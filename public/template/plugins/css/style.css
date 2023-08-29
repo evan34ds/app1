@@ -1,0 +1,26 @@
+.carousel-item {
+    height: 500px;
+}
+
+.carousel-caption {
+    height: 300px;
+    font-family:'Times New Roman', Times, serif;
+    
+    
+}
+.tulisan_satu{
+	font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 49px;
+	font-style: normal;
+    text-shadow:2px 1px 0 rgb(8, 209, 28);
+    color:rgb(85, 242, 6);
+}
+
+.font-wight-bold{
+    font-family: Georgia, Times, 'Times New Roman', serif;
+    font-size: 30px;
+    
+	font-style: normal;
+    text-shadow:2px 1px 0 rgb(8, 209, 28);
+}
+
