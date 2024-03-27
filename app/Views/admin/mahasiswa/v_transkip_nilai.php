@@ -53,6 +53,14 @@
                 </tr>
         </table>
     </div>
+
+    <?php
+    if (session()->getFlashdata('pesan')) {
+        echo '<div class="alert alert-success" role="alert">';
+        echo session()->getFlashdata('pesan');
+        echo '</div>';
+    }
+    ?>
     <div class="col-sm-12">
 
         <?php //1. JIKA LEBI 24 SKS MAKA TIDAK BISA PRINT DAN TAMBAH MATA KULIAH 2. JIKA SKS TELAH MENCAPAI 24 SKS MAKA TDAK BISA MENAMBAH DAN PRINT  
@@ -74,14 +82,16 @@
             $jumlahmatakuliah = 1;
         ?>
         <?php } ?>
-        <a href="<?= base_url('krs/print') ?>" target="_blank" class="btn-flat bg-success color-palette">
-            <i class="fa fa-print">PRINT KRS</i></a>
+        <button class="btn-flat bg-success color-palette"> <a href="<?= base_url('krs/print') ?>" target="_blank" class="btn-flat bg-success color-palette">
+                <i class="fa fa-print">PRINT KRS </i></a></button>
+        <button type="button" data-toggle="modal" data-target="#add" class="btn-flat bg-success color-palette">
+            <i class="fa fa-print">CHEKLISH MATA KULIAH</i></button>
     </div>
     <div class="col-sm-12">
         <table class="table table-bordered table-striped text-sm">
             <thead>
                 <tr class="bg-success color-palette">
-                    <th class="text-center">No</th>
+                    <th class="text-center">WIDI</th>
                     <th class="text-center">Kode</th>
                     <th class="text-center">Mata Kuliah</th>
                     <th class="text-center">Tahun Akademik</th>
@@ -103,7 +113,7 @@
                 $nilai = 0;
                 $totalindex = 0;
                 $db      = \Config\Database::connect();
-                foreach ($data_matkul as $key => $value) {          //ini menjadi wakil databases yang bisa di ambil
+                foreach ($data_matkul_aktif as $key => $value) {          //ini menjadi wakil databases yang bisa di ambil
 
                     $st = $db->table('tbl_krs')
                         ->where('id_mhs', $value['id_mhs']) // Membuat Jumlah Mata Kuliah
@@ -132,7 +142,7 @@
                         <td class="text-center">
                             <?php
                             $jumla2 = 0;
-                            
+
 
                             echo $bobot[$nilai] = $value['sks']  * $value['nilai_index']; //SKS * N. Indeks
                             $totalindex = $totalindex  + $bobot[$nilai]; //Rumus mendapatkan total index
@@ -142,12 +152,7 @@
                             ?>
                         </td>
                         <td class="text-center">
-                            <?php if ($st >> $jumlahmatakuliah) { ?>
-                                <span class="badge badge-danger">MATA KULIAH LEBIH DARI 1</span>
-                            <?php } else { ?>
-                                <i class="badge badge-success">Tidak ada Dobel</i>
-                            <?php  }  ?>
-                            </b>
+                            <?= $value['ceklis_transkrip'] ?>
                         </td>
 
 
@@ -175,5 +180,117 @@
 
             </tbody>
         </table>
+    </div>
+    <!-- <H4><b>Jumlah SKS : $sks </b></H4> -->
+    <!-- modal add -->
+    <div class="modal fade" id="add">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Daftar Transkrip</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <table class="table table-bordered table-striped text-sm">
+                        <thead>
+                            <tr class="bg-success color-palette">
+                                <th class="text-center">WIDI</th>
+                                <th class="text-center">Kode</th>
+                                <th class="text-center">Mata Kuliah</th>
+                                <th class="text-center">Tahun Akademik</th>
+                                <th class="text-center">SKS</th>
+                                <th class="text-center">SMT</th>
+                                <th class="text-center">Kelas</th>
+                                <th class="text-center">Dosen</th>
+                                <th class="text-center">Nilai</th>
+                                <th class="text-center">Huruf</th>
+                                <th class="text-center">Index</th>
+                                <th class="text-center">SKS * N. Indeks</th>
+                                <th class="text-center">Checklist</th>
+                                <th class="text-center">Keterangan</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <?php
+                            echo form_open('admin/transkip_simpan/');
+                            ?>
+                            <?php $no = 1;
+                            $sks = 0; //menjumlahkan sks
+                            $nilai = 0;
+                            $totalindex = 0;
+                            $db      = \Config\Database::connect();
+                            foreach ($data_matkul as $key => $value) {          //ini menjadi wakil databases yang bisa di ambil
+
+                                echo form_hidden($value['id_krs'] . 'id_krs', $value['id_krs']);
+
+                                $st = $db->table('tbl_krs')
+                                    ->where('id_mhs', $value['id_mhs']) // Membuat Jumlah Mata Kuliah
+                                    ->where('id_jadwal', $value['id_jadwal']) // Membuat Jumlah Mata Kuliah
+                                    ->countAllResults();
+
+                                $sks = $sks + $value['sks']; //menjumlahkan sks
+                                $kod = $value['kode_matkul'];
+
+                                $tambahmatkul = 24 - $sks;
+                                $kontrak = 24;
+                                $jumlahmatakuliah = 1;
+                            ?>
+                                <tr>
+                                    <td class="text-center"><?= $no++ ?></td>
+                                    <td class="text-center"><?= $value['kode_matkul'] ?></td>
+                                    <td class="text-center"><?= $value['ta'] ?> <?= $value['semester'] ?> </td>
+                                    <td><?= $value['matkul'] ?></td>
+                                    <td class="text-center"><?= $value['sks'] ?></td>
+                                    <td class="text-center"><?= $value['smt'] ?></td>
+                                    <td class="text-center"><?= $value['nama_kelas_perkuliahan'] ?></td>
+                                    <td><?= $value['nama_dosen'] ?></td>
+                                    <td class="text-center"><?= $value['nilai'] ?></td>
+                                    <td class="text-center"><?= $value['nilai_huruf'] ?></td>
+                                    <td class="text-center"><?= $value['nilai_index'] ?></td>
+
+                                    <td class="text-center">
+                                        <?php
+                                        $jumla2 = 0;
+
+
+                                        echo $bobot[$nilai] = $value['sks']  * $value['nilai_index']; //SKS * N. Indeks
+                                        $totalindex = $totalindex  + $bobot[$nilai]; //Rumus mendapatkan total index
+
+                                        $ipk = $totalindex / $sks;
+
+                                        ?>
+                                    </td>
+                                    <td><select name="<?= $value['id_krs'] ?>ceklis_transkrip">
+                                            <option value="0" <?php if ($value['ceklis_transkrip'] == 0) {
+                                                                    echo 'selected';
+                                                                } ?>>Nonaktif</option>
+                                            <option value="1" <?php if ($value['ceklis_transkrip'] == 1) {
+                                                                    echo 'selected';
+                                                                } ?>>Aktif</option>
+                                        </select>
+                                    </td>
+                                    <td class="text-center">
+                                        <?= $value['ceklis_transkrip'] ?>
+                                    </td>
+
+
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+
+                    <button type="submit">Simpan</button>
+
+                </div>
+                <?php echo form_close() ?>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
     </div>
 </div>

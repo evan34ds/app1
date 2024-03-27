@@ -34,6 +34,11 @@
                     <td><?= $jadwal['matkul'] ?></td>
                 </tr>
                 <tr>
+                    <td>SKS</td>
+                    <td class="text-center">:</td>
+                    <td><?= $jadwal['sks'] ?></td>
+                </tr>
+                <tr>
                     <td>Jadwal</td>
                     <td class="text-center">:</td>
                     <td><?= $jadwal['hari'] ?>, <?= $jadwal['waktu'] ?></td>
@@ -44,14 +49,6 @@
                     <td><?= $jadwal['nama_dosen'] ?></td>
                 </tr>
         </table>
-
-        <div class="col-sm-12">
-            <a href="<?= base_url('dsn/print_nilai_mhs/' . $jadwal['id_jadwal']) ?>" target="_blank" class="btn btn-outline-success">
-                <i class="fa fa-print">PRINT </i></a>
-            <a href="<?= base_url('dsn/ubah_nilai/' . $jadwal['id_jadwal']) ?>" class="btn btn-outline-success">
-                <i class="nav-icon fas fa-edit">EDIT
-                </i></a>
-        </div>
         <div class="col-sm-12">
             <?php
 
@@ -61,6 +58,7 @@
                 echo '</div>';
             }
             ?>
+            <?php echo form_open('dsn/SimpanNilai/' . $jadwal['id_jadwal']) ?>
             <table class="table table-bordered table-striped text-sm">
 
                 <tr class="bg-success color-palette">
@@ -68,43 +66,44 @@
                     <th rowspan="2" class="text-center">NIM</th>
                     <th rowspan="2" class="text-center">MAHASISWA</th>
                     <th colspan="3" class="text-center">NILAI</th>
-                    <th rowspan="2"class="text-center">KET</th>
+                    <th rowspan="2" class="text-center">KET</th>
+
                 </tr>
+
                 <tr class="bg-success color-palette">
                     <td class="text-center">ANGKA</td>
                     <td class="text-center">HURUF</td>
                     <td class="text-center">INDEX</td>
                 </tr>
+
                 <tbody>
                     <?php $no = 1;
 
                     foreach ($mhs as $key => $value) {
                         echo form_hidden($value['id_krs'] . 'id_krs', $value['id_krs']);
                     ?>
-                    <tr>
-                    <tr>
-            
+                        <tr>
                         <tr>
                             <td class="text-center"><?= $no++ ?></td>
                             <td class="text-center"><?= $value['nim'] ?></td>
                             <td><?= $value['nama_mhs'] ?></td>
-                            <td><input name="" type="text" value="<?= $value['nilai'] ?>" min="0" max="100" class="form-control" disabled></td>
-                            <td><input name="" type="text" value="<?= $value['nilai_huruf'] ?>" min="0" max="100" class="form-control" disabled></td>
+                            <td><input name="<?= $value['id_krs'] ?>nilai" type="number" value="<?= $value['nilai'] ?>" class="form-control" min="0" max="100" placeholder=""></td>
+                            <td><input name="" type="text" value="<?= $value['nilai_huruf'] ?>" min="0" max="100" class="form-control"></td>
                             <td class="text-center"><?= $value['nilai_index'] ?></td>
                             <td class="text-center"><?= $value['keterangan'] ?></td>
                         </tr>
-                    </tr>
                     <?php } ?>
 
                     <tr class="bg-success color-palette">
                         <th rowspan="2" class="text-center">NO</th>
                         <th rowspan="2" class="text-center">NIM</th>
                         <th rowspan="2" class="text-center">MAHASISWA</th>
-                        <th colspan="20" class="text-center">NILAI</th>
+                        <th colspan="16" class="text-center">NLAI</th>
 
                     </tr>
                 </tbody>
             </table>
+            <button class="btn btn-outline-success"><i class="fa fa-save">Simpan Nilai</i></button>
             <?php echo form_close() ?>
         </div>
     </div>

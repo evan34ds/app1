@@ -12,14 +12,19 @@ class ModelKrs extends Model
 
     public function DataMhs()
     {
-        return $this->db->table('tbl_kelas')
-            ->join('tbl_mhs', 'tbl_mhs.id_kelas=tbl_kelas.id_kelas', 'left')
+        return $this->db->table('tbl_mhs')
             ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_mhs.id_prodi', 'left') //menampilkan pembimbing Prodi
+            ->join('tbl_akses_fitur', 'tbl_akses_fitur.id_mhs=tbl_mhs.id_mhs', 'left') //menampilkan pembimbing Prodi
+            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_akses_fitur.id_ta', 'left')
             ->join('tbl_fakultas', 'tbl_fakultas.id_fakultas=tbl_prodi.id_fakultas', 'left') //menampilkan fakultas
+            ->join('tbl_kelas', 'tbl_kelas.id_kelas=tbl_mhs.id_kelas', 'left') //menampilkan kelas
             ->join('tbl_dosen', 'tbl_dosen.id_dosen=tbl_kelas.id_dosen', 'left') //menampilkan pembimbing akaademik
+            ->where('status', 1)
+            ->orderBy('tbl_mhs.id_mhs', 'DESC')
             ->where('nim', session()->get('username')) //contohnya d ambil dari session mahasiswa Auth
             ->get()->getRowArray();
     }
+
     public function findNameById($id_jadwal)
     {
         $query = $this->db->table('tbl_jadwal')
@@ -61,7 +66,7 @@ class ModelKrs extends Model
     public function DataKrs($id_mhs, $id_ta) // tmbahan $id_tajika tahun akademik di rubah maka isi krs berubah
     {
         return $this->db->table('tbl_krs')
-            ->join('tbl_jadwal', 'tbl_jadwal.id_jadwal=tbl_krs.id_jadwal', 'left') //menampilkan fakultas
+            ->join('tbl_jadwal', 'tbl_jadwal.id_jadwal=tbl_krs.id_jadwal', 'left') //menampilkan fakultas 
             ->join('tbl_kelas_perkuliahan', 'tbl_kelas_perkuliahan.id_kelas_perkuliahan = tbl_jadwal.id_kelas_perkuliahan', 'left')
             ->join('tbl_kurikulum', 'tbl_kurikulum.id_kurikulum=tbl_kelas_perkuliahan.id_kurikulum', 'left')
             ->join('tbl_matkul', 'tbl_matkul.id_matkul = tbl_kurikulum.id_matkul', 'left')

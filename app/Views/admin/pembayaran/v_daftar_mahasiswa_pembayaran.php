@@ -50,13 +50,10 @@
                         <tr>
                             <th width="50px" class="text-center">No</th>
                             <th>NIM</th>
-                            <th>Nama Mahasiswa</th> 
+                            <th>Nama Mahasiswa</th>
                             <th>Jenjang</th>
                             <th>Program Studi</th>
-                            <th>Tahun Angkatan</th>
-                            <th>Password</th>
-                            <th class="text-center">Foto</th>
-                            <th width="150px" class="text-center">Action</th>
+                            <th width="150px" class="text-center">Transkip</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -68,13 +65,8 @@
                                 <td><?= $value['nama_mhs'] ?></td>
                                 <td class="text-center"><?= $value['jenjang'] ?></td>
                                 <td class="text-center"><?= $value['prodi'] ?></td>
-                                <td class="text-center"><?= $value['ta'] ?> <?= $value['semester'] ?></td>
-                                <td><?= $value['password'] ?></td>
-                                <td class=" text-center"><img src="<?= base_url('fotomahasiswa/' . $value['foto_mhs']) ?>" class="img-circle" width="50px" height="50px"></td>
                                 <td class=" text-center">
-                                    <a href="<?= base_url('mahasiswa/edit/' . $value['id_mhs']) ?>" class="fas fa-edit btn-sm btn-danger"></i></a>
-                                    <button class="fas fa-trash btn-sm btn-flat" data-toggle="modal" data-target="#delete<?= $value['id_mhs'] ?>"><i class="fa fa-pencil"></i></button>
-                                </td>
+                                    <a href="<?= base_url('pembayaran/detail-pem-urisegmen_mhs/23/' . $value['id_mhs']) ?>" class="fas fa-edit btn-sm btn-danger"></i></a></td>
                             </tr>
                         <?php } ?>
                     </tbody>
@@ -85,9 +77,6 @@
                             <th>Nama Mahasiswa</th>
                             <th>Jenjang</th>
                             <th>Program Studi</th>
-                            <th>tgl_masuk</th>
-                            <th>Password</th>
-                            <th class="text-center">Foto</th>
                             <th width="150px" class="text-center">Action</th>
                         </tr>
                     </tfoot>

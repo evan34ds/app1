@@ -76,6 +76,14 @@
                             <input type="file" name="foto_mhs" id="preview_gambar" class="form-control">
                         </div>
 
+                        <label>Tahun Masuk</label>
+                        <select name="id_ta" class="form-control">
+                            <option value="<?= $mhs['id_ta'] ?>"><?= $mhs['ta'] ?> <?= $mhs['semester'] ?></option>
+                            <?php foreach ($ta_aktif as $key => $value) { ?>
+                                <option value="<?= $value['id_ta'] ?>"><?= $value['ta'] ?> <?= $value['semester'] ?></option>
+                            <?php } ?>
+                        </select>
+
                 </p>
                 <div class="modal-footer justify-content-between">
                     <a href="<?= base_url('mahasiswa') ?>" class="fas fa-edit btn-sm btn-danger">Tutup</a>

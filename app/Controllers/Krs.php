@@ -16,6 +16,7 @@ class Krs extends BaseController
         $this->ModelKrs = new ModelKrs();
         $this->ModelJadwalKuliah = new ModelJadwalKuliah();
     }
+
     public function index()
     {
         $mhs = $this->ModelKrs->DataMhs();
@@ -28,6 +29,22 @@ class Krs extends BaseController
             'data_matkul'    => $this->ModelKrs->DataKrs($mhs['id_mhs'], $ta['id_ta']), // tambahan , $ta['id_ta'] sesuiakan dengan tahun akademik krs
             'isi'    =>    'mhs/krs/v_krs'
         );
+
+        $jumlahmatakuliah = 1;
+?>
+		<?php
+        if ($data['mhs']['id_krs'] == $jumlahmatakuliah && $data['ta_aktif']['id_ta'] == $data['mhs']['id_ta']) { ?>
+			<?php
+            // Tempatkan return view('layout/v_wrapper', $data); di sini jika perlu
+            return view('layout/v_wrapper', $data);
+            ?>
+		<?php } else { ?>
+			<?php
+            session()->setFlashdata('gagal_status_perkuliahan', 'Anda Tidak Aktif');
+            return redirect()->to(base_url('mhs'));
+            ?>
+<?php };
+
         return view('layout/v_wrapper', $data);
     }
     public function tambah_matkul($id_jadwal)
@@ -48,10 +65,13 @@ class Krs extends BaseController
             ->where('id_mhs', $id_mhs)
             ->first();
 
-            $nama_matkul = $this->ModelKrs->findNameById($id_jadwal); // cek agar mata kuliah bisa didefinisikan
+        $nama_matkul = $this->ModelKrs->findNameById($id_jadwal); // cek agar mata kuliah bisa didefinisikan
 
-            if ($existingData) {
-            session()->setFlashdata('gagal_krs',''. $nama_matkul.' Telah tersedia 01!!!');
+        if ($mhs['id_krs'] == 0 && $ta['id_ta'] == $mhs['id_ta']) {
+            session()->setFlashdata('gagal_status_perkuliahan', 'Anda Tidak Aktif');
+            return redirect()->to(base_url('krs'));
+        } elseif ($existingData) {
+            session()->setFlashdata('gagal_krs', '' . $nama_matkul . ' Telah tersedia 01!!!');
             return redirect()->to(base_url('krs'));
         } else {
 
@@ -63,7 +83,7 @@ class Krs extends BaseController
                 'id_mhs'       => $mhs['id_mhs']
             ];
             $this->ModelKrs->TambahMatkul($data);
-            session()->setFlashdata('pesan',''. $nama_matkul.' Mata Kuliah Berhasil Di Tambahkan !!!');
+            session()->setFlashdata('pesan', '' . $nama_matkul . ' Mata Kuliah Berhasil Di Tambahkan !!!');
             return redirect()->to(base_url('krs'));
             return view('layout/v_wrapper', $data);
         }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 23, 2023 at 11:12 PM
+-- Generation Time: Mar 25, 2024 at 12:30 AM
 -- Server version: 8.0.17
 -- PHP Version: 7.3.10
 
@@ -103,8 +103,8 @@ INSERT INTO `prodi` (`kd_prodi`, `prodi`, `singkat`, `ketua_prodi`, `nik`, `akre
 CREATE TABLE `tbl_akses_fitur` (
   `id_akses_fitur_mhs` int(4) NOT NULL,
   `id_mhs` int(11) DEFAULT NULL,
-  `khs` int(1) DEFAULT '0',
-  `krs` int(1) DEFAULT '0',
+  `id_khs` int(1) DEFAULT '1',
+  `id_krs` int(11) DEFAULT '0',
   `id_ta` int(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -112,9 +112,11 @@ CREATE TABLE `tbl_akses_fitur` (
 -- Dumping data for table `tbl_akses_fitur`
 --
 
-INSERT INTO `tbl_akses_fitur` (`id_akses_fitur_mhs`, `id_mhs`, `khs`, `krs`, `id_ta`) VALUES
-(1, 10, 0, 0, 1),
-(2, 11, 0, 0, 1);
+INSERT INTO `tbl_akses_fitur` (`id_akses_fitur_mhs`, `id_mhs`, `id_khs`, `id_krs`, `id_ta`) VALUES
+(182, 24, 1, 0, 7),
+(188, 25, 0, 1, 5),
+(191, 0, 1, 0, NULL),
+(195, 26, 1, 0, 7);
 
 -- --------------------------------------------------------
 
@@ -263,7 +265,33 @@ CREATE TABLE `tbl_jadwal` (
 --
 
 INSERT INTO `tbl_jadwal` (`id_jadwal`, `id_prodi`, `id_ta`, `id_kelas_perkuliahan`, `id_matkul`, `id_dosen`, `hari`, `waktu`, `id_ruangan`, `quota`) VALUES
-(66, 13, 7, 5, NULL, 14, 'Selasa', '07.00-09.00', 15, 2);
+(68, 13, 7, 5, NULL, 15, 'Selasa', '07.00-09.00', 15, 30),
+(69, 13, 7, 6, NULL, 14, 'Rabu', '07.00-09.00', 13, 12),
+(70, 13, 5, 7, NULL, 14, 'Selasa', '08.00 - 10.00', 13, 12);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_kategori_pembayaran`
+--
+
+CREATE TABLE `tbl_kategori_pembayaran` (
+  `id_kategori_pembayaran` int(11) NOT NULL COMMENT 'Primary Key',
+  `nama_kategori_pembayaran` varchar(60) DEFAULT NULL,
+  `kode_kategori_pembayaran` varchar(30) NOT NULL,
+  `singkatan_kategori_pembayaran` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `tbl_kategori_pembayaran`
+--
+
+INSERT INTO `tbl_kategori_pembayaran` (`id_kategori_pembayaran`, `nama_kategori_pembayaran`, `kode_kategori_pembayaran`, `singkatan_kategori_pembayaran`) VALUES
+(5, 'PRAKTEK PENGALAMAN LAPANGAN', '001', 'PPL'),
+(6, 'PENERIMAAN MAHASISWA BARU', '002', 'PMB'),
+(7, 'WISUDA', '003', 'WISUDA'),
+(8, 'SUMBANGAN BIAYA PENDIDIKAN', '004', 'SPP'),
+(9, 'JAS ALMAMATER', '005', 'JAS');
 
 -- --------------------------------------------------------
 
@@ -290,6 +318,42 @@ INSERT INTO `tbl_kelas` (`id_kelas`, `nama_kelas`, `id_prodi`, `id_dosen`, `tahu
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_kelas_pembayaran`
+--
+
+CREATE TABLE `tbl_kelas_pembayaran` (
+  `id_kelas_pembayaran` int(10) NOT NULL,
+  `id_mhs` int(11) DEFAULT NULL,
+  `id_pembayaran` int(10) DEFAULT NULL,
+  `nama_kelas_pembayaran` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `id_prodi` int(11) NOT NULL,
+  `kode_kelas_pembayaran` varchar(30) NOT NULL,
+  `pelunasan` decimal(65,0) DEFAULT NULL,
+  `kode_pembayaran_mhs` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `waktu_pembayaran_mhs` timestamp NULL DEFAULT NULL,
+  `id_user` int(9) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `tbl_kelas_pembayaran`
+--
+
+INSERT INTO `tbl_kelas_pembayaran` (`id_kelas_pembayaran`, `id_mhs`, `id_pembayaran`, `nama_kelas_pembayaran`, `id_prodi`, `kode_kelas_pembayaran`, `pelunasan`, `kode_pembayaran_mhs`, `waktu_pembayaran_mhs`, `id_user`) VALUES
+(379, NULL, 3, 'PEMB2019', 12, 'TEOL01', NULL, NULL, NULL, 0),
+(387, NULL, 8, 'WISUDA21', 12, 'TEOL02', NULL, NULL, NULL, 0),
+(388, 32, 8, 'WISUDA21', 12, 'TEOL02', NULL, NULL, NULL, 0),
+(389, 24, 8, 'WISUDA21', 12, 'TEOL02', NULL, NULL, '0000-00-00 00:00:00', 0),
+(391, 32, NULL, 'WISUDA21', 12, 'TEOL02', '200000', '210324-22-8240', '2024-03-21 14:02:00', 1),
+(392, 32, NULL, 'WISUDA21', 12, 'TEOL02', '20000', '210324-22-1938', '2024-03-21 14:03:00', 1),
+(393, 24, NULL, 'WISUDA21', 12, 'TEOL02', '200000', '220324-18-5701', '2024-03-22 10:14:00', 1),
+(421, 24, 3, 'PEMB2019', 12, 'TEOL01', NULL, NULL, NULL, 0),
+(426, 32, 3, 'PEMB2019', 12, 'TEOL01', NULL, NULL, NULL, 0),
+(427, 32, NULL, 'PEMB2019', 12, 'TEOL01', '400000', '230324-21-8455', '2024-03-23 13:36:00', 1),
+(428, 24, NULL, 'WISUDA21', 12, 'TEOL02', '200000', '240324-20-4315', '2024-03-24 12:53:00', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_kelas_perkuliahan`
 --
 
@@ -310,7 +374,9 @@ CREATE TABLE `tbl_kelas_perkuliahan` (
 --
 
 INSERT INTO `tbl_kelas_perkuliahan` (`id_kelas_perkuliahan`, `kode_kelas_perkuliahan`, `nama_kelas_perkuliahan`, `id_kurikulum`, `id_prodi`, `id_dosen`, `id_ta`, `tanggal_akhir`, `tanggal_mulai`) VALUES
-(5, 'S5P22', 'S5P22', 8, 13, 15, 7, '2023-07-06', '2023-06-28');
+(5, 'S5P22', 'S5P22', 8, 13, 15, 7, '2023-07-06', '2023-06-28'),
+(6, 'S2T22', 'S2P221', 9, 13, 14, 7, '2023-10-28', '2023-10-18'),
+(7, 'S8P23', 'S8P23', 9, 13, 14, 5, '2024-01-18', '2024-01-11');
 
 -- --------------------------------------------------------
 
@@ -367,15 +433,18 @@ CREATE TABLE `tbl_krs` (
   `p14` int(1) DEFAULT '0',
   `p15` int(1) DEFAULT '0',
   `p16` int(1) DEFAULT '0',
-  `nilai` varchar(3) DEFAULT '0'
+  `nilai` varchar(3) DEFAULT '0',
+  `ceklis_transkrip` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `tbl_krs`
 --
 
-INSERT INTO `tbl_krs` (`id_krs`, `id_mhs`, `id_jadwal`, `id_ta`, `p1`, `p2`, `p3`, `p4`, `p5`, `p6`, `p7`, `p8`, `p9`, `p10`, `p11`, `p12`, `p13`, `p14`, `p15`, `p16`, `nilai`) VALUES
-(384, 10, 66, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '90');
+INSERT INTO `tbl_krs` (`id_krs`, `id_mhs`, `id_jadwal`, `id_ta`, `p1`, `p2`, `p3`, `p4`, `p5`, `p6`, `p7`, `p8`, `p9`, `p10`, `p11`, `p12`, `p13`, `p14`, `p15`, `p16`, `nilai`, `ceklis_transkrip`) VALUES
+(418, 25, 70, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0', 0),
+(421, 26, 68, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '90', 1),
+(422, 25, 68, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '70', 1);
 
 -- --------------------------------------------------------
 
@@ -398,7 +467,9 @@ CREATE TABLE `tbl_kurikulum` (
 
 INSERT INTO `tbl_kurikulum` (`id_kurikulum`, `nama_kurikulum`, `id_ta`, `id_prodi`, `id_matkul`, `smstr`) VALUES
 (7, 'S1P005', 7, 13, NULL, ''),
-(8, 'S1P005', 7, 13, 25, '3');
+(8, 'S1P005', 7, 13, 25, '3'),
+(9, 'S1P005', 7, 13, 20, '2'),
+(10, 'S1P005', 7, 13, 23, '6');
 
 -- --------------------------------------------------------
 
@@ -454,13 +525,37 @@ CREATE TABLE `tbl_mhs` (
 --
 
 INSERT INTO `tbl_mhs` (`id_mhs`, `id_ta`, `nim`, `nama_mhs`, `id_prodi`, `tgl_masuk`, `password`, `foto_mhs`, `id_kelas`) VALUES
-(10, 7, '20171', 'SALDI PAERI', 13, '2017', '20171', '1607307586_73979e3ee9de80d71126.png', 27),
-(11, 7, '20181', 'ALFANDI AS PONDOKI', 12, '2019', '20181', '1607307710_cb52452ef238a4793549.png', 28),
-(12, 5, '20172', 'JEPRIANTO BAMBA', 13, '2017', '20172', '1607309858_4c4bc642a2971505a47a.png', 27),
-(13, 7, '20182', 'ORLANDO NONASI', 12, '2017', '20182', '1634618554_ef89a828007f8889bea8.png', 28),
-(19, 2, '20111', 'ALDRIANTO MAKOTOS', 12, 'TEOL', '20111', '1649159756_977041739055182c54ad.png', NULL),
-(20, 0, '20173', 'ARIL LUMINGKEWAS', 12, 'TEOL', '20173', '1649431260_27f1ee5ef225c1aceed4.png', NULL),
-(21, 0, '2029121', 'FRANGKI FERNANDA NYIAD', 13, 'TEOL', '2029121', '1649857751_2eb3b9bcf65018fe7bb7.png', 27);
+(24, 7, '20232', 'Frendi', 12, NULL, '20232', '1692048007_159c708de18db834e3a7.png', 28),
+(25, 1, '20221', 'Saldi Paeri', 13, NULL, '20221', '1692048030_c74ed31f83ffc6d61b51.png', 27),
+(26, 1, '20232', 'Resa', 13, NULL, '20232', '1692658910_3014b428538a9fb29eb0.png', 27),
+(32, 7, '20232', 'Stev', 12, NULL, 'ASDSA', '1709027178_3177cb3948429307b94b.png', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_pembayaran`
+--
+
+CREATE TABLE `tbl_pembayaran` (
+  `id_pembayaran` int(10) NOT NULL,
+  `nama_pembayaran` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `biaya` decimal(65,0) DEFAULT NULL,
+  `id_ta` int(10) DEFAULT NULL,
+  `id_prodi` int(2) DEFAULT NULL,
+  `Penerima` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `id_kategori_pembayaran` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `tbl_pembayaran`
+--
+
+INSERT INTO `tbl_pembayaran` (`id_pembayaran`, `nama_pembayaran`, `biaya`, `id_ta`, `id_prodi`, `Penerima`, `id_kategori_pembayaran`) VALUES
+(1, 'SPP', '300009', 1, 13, NULL, 8),
+(3, 'PMB', '50000', 7, 12, NULL, 6),
+(4, 'PPL', '50000', 5, 12, NULL, 5),
+(8, 'Wisuda', '200000', 7, 13, NULL, 7),
+(10, 'Jas', '2500090', 7, 13, NULL, 9);
 
 -- --------------------------------------------------------
 
@@ -499,24 +594,25 @@ CREATE TABLE `tbl_range_nilai` (
   `bobot_minimum` int(4) NOT NULL,
   `bobot_maksimum` int(4) NOT NULL,
   `tanggal_mulai` date NOT NULL,
-  `tanggal_akhir` date NOT NULL
+  `tanggal_akhir` date NOT NULL,
+  `Keterangan` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `tbl_range_nilai`
 --
 
-INSERT INTO `tbl_range_nilai` (`id_range_nilai`, `id_prodi`, `nilai_huruf`, `nilai_index`, `bobot_minimum`, `bobot_maksimum`, `tanggal_mulai`, `tanggal_akhir`) VALUES
-(1, 13, 'A', '4.0', 90, 100, '2022-06-17', '2022-12-15'),
-(2, 13, 'B', '3.0', 80, 89, '2022-06-17', '2022-12-15'),
-(3, 13, 'C', '2.0', 60, 79, '2022-07-15', '2023-08-26'),
-(4, 13, 'D', '1.0', 40, 59, '2022-06-17', '2022-12-15'),
-(5, 12, 'A', '4.0', 90, 100, '2022-06-17', '2022-12-15'),
-(6, 12, 'B', '3.0', 80, 89, '2022-06-17', '2022-12-15'),
-(7, 12, 'C', '2.0', 60, 79, '2022-07-15', '2023-08-26'),
-(8, 12, 'D', '1.0', 40, 59, '2022-06-17', '2022-12-15'),
-(9, 13, 'E', '0.0', 0, 39, '2022-06-17', '2022-12-15'),
-(10, 12, 'E', '0.0', 0, 39, '2022-06-17', '2022-12-15');
+INSERT INTO `tbl_range_nilai` (`id_range_nilai`, `id_prodi`, `nilai_huruf`, `nilai_index`, `bobot_minimum`, `bobot_maksimum`, `tanggal_mulai`, `tanggal_akhir`, `Keterangan`) VALUES
+(1, 13, 'A', '4.0', 90, 100, '2022-06-17', '2022-12-15', 'L'),
+(2, 13, 'B', '3.0', 80, 89, '2022-06-17', '2022-12-15', 'L'),
+(3, 13, 'C', '2.0', 60, 79, '2022-07-15', '2023-08-26', 'L'),
+(4, 13, 'D', '1.0', 40, 59, '2022-06-17', '2022-12-15', 'M'),
+(5, 12, 'A', '4.0', 90, 100, '2022-06-17', '2022-12-15', 'L'),
+(6, 12, 'B', '3.0', 80, 89, '2022-06-17', '2022-12-15', 'L'),
+(7, 12, 'C', '2.0', 60, 79, '2022-07-15', '2023-08-26', 'L'),
+(8, 12, 'D', '1.0', 40, 59, '2022-06-17', '2022-12-15', 'M'),
+(9, 13, 'E', '0.0', 0, 39, '2022-06-17', '2022-12-15', 'T'),
+(10, 12, 'E', '0.0', 0, 39, '2022-06-17', '2022-12-15', 'T');
 
 -- --------------------------------------------------------
 
@@ -576,13 +672,6 @@ CREATE TABLE `tbl_status_mhs` (
   `status_mhs` int(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `tbl_status_mhs`
---
-
-INSERT INTO `tbl_status_mhs` (`id_status`, `id_mhs`, `id_ta`, `status_mhs`) VALUES
-(14, 13, 7, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -601,10 +690,10 @@ CREATE TABLE `tbl_ta` (
 --
 
 INSERT INTO `tbl_ta` (`id_ta`, `ta`, `semester`, `status`) VALUES
-(1, '2020/2021', 'Genap', 0),
+(1, '2020/2021', 'Genap', 1),
 (2, '2020/2021', 'Ganjil', 0),
 (5, '2019/2020', 'Genap', 0),
-(7, '2019/2020', 'Ganjil', 1);
+(7, '2019/2020', 'Ganjil', 0);
 
 -- --------------------------------------------------------
 
@@ -728,10 +817,22 @@ ALTER TABLE `tbl_jadwal`
   ADD PRIMARY KEY (`id_jadwal`);
 
 --
+-- Indexes for table `tbl_kategori_pembayaran`
+--
+ALTER TABLE `tbl_kategori_pembayaran`
+  ADD PRIMARY KEY (`id_kategori_pembayaran`);
+
+--
 -- Indexes for table `tbl_kelas`
 --
 ALTER TABLE `tbl_kelas`
   ADD PRIMARY KEY (`id_kelas`);
+
+--
+-- Indexes for table `tbl_kelas_pembayaran`
+--
+ALTER TABLE `tbl_kelas_pembayaran`
+  ADD PRIMARY KEY (`id_kelas_pembayaran`);
 
 --
 -- Indexes for table `tbl_kelas_perkuliahan`
@@ -768,6 +869,12 @@ ALTER TABLE `tbl_matkul`
 --
 ALTER TABLE `tbl_mhs`
   ADD PRIMARY KEY (`id_mhs`);
+
+--
+-- Indexes for table `tbl_pembayaran`
+--
+ALTER TABLE `tbl_pembayaran`
+  ADD PRIMARY KEY (`id_pembayaran`);
 
 --
 -- Indexes for table `tbl_prodi`
@@ -845,7 +952,7 @@ ALTER TABLE `prodi`
 -- AUTO_INCREMENT for table `tbl_akses_fitur`
 --
 ALTER TABLE `tbl_akses_fitur`
-  MODIFY `id_akses_fitur_mhs` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id_akses_fitur_mhs` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=199;
 
 --
 -- AUTO_INCREMENT for table `tbl_berita`
@@ -881,7 +988,13 @@ ALTER TABLE `tbl_grafik`
 -- AUTO_INCREMENT for table `tbl_jadwal`
 --
 ALTER TABLE `tbl_jadwal`
-  MODIFY `id_jadwal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `id_jadwal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+
+--
+-- AUTO_INCREMENT for table `tbl_kategori_pembayaran`
+--
+ALTER TABLE `tbl_kategori_pembayaran`
+  MODIFY `id_kategori_pembayaran` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `tbl_kelas`
@@ -890,10 +1003,16 @@ ALTER TABLE `tbl_kelas`
   MODIFY `id_kelas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
+-- AUTO_INCREMENT for table `tbl_kelas_pembayaran`
+--
+ALTER TABLE `tbl_kelas_pembayaran`
+  MODIFY `id_kelas_pembayaran` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=429;
+
+--
 -- AUTO_INCREMENT for table `tbl_kelas_perkuliahan`
 --
 ALTER TABLE `tbl_kelas_perkuliahan`
-  MODIFY `id_kelas_perkuliahan` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_kelas_perkuliahan` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tbl_konfigurasi`
@@ -905,13 +1024,13 @@ ALTER TABLE `tbl_konfigurasi`
 -- AUTO_INCREMENT for table `tbl_krs`
 --
 ALTER TABLE `tbl_krs`
-  MODIFY `id_krs` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=385;
+  MODIFY `id_krs` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=423;
 
 --
 -- AUTO_INCREMENT for table `tbl_kurikulum`
 --
 ALTER TABLE `tbl_kurikulum`
-  MODIFY `id_kurikulum` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_kurikulum` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `tbl_matkul`
@@ -923,7 +1042,13 @@ ALTER TABLE `tbl_matkul`
 -- AUTO_INCREMENT for table `tbl_mhs`
 --
 ALTER TABLE `tbl_mhs`
-  MODIFY `id_mhs` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id_mhs` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
+-- AUTO_INCREMENT for table `tbl_pembayaran`
+--
+ALTER TABLE `tbl_pembayaran`
+  MODIFY `id_pembayaran` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tbl_prodi`
@@ -953,7 +1078,7 @@ ALTER TABLE `tbl_slider`
 -- AUTO_INCREMENT for table `tbl_status_mhs`
 --
 ALTER TABLE `tbl_status_mhs`
-  MODIFY `id_status` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id_status` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT for table `tbl_ta`

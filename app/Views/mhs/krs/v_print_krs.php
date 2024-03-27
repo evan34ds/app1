@@ -109,7 +109,7 @@
                                     <td><?= $value['matkul'] ?></td>
                                     <td class="text-center"><?= $value['sks'] ?></td>
                                     <td class="text-center"><?= $value['smt'] ?></td>
-                                    <td class="text-center"><?= $value['nama_kelas'] ?>-<?= $value['tahun_angkatan'] ?></td>
+                                    <td class="text-center"><?= $value['nama_kelas_perkuliahan'] ?></td>
                                     <td class="text-center"><?= $value['ruangan'] ?></td>
                                     <td><?= $value['nama_dosen'] ?></td>
                                     <td class="text-center"><?= $value['hari'] ?>, <?= $value['waktu'] ?></td>
@@ -125,11 +125,7 @@
                         </tbody>
                     </table>
                     <H4><b>Jumlah SKS : <?= $sks ?>
-                    <?php if ($sks == $kontrak) { ?> 
                                         <span class="badge badge-danger">Batas Kontrak hanya : 24 SKS </span>
-                                    <?php } else { ?>
-                                            <i class="badge badge-success">Silakan Di Cetak</i>
-                                    <?php  }  ?>
                                     </b></H4>
 
                     <div class="row">

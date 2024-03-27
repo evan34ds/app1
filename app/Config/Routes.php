@@ -32,6 +32,15 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 
+
+$routes->add('pembayaran/daftar-mhs-pembayaran34', 'Pembayaran::daftar_mhs_pembayaran');
+
+//$routes->get('pembayaran/daftar-pelunasan-mhs', 'Pembayaran::daftar_mhs_pembayaran'); //kedepan pakai GET yang di rekomndasikan 
+
+$routes->add('pembayaran/detail-pem-urisegmen_mhs/23/(:segment)', 'Pembayaran::detail_pembayaran_mhs/$1');
+
+//$routes->get('pembayaran/daftar-pelunasan-mhs/(:any)', 'Pembayaran::daftar_peluanasan_mhs/$1/$2'); 
+
 /**
  * --------------------------------------------------------------------
  * Additional Routing

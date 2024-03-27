@@ -54,6 +54,19 @@ class Dsn extends BaseController
 		);
 		return view('layout/v_wrapper', $data);
 	}
+
+	public function ubah_nilai($id_jadwal)
+	{
+		$dosen = $this->ModelDsn->DataDosen();
+		$data = array(
+			'title' =>    'Nilai Mahasiswa',
+			'jadwal' =>    $this->ModelDsn->DetailJadwal($id_jadwal),
+			'mhs' =>    $this->ModelDsn->mhs($id_jadwal),
+			'range_nilai' =>    $this->ModelDsn->allData(),
+			'isi'    =>    'admin/dosen/nilai/v_ubah_nilai'
+		);
+		return view('layout/v_wrapper', $data);
+	}
 	public function SimpanNilai($id_jadwal)
 	{
 
@@ -128,6 +141,18 @@ class Dsn extends BaseController
 			'mhs' =>    $this->ModelDsn->mhs($id_jadwal),
 		);
 		return view('admin/dosen/absenkelas/v_print_absensi', $data);
+	}
+
+	public function print_nilai_mhs($id_jadwal)
+	{
+		$dosen = $this->ModelDsn->DataDosen();
+		$data = array(
+			'title' =>    'Daftar Nilai Mahasiswa',
+			'jadwal' =>    $this->ModelDsn->DetailJadwal($id_jadwal),
+			'mhs' =>    $this->ModelDsn->mhs($id_jadwal),
+			'range_nilai' =>    $this->ModelDsn->allData(),
+		);
+		return view('admin/dosen/nilai/v_print_nilai', $data);
 	}
 
 	//--------------------------------------------------------------------

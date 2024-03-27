@@ -1,8 +1,25 @@
+<?php
+if (session()->getFlashdata('gagal_status_perkuliahan')) {
+    echo '<div class="alert alert-danger alert-dismissible" role="alert"><i class="icon fas fa-ban"></i>';
+    echo 'Anda Belum Aktif sebagai pengisi KRS silahkan lengkapi Administrasi';
+    echo session()->getFlashdata('gagal_krs');
+    echo '</div>';
+}
+?>
+
+<?php
+if (session()->getFlashdata('gagal_status_khs')) {
+    echo '<div class="alert alert-danger alert-dismissible" role="alert"><i class="icon fas fa-ban"></i>';
+    echo 'Anda Belum Aktif dalam melihat KHS silahkan lengkapi Administrasi';
+    echo session()->getFlashdata('gagal_khs');
+    echo '</div>';
+}
+?>
+
 <section class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-3">
-
                 <!-- Profile Image -->
                 <div class="card card-success card-outline">
                     <div class="card-body box-profile">

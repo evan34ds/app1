@@ -62,6 +62,7 @@ class Filters extends BaseConfig
 				'slider', 'slider/*',
 				'berita', 'berita/*',
 				'bobotnilai', 'bobotnilai/*',
+				'pembayaran', 'pembayaran/*',
 				'/'
 			]],
 			'filtermhs' => ['except' => [
@@ -70,7 +71,8 @@ class Filters extends BaseConfig
 				'krs', 'krs/*',
 				'khs', 'khs/*',
 				'/'
-			]],
+			],
+		],
 			'filterdsn' => ['except' => [
 				'dsn', 'dsn/*',
 				'home', 'home/*',

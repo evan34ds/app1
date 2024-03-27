@@ -35,6 +35,8 @@ class Ta extends BaseController
 
 	public function edit($id_ta)
 	{
+		session()->set('semester', $ta_aktif['semester']);
+		session()->set('ta', $ta_aktif['ta']);
 		$data = [
 			'id_ta' => $id_ta,
 			'semester' => $this->request->getPost('semester'),
@@ -56,11 +58,14 @@ class Ta extends BaseController
 	//Setting Tahun Akademik
 	public function setting()
 	{
+		$ta_aktif = $this->ModelTa->ta_aktif();
 		$data = array(
 			'title' =>	'Data Tahun Akademik',
 			'ta'	=> $this->ModelTa->alldata(),
 			'isi'	=>	'admin/ta/v_set_ta'
 		);
+		session()->set('semester', $ta_aktif['semester']);
+		session()->set('ta', $ta_aktif['ta']);
 		return view('layout/v_wrapper', $data);
 	}
 	public function set_status_ta($id_ta)
