@@ -48,6 +48,7 @@ class Admin extends BaseController
 			'data' => $this->ModelAdmin->jumlah_prodi(),
 			'aktif_mhs' => $this->ModelAdmin->aktif_mhs(),
 			'ta_aktif' => $this->ModelTa->ta_aktif(),
+			'ta_aktif_dasboard' => $this->ModelTa->ta_aktif_dasboard(),
 			'aktif_mhs_prodi' => $this->ModelAdmin->aktif_mhs_prodi(),
 			'isi'    =>    'admin/login/v_admin'
 		);
@@ -175,10 +176,57 @@ class Admin extends BaseController
 			'mhs'       => $this->ModelAdmin->Data_mahasiswa_khs($id_mhs),
 			'matkul_ditawarkan'  => $this->ModelAdmin->matkulditawarkan($mhs['id_prodi']), //sesuiakan dengan tahun akademik krs // $mhs['id_prodi'] filter berdasarkan id_prodi
 			'data_matkul'    => $this->ModelAdmin->DataMatkul($mhs['id_mhs']), // tambahan , $ta['id_ta'] sesuiakan dengan tahun akademik krs
+			'data_matkul_aktif'    => $this->ModelAdmin->DataMatkul_aktif($mhs['id_mhs']), // tambahan , $ta['id_ta'] sesuiakan dengan tahun akademik krs
 			'isi'   => 'admin/mahasiswa/v_transkip_nilai'
 		);
 		return view('layout/v_wrapper', $data);
 	}
+
+	public function transkip_simpan()
+	{
+		$mhs = $this->ModelAdmin->data_transkrip();
+		foreach ($mhs as $key => $value) {
+			$data = [
+				'id_krs' => $this->request->getPost($value['id_krs'] . 'id_krs'),
+				'ceklis_transkrip' => $this->request->getPost($value['id_krs'] . 'ceklis_transkrip'),
+			];
+			$this->ModelAdmin->Simpan_update_transkrip($data);
+		}
+
+		return redirect()->back()->with('pesan', 'Data Transkip tersimpan');
+
+	}
+
+	public function add_mhs_akses()
+	{
+		$ModelMahasiswa = new ModelMahasiswa();
+		$data = [];
+
+		// Ambil data mahasiswa_id dan pembimbing_id dari formulir
+		$mahasiswaIds = $this->request->getPost('mahasiswa_ids');
+		$ta = $this->ModelTa->ta_aktif();
+
+		if (is_array($mahasiswaIds)) {
+
+			// Loop melalui semua mahasiswa yang dipilih
+			foreach ($mahasiswaIds as $mahasiswaId) {
+				$data[] = [
+					'id_mhs' => $mahasiswaId,
+					'id_ta'       => $ta['id_ta'],
+				];
+			}
+
+
+			$ModelMahasiswa->Tambah_mhs_status($data);
+
+			// Redirect ke halaman sebelumnya atau tampilkan pesan berhasil jika diperlukan
+			return redirect()->back()->with('pesan', 'Data berhasil disimpan ke tabel status.');
+		} else {
+
+			return redirect()->back()->with('error', 'Tidak Ada data yang di Pilih.');
+		}
+	}
+
 
 
 

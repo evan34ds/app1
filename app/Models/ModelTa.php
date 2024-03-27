@@ -39,4 +39,12 @@ class ModelTa extends Model
             ->get()
             ->getRowArray();
     }
+
+    public function ta_aktif_dasboard()
+    {
+        return $this->db->table('tbl_ta')
+            ->where('status', 1)
+            ->get()
+            ->getRowArray();
+    }
 }

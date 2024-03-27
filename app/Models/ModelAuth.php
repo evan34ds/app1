@@ -30,5 +30,12 @@ class ModelAuth extends Model
                 'password' => $password
             ])->get()->getRowArray();
     }
+    public function ta_aktif()
+    {
+        return $this->db->table('tbl_ta')
+            ->where('status', 1)
+            ->get()
+            ->getRowArray();
+    }
 
 }

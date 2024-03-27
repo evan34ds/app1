@@ -21,7 +21,8 @@ class Auth extends BaseController
         return view('layout/v_wrapper', $data);
     }
     public function cek_login()
-    { {
+    {
+        {
             if ($this->validate([
                 'username' => [
                     'label' => 'Username',
@@ -53,14 +54,23 @@ class Auth extends BaseController
                 $level = $this->request->getPost('level');
                 $username = $this->request->getPost('username');
                 $password = $this->request->getPost('password');
+                $ta_aktif = $this->ModelAuth->ta_aktif();
+
                 if ($level == 1) {
                     $cek_user = $this->ModelAuth->login_user($username, $password);
+                    $ta_aktif = $this->ModelAuth->ta_aktif();
+                    
+
                     if ($cek_user) {
                         session()->set('id', $cek_user['id_user']);
                         session()->set('username', $cek_user['username']);
                         session()->set('nama', $cek_user['nama_user']);
                         session()->set('foto', $cek_user['foto']);
                         session()->set('level', $level);
+                        session()->set('status', $ta_aktif['status']);
+                        session()->set('ta', $ta_aktif['ta']);
+                        session()->set('semester', $ta_aktif['semester']); // dipakai juga di Tahun akademik ssaat di ganti maka berubah di nav
+                        
                         //login
                         return redirect()->to(base_url('admin'));
                     } else {

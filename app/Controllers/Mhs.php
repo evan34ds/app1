@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\ModelAdmin;
+use App\Models\ModelMahasiswa;
 use App\Models\ModelTa;
 use App\Models\ModelKrs;
 
@@ -12,18 +13,19 @@ class Mhs extends BaseController
 	{
 		helper('form');
 		$this->ModelAdmin = new ModelAdmin();
+		$this->ModelMahasiswa = new ModelMahasiswa();
 		$this->ModelTa = new ModelTa();
 		$this->ModelKrs = new ModelKrs();
 	}
 	public function index()
 	{
-
 		$data = [
 			'title' =>    'Dashboard',
 			'mhs' => $this->ModelKrs->DataMhs(),
 			'ta' => $this->ModelTa->ta_aktif(), //sesuiakan dengan tahun akademik krs
 			'isi'    =>    'mhs/v_dasboard_mhs'
 		];
+
 		return view('layout/v_wrapper', $data);
 	}
 	public function absensi()
@@ -41,6 +43,17 @@ class Mhs extends BaseController
 		return view('layout/v_wrapper', $data);
 	}
 
-	//--------------------------------------------------------------------
+	//-----------------------duplikate---------------------------------------------
+	public function index2()
+	{
 
+		$data = [
+			'title' =>    'Dashboard',
+			'mhs' => $this->ModelKrs->DataMhs(),
+			'ta' => $this->ModelTa->ta_aktif(), //sesuiakan dengan tahun akademik krs
+			'isi'    =>    'mhs/v_dasboard_mhs'
+		];
+
+		return view('layout/v_wrapper', $data);
+	}
 }

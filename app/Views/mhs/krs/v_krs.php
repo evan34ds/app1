@@ -55,44 +55,59 @@
     </div>
     <div class="col-sm-12">
 
-              <?php //1. JIKA LEBI 24 SKS MAKA TIDAK BISA PRINT DAN TAMBAH MATA KULIAH 2. JIKA SKS TELAH MENCAPAI 24 SKS MAKA TDAK BISA MENAMBAH DAN PRINT  
-                $sks = 0; //menjumlahkan sks
-                $db      = \Config\Database::connect(); 
-                foreach ($data_matkul as $key => $value) {          //ini menjadi wakil databases yang bisa di ambil
-                    
-                    $st = $db->table('tbl_krs')
-                    ->where('id_mhs', $value['id_mhs']) // Membuat Jumlah Mata Kuliah
-                    ->where('id_jadwal', $value['id_jadwal']) // Membuat Jumlah Mata Kuliah
-                    ->countAllResults();
- 
-                    $sks = $sks + $value['sks']; //menjumlahkan sks
-                    $kod = $value['kode_matkul']; 
-                        
-                    $tambahmatkul= 24 - $sks;
-                    $kontrak = 24;
-                    $jumlahmatakuliah = 1;
-                ?>
-                 <?php } ?>
-                                
-                <button type="button" class="btn-flat bg-primary color-palette" data-toggle="modal" data-target="#add">
-                <i class="fa fa-plus">TAMBAH MATA KULIAH</i></button>
+        <?php //1. JIKA LEBI 24 SKS MAKA TIDAK BISA PRINT DAN TAMBAH MATA KULIAH 2. JIKA SKS TELAH MENCAPAI 24 SKS MAKA TDAK BISA MENAMBAH DAN PRINT  
+        $sks = 0; //menjumlahkan sks
+        $db      = \Config\Database::connect();
+        foreach ($data_matkul as $key => $value) {          //ini menjadi wakil databases yang bisa di ambil
 
-                <a href="<?= base_url('krs/print') ?>" target="_blank" class="btn-flat bg-success color-palette">
-                <i class="fa fa-print">Print KRS</i></a>
-           
+            $st = $db->table('tbl_krs')
+                ->where('id_mhs', $value['id_mhs']) // Membuat Jumlah Mata Kuliah
+                ->where('id_jadwal', $value['id_jadwal']) // Membuat Jumlah Mata Kuliah
+                ->countAllResults();
+
+            $sks = $sks + $value['sks']; //menjumlahkan sks
+            $kod = $value['kode_matkul'];
+
+            $tambahmatkul = 24 - $sks;
+            $kontrak = 24;
+
+        ?>
+        <?php }
+        $jumlahmatakuliah = 1;
+        ?>
+
+        <?php
+        if ($mhs['id_krs'] == $jumlahmatakuliah && $ta_aktif['id_ta'] == $mhs['id_ta']) { ?>
+            <button type="button" class="btn-flat bg-primary color-palette" data-toggle="modal" data-target="#add">
+                <i class="fa fa-plus">TAMBAH MATA KULIAH</i>
+            </button>
+
+            
+            <b>
+            <a href="<?= base_url('krs/print') ?>" target="_blank" class="btn-flat bg-success color-palette">
+            <i class="fa fa-print">PRINT KRS</i></a>
+
+        <?php } else { ?>
+           <div class="alert alert-danger alert-dismissible" role="alert">Anda tidak bisa mengakses KRS disebapkan Belum mengurus Administrasi</i>
+        </div>
+        <?php } ?>
+
+
+        </b>
+
     </div>
     <div class="col-sm-12">
-    <?php
-                $errors = session()->getFlashdata('errors');
-                if (!empty($errors)) { ?>
-                    <div class="card card-success" role="alert">
-                        <ul>
-                            <?php foreach ($errors as $key => $value) { ?>
-                                <li><?= esc($value) ?></li>
-                            <?php } ?>
-                        </ul>
-                    </div>
-                <?php } ?>
+        <?php
+        $errors = session()->getFlashdata('errors');
+        if (!empty($errors)) { ?>
+            <div class="card card-success" role="alert">
+                <ul>
+                    <?php foreach ($errors as $key => $value) { ?>
+                        <li><?= esc($value) ?></li>
+                    <?php } ?>
+                </ul>
+            </div>
+        <?php } ?>
         <?php //pesan berhasil di simpan
         if (session()->getFlashdata('pesan')) {
             echo '<div class="alert alert-success" role="alert">';
@@ -102,21 +117,30 @@
         ?>
 
         <?php
-                if (session()->getFlashdata('gagal')) {
-                    echo '<div class="alert alert-danger alert-dismissible" role="alert"></i>';
-                    echo session()->getFlashdata('gagal');
-                    echo '</div>';
-                }
+        if (session()->getFlashdata('gagal')) {
+            echo '<div class="alert alert-danger alert-dismissible" role="alert"></i>';
+            echo session()->getFlashdata('gagal');
+            echo '</div>';
+        }
         ?>
 
-<?php
-                    if (session()->getFlashdata('gagal_krs')) {
-                        echo '<div class="alert alert-danger alert-dismissible" role="alert"><i class="icon fas fa-ban"></i>';
-                        echo 'Mata Kuliah ';
-                        echo session()->getFlashdata('gagal_krs');
-                        echo '</div>';
-                    }
-                    ?>
+        <?php
+        if (session()->getFlashdata('gagal_krs')) {
+            echo '<div class="alert alert-danger alert-dismissible" role="alert"><i class="icon fas fa-ban"></i>';
+            echo 'Mata Kuliah ';
+            echo session()->getFlashdata('gagal_krs');
+            echo '</div>';
+        }
+        ?>
+
+        <?php
+        if (session()->getFlashdata('gagal_status_perkuliahan')) {
+            echo '<div class="alert alert-danger alert-dismissible" role="alert"><i class="icon fas fa-ban"></i>';
+            echo 'Anda Belum Aktif sebagai pengisi KRS lengkapi Administrasi';
+            echo session()->getFlashdata('gagal_krs');
+            echo '</div>';
+        }
+        ?>
 
         <table class="table table-bordered table-striped text-sm">
             <thead>
@@ -140,23 +164,23 @@
             <tbody>
                 <?php $no = 1;
                 $sks = 0; //menjumlahkan sks
-                $db      = \Config\Database::connect(); 
+                $db      = \Config\Database::connect();
                 foreach ($data_matkul as $key => $value) {          //ini menjadi wakil databases yang bisa di ambil
-                    
+
                     $st = $db->table('tbl_krs')
-                    ->where('id_mhs', $value['id_mhs']) // Membuat Jumlah Mata Kuliah
-                    ->where('id_jadwal', $value['id_jadwal']) // Membuat Jumlah Mata Kuliah
-                    ->countAllResults();
+                        ->where('id_mhs', $value['id_mhs']) // Membuat Jumlah Mata Kuliah
+                        ->where('id_jadwal', $value['id_jadwal']) // Membuat Jumlah Mata Kuliah
+                        ->countAllResults();
 
                     $sks = $sks + $value['sks']; //menjumlahkan sks
-                    $kod = $value['kode_matkul']; 
+                    $kod = $value['kode_matkul'];
 
-                    $tambahmatkul= 24 - $sks;
+                    $tambahmatkul = 24 - $sks;
                     $jumlahmatakuliah = 1;
                 ?>
                     <tr>
                         <td class="text-center"><?= $no++ ?></td>
-                        <td class="text-center"><?=$value['kode_matkul'] ?></td>
+                        <td class="text-center"><?= $value['kode_matkul'] ?></td>
                         <td><?= $value['matkul'] ?></td>
                         <td class="text-center"><?= $value['sks'] ?></td>
                         <td class="text-center"><?= $value['smt'] ?></td>
@@ -166,19 +190,19 @@
                         <td class="text-center"><?= $value['hari'] ?>, <?= $value['waktu'] ?></td>
                         <td><button class='btn btn-block btn-outline-danger btn-xs' data-toggle="modal" data-target="#delete<?= $value['id_krs'] ?>"><i class="fas fa-trash"></i></button></td>
                         <td class="text-center"><?= $st ?></td>
-                        <td class="text-center"> 
-                                    <?php if ($st >> $jumlahmatakuliah ) { ?> 
-                                        <span class="badge badge-danger">MATA KULIAH LEBIH DARI 1</span>
-                                    <?php } else { ?>
-                                            <i class="badge badge-success">Tidak ada Dobel</i>
-                                    <?php  }  ?>
-                                    </b>
+                        <td class="text-center">
+                            <?php if ($st >> $jumlahmatakuliah) { ?>
+                                <span class="badge badge-danger">MATA KULIAH LEBIH DARI 1</span>
+                            <?php } else { ?>
+                                <i class="badge badge-success">Tidak ada Dobel</i>
+                            <?php  }  ?>
+                            </b>
                         </td>
                         <td><?= $sks ?></td>
                     </tr>
                 <?php } ?>
 
-                
+
 
                 <tr class="bg-success color-palette">
                     <th>#</th>
@@ -235,17 +259,17 @@
                         <?php $no = 1;
                         $db      = \Config\Database::connect();  // Membuat Jumlah Mata Kuliah
                         foreach ($matkul_ditawarkan as $key => $value) {
-                            $jml = $db->table( 'tbl_krs')
+                            $jml = $db->table('tbl_krs')
                                 ->where('id_jadwal', $value['id_jadwal']) // Membuat Jumlah Mata Kuliah
                                 ->countAllResults();
 
                             $mhs = $db->table('tbl_krs')
-                               // ->where('id_mhs', $value['id_mhs']) // Membuat Jumlah Mata Kuliah
+                                // ->where('id_mhs', $value['id_mhs']) // Membuat Jumlah Mata Kuliah
                                 ->where('id_jadwal', $value['id_jadwal']) // Membuat Jumlah Mata Kuliah
                                 ->countAllResults();
 
-                               ?>
-                                
+                        ?>
+
                             <tr>
                                 <td><?= $no++ ?></td>
                                 <td><?= $value['kode_matkul'] ?></td>
@@ -259,9 +283,10 @@
                                 <td><?= $value['nama_dosen'] ?></td>
                                 <td><?= $value['hari'] ?>, <?= $value['waktu'] ?></td>
                                 <td class="text-center">
-                                    <span class="badge bg-success"><?= $jml ?>/<?= $value['quota'] ?></span> </td>
+                                    <span class="badge bg-success"><?= $jml ?>/<?= $value['quota'] ?></span>
+                                </td>
                                 <td class="text-center">
-                                    <?php if ($jml == $value['quota']) { ?> 
+                                    <?php if ($jml == $value['quota']) { ?>
                                         <span class="badge bg-success">Full</span>
                                     <?php } else { ?>
                                         <a href="<?= base_url('krs/tambah_matkul/' . $value['id_jadwal']) ?>" class="btn-flat bg-primary color-palette">
@@ -270,7 +295,7 @@
 
                                 </td>
                                 <td><?= $mhs ?></td>
-                               
+
                                 </td>
                             </tr> <?php } ?>
                     </tbody>
@@ -311,20 +336,23 @@
 <?php } ?>
 
 <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <h1>Catatan :</h1>
-    <p> 1. fitler mata kuliah di tawarkan sesuai kelas perkuliahan @tgl 12 Juni 2023"</p> 
-    </body>
+<html lang="en">
 
-    <h1>Kegitan Selanjutnya :</h1>
- 
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <h1>Catatan :</h1>
+    <p> 1. fitler mata kuliah di tawarkan sesuai kelas perkuliahan @tgl 12 Juni 2023"</p>
+</body>
+
+<h1>Kegitan Selanjutnya :</h1>
 
 
-    <p></p> 
-    </html>
+
+<p></p>
+
+</html>

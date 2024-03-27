@@ -61,7 +61,7 @@
         foreach ($khs->getResult() as $value) {          //ini menjadi wakil databases yang bisa di ambi
         ?>
         <?php } ?>
-        <a href="<?= base_url('krs/print') ?>" target="_blank" class="btn-flat bg-success color-palette">
+        <a href="<?= base_url('khs/print') ?>" target="_blank" class="btn-flat bg-success color-palette">
             <i class="fa fa-print">PRINT KHS</i></a>
     </div>
     <div class="col-sm-12">
@@ -129,7 +129,7 @@
                         <td align="right" colspan="3">Total SKS</td>
                         <td align="center"> <?= $sks ?></td>
                         <td colspan="7"></td>
-                        <td align="center"><?= $jml ?></td>
+                        <td align="center"><?= $totalindex ?></td>
                     </tr>
 
                     <tr class="bg-warning color-palette">

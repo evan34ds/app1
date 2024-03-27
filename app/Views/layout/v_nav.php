@@ -38,8 +38,6 @@
                     <li><a href="<?= base_url('mahasiswa') ?>" class="dropdown-item">Mahasiswa</a></li>
                     <li><a href="<?= base_url('mahasiswa/akses_fitur_mhs') ?>" class="dropdown-item">Akses Fitur Mahasiswa</a></li>
                     <li><a href="<?= base_url('dosen') ?>" class="dropdown-item">Dosen</a></li>
-
-
                     <!-- Level two dropdown-->
                     <!-- End Level two -->
                 </ul>
@@ -57,6 +55,17 @@
                     <li><a href="<?= base_url('admin/daftar_mhs_khs') ?>" class="dropdown-item">Kartu Hasil Studi Mahasiswa</a></li>
                     <li><a href="<?= base_url('admin/admin_aktivitas_mhs') ?>" class="dropdown-item">Hitung Aktivitas Perkuliahan Mahasiswa</a></li>
                     <li><a href="<?= base_url('admin/daftar_mhs_transkip') ?>" class="dropdown-item">Transkip Nilai</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Keuangan</a>
+                <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                    <li><a href="<?= base_url('pembayaran/kategori_pembayaran') ?>" class="dropdown-item">Kategori Pembayaran</a></li>
+                    <li><a href="<?= base_url('pembayaran') ?>" class="dropdown-item">Pembayaran</a></li>
+                    <li><a href="<?= base_url('pembayaran/kelas_pembayaran') ?>" class="dropdown-item">Kelas Pembayaran</a></li>
+                    <li><a href="<?= base_url('pembayaran/daftar-mhs-pembayaran34') ?>" class="dropdown-item">Proses Pembayaran</a></li>
+                    <li><a href="<?= base_url('pembayaran/laporan_pembayaran') ?>" class="dropdown-item">Laporan Pembayaran</a></li>
                 </ul>
             </li>
             <li class="nav-item dropdown">
@@ -230,6 +239,7 @@
                         <img src="<?= base_url('fotodosen/' . session()->get('foto'))  ?>" class="user-image img-circle elevation-2" alt="User Image">
                     <?php } ?>
                     <span class="d-none d-md-inline"><?= session()->get('nama') ?></span>
+                    
                 </a>
                 <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                     <!-- User image -->
@@ -262,10 +272,12 @@
                 </ul>
             </li>
 
+         
+            <div><span class="badge badge-primary">TA <?= session()->get('ta') ?> <?= session()->get('semester') ?></span></div>
         </ul>
     </div>
-
     </nav>
+    
 
 
 

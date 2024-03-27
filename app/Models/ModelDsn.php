@@ -48,7 +48,7 @@ class ModelDsn extends Model
         return $this->db->table('tbl_krs')
             ->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_krs.id_mhs', 'left')
             ->join('tbl_range_nilai', 'tbl_krs.nilai BETWEEN tbl_range_nilai.bobot_minimum AND tbl_range_nilai.bobot_maksimum', 'left')
-            ->select('tbl_krs.id_mhs, tbl_krs.id_krs, tbl_mhs.nim, tbl_mhs.nama_mhs, tbl_krs.nilai, tbl_range_nilai.nilai_huruf, 
+            ->select('tbl_krs.id_mhs, tbl_krs.id_krs, tbl_mhs.nim, tbl_mhs.nama_mhs, tbl_krs.nilai, tbl_range_nilai.nilai_huruf,tbl_range_nilai.nilai_index,tbl_range_nilai.keterangan, 
             tbl_krs.p1, tbl_krs.p2, tbl_krs.p3, tbl_krs.p4, tbl_krs.p5, tbl_krs.p6, tbl_krs.p7, tbl_krs.p8, tbl_krs.p9, tbl_krs.p10,
             tbl_krs.p11, tbl_krs.p12, tbl_krs.p13, tbl_krs.p14, tbl_krs.p15, tbl_krs.p16')
             ->where('id_jadwal', $id_jadwal)

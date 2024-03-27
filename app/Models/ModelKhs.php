@@ -37,7 +37,7 @@ class ModelKhs extends Model
         $builder->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_krs.id_mhs','left');
         $builder->join('tbl_jadwal', 'tbl_jadwal.id_jadwal = tbl_krs.id_jadwal', 'left');
         $builder->join('tbl_kelas_perkuliahan', 'tbl_kelas_perkuliahan.id_kelas_perkuliahan = tbl_jadwal.id_kelas_perkuliahan', 'left');
-       $builder->join('tbl_kurikulum','tbl_kurikulum.id_kurikulum=tbl_kelas_perkuliahan.id_kurikulum','left');
+        $builder->join('tbl_kurikulum','tbl_kurikulum.id_kurikulum=tbl_kelas_perkuliahan.id_kurikulum','left');
         $builder->join('tbl_matkul', 'tbl_matkul.id_matkul = tbl_kurikulum.id_matkul', 'left');
         $builder->join('tbl_ruangan', 'tbl_ruangan.id_ruangan = tbl_jadwal.id_ruangan','left');
         $builder->join('tbl_dosen', 'tbl_dosen.id_dosen = tbl_jadwal.id_dosen','left');

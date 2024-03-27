@@ -76,7 +76,6 @@
                         <label>Foto</label>
                         <input type="file" name="foto_mhs" id="preview_gambar" class="form-control">
                     </div>
-
                 </p>
                 <div class="modal-footer justify-content-between">
                     <a href="<?= base_url('mahasiswa') ?>" class="fas fa-edit btn-sm btn-danger">Tutup</a>
