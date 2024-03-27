@@ -73,7 +73,6 @@ class ModelDsn extends Model
     {
         return $this->db->table('tbl_range_nilai')
             ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_range_nilai.id_prodi', 'left')
-
             ->get()->getResultArray();
     }
 }
