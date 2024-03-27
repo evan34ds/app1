@@ -19,7 +19,7 @@
             $no = 1;
             $total_pelunasan = 0;
             foreach ($results as $key => $value) {
-                $today = date_indo('Y-m-d');
+                $today = date_indo('Y-m-d:200:100');
                 $total_pelunasan = $total_pelunasan + $value['pelunasan']; //menjumlahkan sks
                 
             ?>
