@@ -480,10 +480,8 @@ class Pembayaran extends BaseController
 
 	public function laporan_statistik()
 	{
-
-
 		$data = [
-			'title' =>    'Laporan Statistik Pembayaran',
+		'title' =>    'Laporan Statistik Pembayaran',
 		'groupedData' => $this->ModelPembayaran->getGroupedData(),
 		'isi'    =>    'admin/pembayaran/laporan/v_laporan_statistik'
 
