@@ -424,6 +424,20 @@ class Pembayaran extends BaseController
 		return view('layout/v_wrapper', $data);
 	}
 
+
+
+	public function kelas_pembayaran()
+	{
+		$data = array(
+			'title' =>    'Kelas Pembayaran',
+			'kelas_pembayaran' => $this->ModelPembayaran->kelas_pembayaran(),
+			'pembayaran' => $this->ModelPembayaran->allData(),
+			'prodi' => $this->ModelProdi->allData(),
+			'isi'    =>    'admin/pembayaran/v_kelas_pembayaran'
+		);
+		return view('layout/v_wrapper', $data);
+	}
+
 	public function laporan_pembayaran()
 	{
 		$request = service('request');
@@ -475,41 +489,6 @@ class Pembayaran extends BaseController
 
 		];
 
-		return view('layout/v_wrapper', $data);
-	}
-
-	
-
-
-	public function kelas_pembayaran()
-	{
-		$data = array(
-			'title' =>    'Kelas Pembayaran',
-			'kelas_pembayaran' => $this->ModelPembayaran->kelas_pembayaran(),
-			'pembayaran' => $this->ModelPembayaran->allData(),
-			'prodi' => $this->ModelProdi->allData(),
-			'isi'    =>    'admin/pembayaran/v_kelas_pembayaran'
-		);
-		return view('layout/v_wrapper', $data);
-	}
-
-	public function pencarian_pembayaran_harian()
-	{
-		// Get input service
-		$request = service('request');
-		$data = array(
-			'title' =>    'Laporan Pembayaran',
-			// Terima data dari form
-			$start_date = $request->getPost('start_date'),
-			$end_date = $request->getPost('end_date'),
-
-			// Query data dari database berdasarkan rentang tanggal
-			'results' => $this->ModelPembayaran->pencarian_pembayaran_harian($start_date, $end_date),
-			'isi'    =>    'admin/pembayaran/laporan/v_pencarian_pembayaran_harian'
-
-		);
-
-		// Kirim data ke View untuk ditampilkan
 		return view('layout/v_wrapper', $data);
 	}
 
