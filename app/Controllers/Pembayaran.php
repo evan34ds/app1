@@ -456,7 +456,7 @@ class Pembayaran extends BaseController
 		return view('layout/v_wrapper', $data);
 	}
 
-	public function lapoaran_harian()
+	public function laporan_harian()
 	{
 
 		$request = service('request');
@@ -481,11 +481,14 @@ class Pembayaran extends BaseController
 	public function laporan_statistik()
 	{
 
-
 		$data = [
 			'title' =>    'Laporan Statistik Pembayaran',
-		'groupedData' => $this->ModelPembayaran->getGroupedData(),
-		'isi'    =>    'admin/pembayaran/laporan/v_laporan_statistik'
+			'nama_mhs_list' => $this->ModelPembayaran->getNamaMhsList(),
+			'kode_kelas_pembayaran_list' => $this->ModelPembayaran->getKodeKelasPembayaranList(),
+			'pelunasan_data' => $this->ModelPembayaran->getPelunasanData(),
+			'groupedData' => $this->ModelPembayaran->getGroupedData(),
+			'tahun_akademik_list' => $this->ModelPembayaran->alldataTa(),
+			'isi'    =>    'admin/pembayaran/laporan/v_laporan_statistik'
 
 		];
 

@@ -17,7 +17,7 @@
             <div class="card-header justify-content-center">
 
                 <!-- Form untuk memasukkan rentang tanggal -->
-                <form class="form-inline justify-content-center" action="<?php echo base_url('pembayaran/lapoaran_harian'); ?>" method="post">
+                <form class="form-inline justify-content-center" action="<?php echo base_url('pembayaran/laporan_harian'); ?>" method="post">
                     <div class="form-group">
                         <label for="start_date" class="mr-2">Tanggal Awal</label>
                         <input class="form-control form-control-sm mr-2" name="start_date" type="date" id="start_date">

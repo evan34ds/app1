@@ -19,7 +19,7 @@
             $no = 1;
             $total_pelunasan = 0;
             foreach ($results as $key => $value) {
-                $today = date_indo('Y-m-d : 90:100');
+                $today = date_indo('d-m-Y');  // Hasilnya menampilkan format tanggal hari ini 
                 $total_pelunasan = $total_pelunasan + $value['pelunasan']; //menjumlahkan sks
                 
             ?>
@@ -32,13 +32,13 @@
                             <h3><?= 'Rp ' . number_format($total_pelunasan, 0, ',', '.') ?></h3>
 
                             <p>Harian</p>
-                            <p>Tanggal : <?= $today ?></p>
+                            <p>Tanggal : <?php echo date_indo('d-m-Y'); ?></p>
 
                         </div>
                         <div class="icon">
                             <i class="ion ion-bag"></i>
                         </div>
-                        <a href=<?= base_url('pembayaran/lapoaran_harian') ?> class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href=<?= base_url('pembayaran/laporan_harian') ?> class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">

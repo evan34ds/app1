@@ -19,6 +19,8 @@ class ModelPembayaran extends Model
             ->get()->getResultArray();
     }
 
+
+
     public function allData_kategori_pembayaran()
     {
         return $this->db->table('tbl_kategori_pembayaran')
@@ -608,5 +610,69 @@ class ModelPembayaran extends Model
             ->findAll();
 
         return $builder;
+    }
+
+    public function getNamaMhsList()
+    {
+        // Ambil daftar nama mahasiswa dari tabel
+        $builder = $this->db->table('tbl_kelas_pembayaran');
+        $builder->distinct()->select('tbl_mhs.nama_mhs, tbl_ta.ta')
+            ->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_kelas_pembayaran.id_mhs', 'left')
+            ->join('tbl_ta','tbl_ta.id_ta= tbl_mhs.id_ta','left')
+            ->where('tbl_kelas_pembayaran.id_mhs IS not null')
+            ->groupBy('tbl_mhs.nama_mhs, tbl_ta.ta'); // Mengelompokkan berdasarkan nama_mhs dan ta
+        $query = $builder->get();
+
+        return $query->getResultArray();
+    }
+
+    public function getKodeKelasPembayaranList()
+    {
+        // Ambil daftar kode kelas pembayaran dari tabel
+        $builder = $this->db->table('tbl_kelas_pembayaran');
+        $builder->distinct()->select('kode_kelas_pembayaran');
+        $builder->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_kelas_pembayaran.id_mhs', 'left');
+        $builder->join('tbl_ta','tbl_ta.id_ta= tbl_mhs.id_ta','left');
+        $query = $builder->get();
+
+        return $query->getResultArray();
+    }
+
+    public function getPelunasanData()
+    {
+        // Ambil data pelunasan dari tabel
+        $builder = $this->db->table('tbl_kelas_pembayaran');
+        $builder->select('tbl_mhs.nama_mhs, tbl_kelas_pembayaran.kode_kelas_pembayaran, tbl_kelas_pembayaran.pelunasan')
+            ->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_kelas_pembayaran.id_mhs');
+
+        $query = $builder->get();
+
+        // Bentuk array asosiatif dari hasil query
+        $pelunasanData = array();
+        foreach ($query->getResult() as $row) {
+            $nama_mhs = $row->nama_mhs;
+            $kode_kelas_pembayaran = $row->kode_kelas_pembayaran;
+            $pelunasan = $row->pelunasan;
+
+            // Atur nilai pelunasan menjadi 3 jika null
+            $pelunasan = ($pelunasan !== null) ? $pelunasan : 0;
+
+
+            // Jika sudah ada entri untuk mahasiswa dan kode pembayaran, tambahkan nilai pelunasan
+            if (isset($pelunasanData[$nama_mhs][$kode_kelas_pembayaran])) {
+                $pelunasanData[$nama_mhs][$kode_kelas_pembayaran] += $pelunasan;
+            } else {
+                $pelunasanData[$nama_mhs][$kode_kelas_pembayaran] = $pelunasan;
+            }
+        }
+        return $pelunasanData;
+    }
+
+    public function allDataTa()
+    {
+        return $this->db->table('tbl_ta')
+            ->orderBy('id_ta', 'DESC')
+            ->groupBy('tbl_ta.id_ta')
+            ->get()->getResultArray();
     }
 }
