@@ -19,7 +19,11 @@
             $no = 1;
             $total_pelunasan = 0;
             foreach ($results as $key => $value) {
+<<<<<<< HEAD
                 $today = date_indo('d-m-Y');  // Hasilnya menampilkan format tanggal hari ini 
+=======
+                $today = date_indo('Y-m-d');
+>>>>>>> adbc04cdf05b62924585d3d61292239f63c50d2f
                 $total_pelunasan = $total_pelunasan + $value['pelunasan']; //menjumlahkan sks
                 
             ?>
