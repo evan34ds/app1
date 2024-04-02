@@ -480,12 +480,15 @@ class Pembayaran extends BaseController
 
 	public function laporan_statistik()
 	{
-
+		
 		$data = [
 			'title' =>    'Laporan Statistik Pembayaran',
 			'nama_mhs_list' => $this->ModelPembayaran->getNamaMhsList(),
+			'nama_mhs_list_tiga' => $this->ModelPembayaran->getNamaMhsList3(),
 			'kode_kelas_pembayaran_list' => $this->ModelPembayaran->getKodeKelasPembayaranList(),
+			'get_mhs_jumlah_pelunasan' => $this->ModelPembayaran->get_mhs_jumlah_pelunasan(),
 			'pelunasan_data' => $this->ModelPembayaran->getPelunasanData(),
+			'jumlah_pelunasan_data' => $this->ModelPembayaran->getJumlahpelunasan(),
 			'groupedData' => $this->ModelPembayaran->getGroupedData(),
 			'tahun_akademik_list' => $this->ModelTa->alldata(),
 			'isi'    =>    'admin/pembayaran/laporan/v_laporan_statistik'

@@ -70,6 +70,7 @@
                                     echo "<th>{$kode_kelas['kode_kelas_pembayaran']}</th>";
                                 }
                             }
+
                             ?>
                         </tr>
                     </thead>
@@ -105,12 +106,12 @@
 
 
             // Mengelompokkan data berdasarkan tahun akademik
+
+
             foreach ($nama_mhs_list as $nama_mhs) {
                 $tahun_akademik = $nama_mhs['ta'];
-                $kode_kelas_data = [];
-                echo '<pre>';
-                print_r($kode_kelas_data);
-                echo '</pre>';
+                //   print_r($nama_mhs['id_mhs']);
+
 
                 // Mengelompokkan data berdasarkan kode kelas
                 foreach ($kode_kelas_pembayaran_list as $kode_kelas) {
@@ -120,126 +121,139 @@
                         : 2;
                     $kode_kelas_data[$kode_kelas_pembayaran] = $pelunasan;
 
-                  
+                    //    print_r([$nama_mhs]);
+                    // print_r([$kode_kelas_pembayaran]);
+                    // print_r($pelunasan_data[$nama_mhs['nama_mhs']]);
+                    //  print_r($kode_kelas_data[$kode_kelas_pembayaran]);
+                }
+
+                // Mengelompokkan data jumlah pelunasan  berdasarkan nama
+                foreach ($get_mhs_jumlah_pelunasan as $jumlah_pelunasan) {
+                    $jumlah_pelunasan_kel = $jumlah_pelunasan['id_mhs'];
+                    $pelunasan_kel = isset($jumlah_pelunasan_data[$nama_mhs['nama_mhs']][$jumlah_pelunasan_kel]) ?
+                        ($jumlah_pelunasan_data[$nama_mhs['nama_mhs']][$jumlah_pelunasan_kel] !== null ? $jumlah_pelunasan_data[$nama_mhs['nama_mhs']][$jumlah_pelunasan_kel] : 1)
+                        : 2;
+                    $kode_kelas_data_pel[$jumlah_pelunasan_kel] = $pelunasan_kel;
+
+                    // print_r($jumlah_pelunasan_data['nim_mhs']);
+                    // print_r($kode_kelas_data_pel[$jumlah_pelunasan_kel]);
+                    //  print_r($kode_kelas_data_pel[$jumlah_pelunasan_kel] );
+
                 }
 
                 // Menyimpan data dalam array berdasarkan tahun akademik
                 $data_by_ta[$tahun_akademik][] = [
                     'nama_mhs' => $nama_mhs['nama_mhs'],
-                    'kode_kelas_data' => $kode_kelas_data
-                ];
+                    'kode_kelas_data' => $kode_kelas_data,
+                    'kode_kelas_data_pel' => $kode_kelas_data_pel,
 
+                ];
             }
+
+            //  echo '<pre>';
+            print_r($kode_kelas_data);
+            // print_r($kode_kelas_data_pel);
+            // echo '</pre>';
 
 
             // Menampilkan tabel berdasarkan tahun akademik
             foreach ($data_by_ta as $tahun_akademik => $data_kelas) {
+                //     print_r($data['pel']);
             ?>
                 <h2>Tahun Akademik <?= $tahun_akademik ?></h2>
-                <table id="example" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>Nama Mahasiswa</th>
-                            <?php
-                            // Array untuk menyimpan informasi apakah kolom harus ditampilkan
-                            $show_column = array_fill_keys(array_keys($kode_kelas_pembayaran_list), false);
+                <div class="card-body">
+                    <table id="example" class="table table-bordered table-striped">
+                        <thead>
+                            <tr class="bg-success color-palette">
+                                <th>Nama Mahasiswa</th>
+                                <?php
+                                // Array untuk menyimpan informasi apakah kolom harus ditampilkan
+                                $show_column = array_fill_keys(array_keys($kode_kelas_pembayaran_list), false);
+                                $show = array_fill_keys(array_keys($jumlah_pelunasan_data), false);
 
 
-                            // Mengatur informasi apakah kolom harus ditampilkan atau tidak
-                            foreach ($kode_kelas_pembayaran_list as $key => $kode_kelas) {
-                                foreach ($data_kelas as $data) {
-                                    if ($data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']] != 2) {
-                                        $show_column[$key] = true;
-                                        break;
+                                // Mengatur informasi apakah kolom harus ditampilkan atau tidak
+                                foreach ($kode_kelas_pembayaran_list as $key => $kode_kelas) {
+                                    foreach ($data_kelas as $data) {
+                                        if ($data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']] != 2) {
+                                            $show_column[$key] = true;
+                                            break;
+                                        }
                                     }
                                 }
 
-             
-                            }
-
-                            // Menampilkan kolom kelas pembayaran yang harus ditampilkan
-                            foreach ($kode_kelas_pembayaran_list as $key => $kode_kelas) {
-                                if ($show_column[$key]) {
-                                    echo "<th>{$kode_kelas['kode_kelas_pembayaran']}</th>";
-                                }
-                            }
-                            ?>
-                             <th>Jumlah Pembayaran</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($data_kelas as $data) : ?>
-                            <tr>
-                                <td><?= $data['nama_mhs'] ?></td>
-                                <?php
                                 foreach ($kode_kelas_pembayaran_list as $key => $kode_kelas) {
                                     if ($show_column[$key]) {
-                                        echo "<td>{$data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']]}</td>";
-
-                                       // echo '<pre>';
-                                       // print_r($data['kode_kelas_data']);
-                                       // echo '</pre>';
+                                        echo "<th>{$kode_kelas['kode_kelas_pembayaran']}</th>";
                                     }
                                 }
+
+                                // Mengatur informasi apakah kolom harus ditampilkan atau tidak
+                                foreach ($get_mhs_jumlah_pelunasan as $key => $jumlah_pembayaran) {
+                                    foreach ($data_kelas as $data) {
+                                        if ($data['kode_kelas_data_pel'][$jumlah_pembayaran['id_mhs']] != 2) {
+                                            $show[$key] = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                foreach ($get_mhs_jumlah_pelunasan as $key => $jumlah_pembayaran) {
+                                    if ($show[$key]) {
+                                        echo "<th>Jumlah</th>";
+                                    }
+                                }
+                                // Menampilkan kolom kelas pembayaran yang harus ditampilkan
+
                                 ?>
+                              
+
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($data_kelas as $data) : ?>
+                                <tr>
+                                    <td><?= $data['nama_mhs'] ?></td>
+                                    <?php
+                                    foreach ($kode_kelas_pembayaran_list as $key => $kode_kelas) {
+                                        if ($show_column[$key]) {
+                                            echo "<td>{$data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']]}</td>";
+
+                                            // echo '<pre>';
+                                            //  print_r($data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']]);
+                                            //   print_r($data['kode_kelas_data']);
+                                            // echo '</pre>';
+                                        }
+                                    }
+                                    ?>
+
+                                    <?php
+                                    $total = 0;
+                                    foreach ($get_mhs_jumlah_pelunasan as $key => $jumlah_pembayaran) {
+                                        if ($show[$key]) {
+                                            echo "<td>{$data['kode_kelas_data_pel'][$jumlah_pembayaran['id_mhs']]}</td>";
+                                        }
+                                    }
+                                    // echo '<pre>';
+                                    // print_r($jumlah_pembayaran['id_mhs']);
+                                    //  print_r($data['pel'][$jumlah_pembayaran['pelunasan']]);
+                                    //  echo '</pre>';
+
+
+                                    ?>
+
+
+
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php } ?>
+
         </div>
     </body>
 
     <body>
 
-    
+
     </body>
-
-
-    Tentu, berikut adalah contoh sederhana penggunaan kode tersebut dalam bahasa pemrograman PHP:
-
-    php
-    Copy code
-    <?php
-
-    // Inisialisasi array kosong
-    $data_by_ta = [];
-
-    // Menambahkan data ke dalam array
-    $data_by_ta['2019'] = ['jumlah' => 100, 'rata_rata' => 75];
-    $data_by_ta['2020'] = ['jumlah' => 120, 'rata_rata' => 80];
-    $data_by_ta['2021'] = ['jumlah' => 150, 'rata_rata' => 85];
-
-    $data_by_ta['2019'] = ['jumlah' => 100, 'rata_rata' => 75];
-    $data_by_ta['2020'] = ['jumlah' => 120, 'rata_rata' => 80];
-    $data_by_ta['2021'] = ['jumlah' => 150, 'rata_rata' => 85];
-
-    // Menampilkan isi array
-    echo "Data berdasarkan tahun ajaran:\n";
-    foreach ($data_by_ta as $tahun => $data) {
-        echo "Tahun Ajaran: $tahun, Jumlah Siswa: {$data['jumlah']}, Rata-rata Nilai: {$data['rata_rata']}\n";
-    }
-
-    print_r($data_by_ta);
-    ?>
-    <th>batas 2</th>
-    <?php
-
-    // Data mahasiswa
-    $nama_mhs = [
-        'nama' => 'John Doe',
-        'kode' => '10',
-        'nim' => '123456789',
-        'ta' => '2023/2024' // Tahun akademik
-    ];
-
-    // Mengambil tahun akademik dari data mahasiswa
-    $tahun_akademik = $nama_mhs['ta'];
-
-    // Menampilkan tahun akademik
-    echo "Tahun akademik mahasiswa: $tahun_akademik";
-
-    ?>
-
-    </html>

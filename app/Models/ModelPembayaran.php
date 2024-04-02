@@ -616,13 +616,27 @@ class ModelPembayaran extends Model
     {
         // Ambil daftar nama mahasiswa dari tabel
         $builder = $this->db->table('tbl_kelas_pembayaran');
-        $builder->distinct()->select('tbl_mhs.nama_mhs, tbl_ta.ta')
+        $builder->distinct()->select('tbl_mhs.nama_mhs, tbl_ta.ta, tbl_kelas_pembayaran.id_mhs, tbl_kelas_pembayaran.pelunasan')
             ->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_kelas_pembayaran.id_mhs', 'left')
             ->join('tbl_ta','tbl_ta.id_ta= tbl_mhs.id_ta','left')
             ->where('tbl_kelas_pembayaran.id_mhs IS not null')
             ->groupBy('tbl_mhs.nama_mhs, tbl_ta.ta'); // Mengelompokkan berdasarkan nama_mhs dan ta
         $query = $builder->get();
 
+        return $query->getResultArray();
+    }
+
+    public function getNamaMhsList3()
+    {
+        // Ambil daftar nama mahasiswa dari tabel
+        $builder = $this->db->table('tbl_kelas_pembayaran');
+        $builder->distinct()->select('tbl_mhs.id_mhs, tbl_ta.ta, tbl_kelas_pembayaran.pelunasan')
+            ->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_kelas_pembayaran.id_mhs', 'left')
+            ->join('tbl_ta', 'tbl_ta.id_ta = tbl_mhs.id_ta', 'left')
+            ->where('tbl_kelas_pembayaran.id_mhs IS NOT NULL')
+            ->groupBy('tbl_mhs.id_mhs, tbl_ta.ta'); // Mengelompokkan berdasarkan id_mhs dan ta
+        $query = $builder->get();
+        
         return $query->getResultArray();
     }
 
@@ -638,13 +652,23 @@ class ModelPembayaran extends Model
         return $query->getResultArray();
     }
 
+    public function get_mhs_jumlah_pelunasan()
+    {
+        // Ambil data pelunasan dari tabel
+        $builder = $this->db->table('tbl_kelas_pembayaran');
+        $builder->distinct()->select('tbl_mhs.nama_mhs, tbl_kelas_pembayaran.id_mhs');
+        $builder->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_kelas_pembayaran.id_mhs', 'left');
+        $query = $builder->get();
+        return $query->getResultArray();
+        
+    }
+
     public function getPelunasanData()
     {
         // Ambil data pelunasan dari tabel
         $builder = $this->db->table('tbl_kelas_pembayaran');
         $builder->select('tbl_mhs.nama_mhs, tbl_kelas_pembayaran.kode_kelas_pembayaran, tbl_kelas_pembayaran.pelunasan')
             ->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_kelas_pembayaran.id_mhs');
-
         $query = $builder->get();
 
         // Bentuk array asosiatif dari hasil query
@@ -665,14 +689,46 @@ class ModelPembayaran extends Model
                 $pelunasanData[$nama_mhs][$kode_kelas_pembayaran] = $pelunasan;
             }
         }
+        
+       
         return $pelunasanData;
+
+
     }
 
-    public function allDataTa()
+    public function getJumlahpelunasan()
     {
-        return $this->db->table('tbl_ta')
-            ->orderBy('id_ta', 'DESC')
-            ->groupBy('tbl_ta.id_ta')
-            ->get()->getResultArray();
+        // Ambil data pelunasan dari tabel
+        $builder = $this->db->table('tbl_kelas_pembayaran');
+        $builder->select('tbl_mhs.nama_mhs,tbl_kelas_pembayaran.id_mhs, tbl_kelas_pembayaran.pelunasan')
+            ->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_kelas_pembayaran.id_mhs');
+    
+        $query = $builder->get();
+    
+        // Bentuk array asosiatif dari hasil query
+        $JumlahpelunasanData = array();
+        foreach ($query->getResult() as $row) {
+            $nama_mhs = $row->nama_mhs;
+            $id_mhs =$row->id_mhs;
+            $pelunasan = $row->pelunasan;
+    
+            // Atur nilai pelunasan menjadi 3 jika null
+            $Jumlahpelunasan = ($pelunasan !== null) ? $pelunasan : 0;
+    
+    
+            // Jika sudah ada entri untuk mahasiswa dan kode pembayaran, tambahkan nilai pelunasan
+            if (isset($JumlahpelunasanData[$nama_mhs][$id_mhs])) {
+                $JumlahpelunasanData[$nama_mhs][$id_mhs] += $pelunasan;
+            } else {
+                $JumlahpelunasanData[$nama_mhs][$id_mhs] = $Jumlahpelunasan;
+            }
+        }
+        
+        // Cetak struktur variabel $JumlahpelunasanData menggunakan print_r()
+        echo "<pre>";
+        print_r($JumlahpelunasanData);
+        echo "</pre>";
+        return $JumlahpelunasanData;
     }
+   
 }
