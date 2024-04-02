@@ -151,7 +151,7 @@
             }
 
             //  echo '<pre>';
-            print_r($kode_kelas_data);
+         //   print_r($kode_kelas_data);
             // print_r($kode_kelas_data_pel);
             // echo '</pre>';
 
@@ -178,30 +178,14 @@
                                         if ($data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']] != 2) {
                                             $show_column[$key] = true;
                                             break;
+                                            print_r( $show_column[$key]);
                                         }
                                     }
                                 }
 
-                                foreach ($kode_kelas_pembayaran_list as $key => $kode_kelas) {
-                                    if ($show_column[$key]) {
-                                        echo "<th>{$kode_kelas['kode_kelas_pembayaran']}</th>";
-                                    }
-                                }
+                                
 
-                                // Mengatur informasi apakah kolom harus ditampilkan atau tidak
-                                foreach ($get_mhs_jumlah_pelunasan as $key => $jumlah_pembayaran) {
-                                    foreach ($data_kelas as $data) {
-                                        if ($data['kode_kelas_data_pel'][$jumlah_pembayaran['id_mhs']] != 2) {
-                                            $show[$key] = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                                foreach ($get_mhs_jumlah_pelunasan as $key => $jumlah_pembayaran) {
-                                    if ($show[$key]) {
-                                        echo "<th>Jumlah</th>";
-                                    }
-                                }
+                               
                                 // Menampilkan kolom kelas pembayaran yang harus ditampilkan
 
                                 ?>
@@ -229,10 +213,10 @@
                                     <?php
                                     $total = 0;
                                     foreach ($get_mhs_jumlah_pelunasan as $key => $jumlah_pembayaran) {
-                                        if ($show[$key]) {
+                                     
                                             echo "<td>{$data['kode_kelas_data_pel'][$jumlah_pembayaran['id_mhs']]}</td>";
                                         }
-                                    }
+                                    
                                     // echo '<pre>';
                                     // print_r($jumlah_pembayaran['id_mhs']);
                                     //  print_r($data['pel'][$jumlah_pembayaran['pelunasan']]);
