@@ -194,6 +194,8 @@
                                 // Menampilkan kolom kelas pembayaran yang harus ditampilkan
 
                                 ?>
+
+                                <th>Jumlah</th>
                               
 
                             </tr>
@@ -229,6 +231,8 @@
 
 
                                     ?>
+
+                                    
 
 
 
