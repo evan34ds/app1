@@ -183,9 +183,14 @@
                                     }
                                 }
 
-                                
+                                // Menampilkan kolom kelas pembayaran yang harus ditampilkan
+                            foreach ($kode_kelas_pembayaran_list as $key => $kode_kelas) {
+                                if ($show_column[$key]) {
+                                    echo "<th>{$kode_kelas['kode_kelas_pembayaran']}</th>";
+                                }
+                            }
 
-                               
+
                                 // Menampilkan kolom kelas pembayaran yang harus ditampilkan
 
                                 ?>
@@ -213,7 +218,7 @@
                                     <?php
                                     $total = 0;
                                     foreach ($get_mhs_jumlah_pelunasan as $key => $jumlah_pembayaran) {
-                                     
+                                    
                                             echo "<td>{$data['kode_kelas_data_pel'][$jumlah_pembayaran['id_mhs']]}</td>";
                                         }
                                     
