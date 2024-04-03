@@ -121,7 +121,7 @@
                         : 2;
                     $kode_kelas_data[$kode_kelas_pembayaran] = $pelunasan;
 
-                     //  print_r($pelunasan_data[$nama_mhs['nama_mhs']]);
+                   //    print_r($pelunasan_data[$nama_mhs['nama_mhs']]);
                     // print_r([$kode_kelas_pembayaran]);
                    //  print_r($pelunasan_data);
                     //  print_r($kode_kelas_data[$kode_kelas_pembayaran]);
@@ -140,7 +140,7 @@
                     $kode_kelas_data_pel[$jumlah_pelunasan_kel] = $pelunasan_kel;
 
                    // print_r([$nama_mhs['id_mhs']]);
-                 //   print_r($jumlah_pelunasan[$nama_mhs['nama_mhs']]);
+                  // print_r($jumlah_pelunasan_data[$nama_mhs['id_mhs']]);
                     // print_r($jumlah_pelunasan_data['nama_mhs']);
                     // print_r($kode_kelas_data_pel[$jumlah_pelunasan_kel]);
                     // print_r($kode_kelas_data_pel[$jumlah_pelunasan_kel]);

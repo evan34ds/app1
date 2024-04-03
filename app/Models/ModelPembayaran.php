@@ -692,7 +692,7 @@ class ModelPembayaran extends Model
             }
         }
         
-      //  print_r($pelunasanData[$kode_kelas_pembayaran]);
+       // print_r($pelunasanData[$nama_mhs]);
         return $pelunasanData;
 
 
@@ -709,8 +709,8 @@ class ModelPembayaran extends Model
         // Bentuk array asosiatif dari hasil query
         $JumlahpelunasanData = array();
         foreach ($query->getResult() as $row) {
-            $nama_mhs = $row->nama_mhs;
             $id_mhs =$row->id_mhs;
+            $nama_mhs = $row->nama_mhs;
             $pelunasan = $row->pelunasan;
     
             // Atur nilai pelunasan menjadi 3 jika null
@@ -718,10 +718,10 @@ class ModelPembayaran extends Model
     
     
             // Jika sudah ada entri untuk mahasiswa dan kode pembayaran, tambahkan nilai pelunasan
-            if (isset($JumlahpelunasanData[$nama_mhs][$id_mhs])) {
-                $JumlahpelunasanData[$nama_mhs][$id_mhs] += $Jumlahpelunasan;
+            if (isset($JumlahpelunasanData[$id_mhs][$nama_mhs])) {
+                $JumlahpelunasanData[$id_mhs][$nama_mhs] += $Jumlahpelunasan;
             } else {
-                $JumlahpelunasanData[$nama_mhs][$id_mhs] = $Jumlahpelunasan;
+                $JumlahpelunasanData[$id_mhs][$nama_mhs] = $Jumlahpelunasan;
             }
         }
         
@@ -729,7 +729,7 @@ class ModelPembayaran extends Model
        // echo "<pre>";
        // print_r($JumlahpelunasanData);
       //  echo "</pre>";
-      print_r($Jumlahpelunasan);
+    // print_r($JumlahpelunasanData[$id_mhs]);
         return $JumlahpelunasanData;
     }
    
