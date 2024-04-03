@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use CodeIgniter\Database\MySQLi\Builder;
 use CodeIgniter\Model;
 
 class ModelPembayaran extends Model
@@ -616,7 +617,7 @@ class ModelPembayaran extends Model
     {
         // Ambil daftar nama mahasiswa dari tabel
         $builder = $this->db->table('tbl_kelas_pembayaran');
-        $builder->distinct()->select('tbl_mhs.nama_mhs, tbl_ta.ta, tbl_kelas_pembayaran.id_mhs, tbl_kelas_pembayaran.pelunasan')
+        $builder->distinct()->select('tbl_mhs.nama_mhs, tbl_ta.ta, tbl_mhs.id_mhs, tbl_kelas_pembayaran.pelunasan')
             ->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_kelas_pembayaran.id_mhs', 'left')
             ->join('tbl_ta','tbl_ta.id_ta= tbl_mhs.id_ta','left')
             ->where('tbl_kelas_pembayaran.id_mhs IS not null')
@@ -656,8 +657,9 @@ class ModelPembayaran extends Model
     {
         // Ambil data pelunasan dari tabel
         $builder = $this->db->table('tbl_kelas_pembayaran');
-        $builder->distinct()->select('tbl_mhs.nama_mhs, tbl_kelas_pembayaran.id_mhs');
+        $builder->distinct()->select('tbl_kelas_pembayaran.id_mhs');
         $builder->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_kelas_pembayaran.id_mhs', 'left');
+        $builder->groupBy('tbl_kelas_pembayaran.id_mhs'); // Mengelompokkan berdasarkan id_mhs dan ta
         $query = $builder->get();
         return $query->getResultArray();
         
@@ -690,7 +692,7 @@ class ModelPembayaran extends Model
             }
         }
         
-       
+      //  print_r($pelunasanData[$kode_kelas_pembayaran]);
         return $pelunasanData;
 
 
@@ -700,9 +702,8 @@ class ModelPembayaran extends Model
     {
         // Ambil data pelunasan dari tabel
         $builder = $this->db->table('tbl_kelas_pembayaran');
-        $builder->select('tbl_mhs.nama_mhs,tbl_kelas_pembayaran.id_mhs, tbl_kelas_pembayaran.pelunasan')
+        $builder->select('tbl_kelas_pembayaran.id_mhs, tbl_mhs.nama_mhs, tbl_kelas_pembayaran.pelunasan')
             ->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_kelas_pembayaran.id_mhs');
-    
         $query = $builder->get();
     
         // Bentuk array asosiatif dari hasil query
@@ -718,16 +719,17 @@ class ModelPembayaran extends Model
     
             // Jika sudah ada entri untuk mahasiswa dan kode pembayaran, tambahkan nilai pelunasan
             if (isset($JumlahpelunasanData[$nama_mhs][$id_mhs])) {
-                $JumlahpelunasanData[$nama_mhs][$id_mhs] += $pelunasan;
+                $JumlahpelunasanData[$nama_mhs][$id_mhs] += $Jumlahpelunasan;
             } else {
                 $JumlahpelunasanData[$nama_mhs][$id_mhs] = $Jumlahpelunasan;
             }
         }
         
         // Cetak struktur variabel $JumlahpelunasanData menggunakan print_r()
-        echo "<pre>";
-        print_r($JumlahpelunasanData);
-        echo "</pre>";
+       // echo "<pre>";
+       // print_r($JumlahpelunasanData);
+      //  echo "</pre>";
+      print_r($Jumlahpelunasan);
         return $JumlahpelunasanData;
     }
    
