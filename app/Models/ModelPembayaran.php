@@ -619,7 +619,7 @@ class ModelPembayaran extends Model
         $builder = $this->db->table('tbl_kelas_pembayaran');
         $builder->distinct()->select('tbl_mhs.nama_mhs, tbl_ta.ta, tbl_mhs.id_mhs, tbl_kelas_pembayaran.pelunasan')
             ->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_kelas_pembayaran.id_mhs', 'left')
-            ->join('tbl_ta','tbl_ta.id_ta= tbl_mhs.id_ta','left')
+            ->join('tbl_ta', 'tbl_ta.id_ta= tbl_mhs.id_ta', 'left')
             ->where('tbl_kelas_pembayaran.id_mhs IS not null')
             ->groupBy('tbl_mhs.nama_mhs, tbl_ta.ta'); // Mengelompokkan berdasarkan nama_mhs dan ta
         $query = $builder->get();
@@ -637,7 +637,7 @@ class ModelPembayaran extends Model
             ->where('tbl_kelas_pembayaran.id_mhs IS NOT NULL')
             ->groupBy('tbl_mhs.id_mhs, tbl_ta.ta'); // Mengelompokkan berdasarkan id_mhs dan ta
         $query = $builder->get();
-        
+
         return $query->getResultArray();
     }
 
@@ -647,7 +647,7 @@ class ModelPembayaran extends Model
         $builder = $this->db->table('tbl_kelas_pembayaran');
         $builder->distinct()->select('kode_kelas_pembayaran');
         $builder->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_kelas_pembayaran.id_mhs', 'left');
-        $builder->join('tbl_ta','tbl_ta.id_ta= tbl_mhs.id_ta','left');
+        $builder->join('tbl_ta', 'tbl_ta.id_ta= tbl_mhs.id_ta', 'left');
         $query = $builder->get();
 
         return $query->getResultArray();
@@ -655,14 +655,14 @@ class ModelPembayaran extends Model
 
     public function get_mhs_jumlah_pelunasan()
     {
-        // Ambil data pelunasan dari tabel
+        // Ambil daftar kode kelas pembayaran dari tabel
         $builder = $this->db->table('tbl_kelas_pembayaran');
-        $builder->distinct()->select('tbl_kelas_pembayaran.id_mhs');
+        $builder->distinct()->select('kode_kelas_pembayaran');
         $builder->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_kelas_pembayaran.id_mhs', 'left');
-        $builder->groupBy('tbl_kelas_pembayaran.id_mhs'); // Mengelompokkan berdasarkan id_mhs dan ta
+        $builder->join('tbl_ta', 'tbl_ta.id_ta= tbl_mhs.id_ta', 'left');
         $query = $builder->get();
+
         return $query->getResultArray();
-        
     }
 
     public function getPelunasanData()
@@ -691,46 +691,48 @@ class ModelPembayaran extends Model
                 $pelunasanData[$nama_mhs][$kode_kelas_pembayaran] = $pelunasan;
             }
         }
-        
-       // print_r($pelunasanData[$nama_mhs]);
+
+        // print_r($pelunasanData[$nama_mhs]);
         return $pelunasanData;
-
-
     }
 
-    public function getJumlahpelunasan()
+
+    public function  getJumlahpelunasan()
     {
-        // Ambil data pelunasan dari tabel
         $builder = $this->db->table('tbl_kelas_pembayaran');
-        $builder->select('tbl_kelas_pembayaran.id_mhs, tbl_mhs.nama_mhs, tbl_kelas_pembayaran.pelunasan')
+        $builder->select('tbl_mhs.nama_mhs, tbl_kelas_pembayaran.kode_kelas_pembayaran, tbl_kelas_pembayaran.pelunasan')
             ->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_kelas_pembayaran.id_mhs');
         $query = $builder->get();
-    
+
         // Bentuk array asosiatif dari hasil query
         $JumlahpelunasanData = array();
         foreach ($query->getResult() as $row) {
-            $id_mhs =$row->id_mhs;
             $nama_mhs = $row->nama_mhs;
+            $kode_kelas_pembayaran = $row->kode_kelas_pembayaran;
             $pelunasan = $row->pelunasan;
-    
+
             // Atur nilai pelunasan menjadi 3 jika null
             $Jumlahpelunasan = ($pelunasan !== null) ? $pelunasan : 0;
-    
-    
+
             // Jika sudah ada entri untuk mahasiswa dan kode pembayaran, tambahkan nilai pelunasan
-            if (isset($JumlahpelunasanData[$id_mhs][$nama_mhs])) {
-                $JumlahpelunasanData[$id_mhs][$nama_mhs] += $Jumlahpelunasan;
+            if (isset($JumlahpelunasanData[$nama_mhs][$kode_kelas_pembayaran])) {
+                $JumlahpelunasanData[$nama_mhs][$kode_kelas_pembayaran] +=  $Jumlahpelunasan;
             } else {
-                $JumlahpelunasanData[$id_mhs][$nama_mhs] = $Jumlahpelunasan;
+                $JumlahpelunasanData[$nama_mhs][$kode_kelas_pembayaran] = $Jumlahpelunasan;
             }
+
+            // Tambahkan jumlah pelunasan ke dalam kolom baru
+            if (isset($JumlahpelunasanData[$nama_mhs]['total_pelunasan'])) {
+                $JumlahpelunasanData[$nama_mhs]['total_pelunasan'] += $Jumlahpelunasan;
+            } else {
+                $JumlahpelunasanData[$nama_mhs]['total_pelunasan'] = $Jumlahpelunasan;
+            }
+
+            
         }
-        
-        // Cetak struktur variabel $JumlahpelunasanData menggunakan print_r()
-       // echo "<pre>";
-       // print_r($JumlahpelunasanData);
-      //  echo "</pre>";
-    // print_r($JumlahpelunasanData[$id_mhs]);
+        echo '<pre>';
+        print_r($JumlahpelunasanData);
+        echo '</pre>';
         return $JumlahpelunasanData;
     }
-   
 }
