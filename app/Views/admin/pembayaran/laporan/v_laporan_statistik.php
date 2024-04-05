@@ -124,7 +124,7 @@
                     //    print_r($pelunasan_data[$nama_mhs['nama_mhs']]);
                     // print_r([$kode_kelas_pembayaran]);
                     //  print_r($pelunasan_data);
-                   // print_r($kode_kelas_data[$kode_kelas_pembayaran]);
+                    // print_r($kode_kelas_data[$kode_kelas_pembayaran]);
                     //  print_r($kode_kelas_pembayaran_list);
                     //  print_r($pelunasan);
                 }
@@ -151,7 +151,7 @@
                     // Menambahkan data pelunasan ke dalam data yang akan digunakan
                     $data_yang_akan_digunakan[] = $jumlah_pelunasan;
 
-                  //    print_r($total_pelunasan_per_mahasiswa);
+                    //    print_r($total_pelunasan_per_mahasiswa);
                 }
 
                 // Menyimpan data dalam array berdasarkan tahun akademik
@@ -166,13 +166,13 @@
 
             //  echo '<pre>';
             //   print_r($kode_kelas_data);
-           //  print_r($kode_kelas_data_pel);
+            //  print_r($kode_kelas_data_pel);
             // echo '</pre>';
 
 
             // Menampilkan tabel berdasarkan tahun akademik
             foreach ($data_by_ta as $tahun_akademik => $data_kelas) {
-                 //    print_r($data_kelas);
+                //    print_r($data_kelas);
             ?>
                 <h2>Tahun Akademik <?= $tahun_akademik ?></h2>
                 <div class="card-body">
@@ -219,9 +219,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($data_kelas as $data) : 
+                            <?php foreach ($data_kelas as $data) :
                                 $total_pelunasan = $data['kode_kelas_data_pel']['total_pelunasan'];
-                                ?>
+                            ?>
                                 <tr>
                                     <td><?= $data['nama_mhs'] ?></td>
                                     <?php
@@ -238,7 +238,7 @@
                                         }
                                     }
                                     ?>
-                                    <td><?= $total_pelunasan ?></td> 
+                                    <td><?= $total_pelunasan ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -250,6 +250,3 @@
     </body>
 
     <body>
-
-
-    </body>
