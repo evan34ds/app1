@@ -246,6 +246,7 @@ class Admin extends BaseController
 		return redirect()->to(base_url('krs'));
 		return view('layout/v_wrapper', $data);
 	}
+	
 
 	//--------------------------------------------------------------------
 
