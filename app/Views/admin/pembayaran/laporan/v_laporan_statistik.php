@@ -225,9 +225,6 @@
                             foreach ($data_kelas as $data) :
                                 $total_pelunasan = $data['kode_kelas_data_pel']['total_pelunasan'];
                                 $total += $total_pelunasan;
-
-
-
                             ?>
                                 <tr>
                                     <td><?= $data['nama_mhs'] ?></td>
@@ -245,18 +242,14 @@
                                         }
                                     }
                                     ?>
+
+
                                     <td><?= $total_pelunasan ?></td>
                                 </tr>
                             <?php endforeach; ?>
-                            <tr class="bg-warning color-palette">
-                                <td align="right" colspan="1">Total Pelunasan</td>
-                                <td align="center"></td> <!-- Mendapatkan total sks -->
-                                <td><?= $total ?></td> <!-- Menampilkan total pelunasan keseluruhan -->
-                            </tr>
-
-
                         </tbody>
                     </table>
+                    <div class="card-footer bg-warning color-palette" align="right"  style="font-size: 20px;">Total Pelunasan : <?= 'Rp ' . number_format($total, 0, ',', '.') ?></div>
                 </div>
             <?php } ?>
 

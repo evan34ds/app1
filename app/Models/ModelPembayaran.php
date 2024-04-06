@@ -730,9 +730,9 @@ class ModelPembayaran extends Model
 
             
         }
-        echo '<pre>';
-        print_r($JumlahpelunasanData);
-        echo '</pre>';
+       // echo '<pre>';
+       // print_r($JumlahpelunasanData);
+       // echo '</pre>';
         return $JumlahpelunasanData;
     }
 }
