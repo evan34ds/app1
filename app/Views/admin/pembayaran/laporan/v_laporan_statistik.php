@@ -207,10 +207,6 @@
                                         echo "<th>{$kode_kelas['kode_kelas_pembayaran']}</th>";
                                     }
                                 }
-
-
-
-
                                 ?>
 
                                 <th>Jumlah</th>
@@ -231,8 +227,8 @@
                                     <?php
                                     foreach ($kode_kelas_pembayaran_list as $key => $kode_kelas) {
                                         if ($show_column[$key]) {
-                                            echo "<td>{$data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']]}</td>";
-
+                                            // jika echo "<td>Rp " . number_format($data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']], 0, ',', '.') . "</td>"; adalah 2 maka isinya 0
+                                            echo "<td>Rp " . ($data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']] !== 2 ? number_format($data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']], 0, ',', '.') : 0) . "</td>";
                                             // echo '<pre>';
                                             //  print_r($kode_kelas['kode_kelas_pembayaran']);
                                             //   print_r($data_kelas);
@@ -242,14 +238,12 @@
                                         }
                                     }
                                     ?>
-
-
-                                    <td><?= $total_pelunasan ?></td>
+                                    <td><?= 'Rp ' . number_format($total_pelunasan, 0, ',', '.') ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-                    <div class="card-footer bg-warning color-palette" align="right"  style="font-size: 20px;">Total Pelunasan : <?= 'Rp ' . number_format($total, 0, ',', '.') ?></div>
+                    <div class="card-footer bg-warning color-palette" align="right" style="font-size: 20px;">Total Pelunasan : <?= 'Rp ' . number_format($total, 0, ',', '.') ?></div>
                 </div>
             <?php } ?>
 
@@ -257,3 +251,31 @@
     </body>
 
     <body>
+
+        <body>
+
+            <div style="overflow-x:auto;">
+                <table border="1">
+                    <tr>
+                        <th>Nama</th>
+                        <th>Umur</th>
+                        <th>Kota</th>
+                        <!-- Tambahkan kolom sebanyak yang diperlukan -->
+                    </tr>
+                    <tr>
+                        <td>John Doe</td>
+                        <td>30</td>
+                        <td>New York</td>
+                        <!-- Isi data sesuai kebutuhan -->
+                    </tr>
+                    <tr>
+                        <td>Jane Smith</td>
+                        <td>25</td>
+                        <td>Los Angeles</td>
+                        <!-- Isi data sesuai kebutuhan -->
+                    </tr>
+                    <!-- Tambahkan baris sebanyak yang diperlukan -->
+                </table>
+            </div>
+
+        </body>
