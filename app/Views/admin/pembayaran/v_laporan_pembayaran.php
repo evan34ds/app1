@@ -25,7 +25,7 @@
                 $today = date_indo('Y-m-d');
 
                 $total_pelunasan = $total_pelunasan + $value['pelunasan']; //menjumlahkan sks
-                
+
             ?>
             <?php } ?>
             <div class="row">
@@ -49,8 +49,8 @@
                     <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3>53<sup style="font-size: 20px">%</sup></h3>
-
+                            <h3><?= 'Rp ' . number_format($statistik_total_pelunasan['to_pelunasan'], 0, ',', '.') ?></h3>
+                            <p>Total Penerimaan</p>
                             <p>Statistik Pembayaran</p>
                         </div>
                         <div class="icon">

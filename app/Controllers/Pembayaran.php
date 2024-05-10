@@ -451,7 +451,7 @@ class Pembayaran extends BaseController
 			'start_date' => $start_date,
 			'end_date' => $end_date,
 			'results' => $this->ModelPembayaran->pencarian_pembayaran_harian($start_date, $end_date),
-			
+			'statistik_total_pelunasan' => $this->ModelPembayaran->statistik_total_pelunasan(),
 			'isi'    =>    'admin/pembayaran/v_laporan_pembayaran'
 		);
 		return view('layout/v_wrapper', $data);

@@ -734,4 +734,10 @@ class ModelPembayaran extends Model
        // echo '</pre>';
         return $JumlahpelunasanData;
     }
+    public function statistik_total_pelunasan()
+    {
+        return $this->db->table('tbl_kelas_pembayaran')
+            ->select('SUM(tbl_kelas_pembayaran.pelunasan) as to_pelunasan')
+            ->get()->getRowArray();
+    }
 }
