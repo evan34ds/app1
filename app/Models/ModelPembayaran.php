@@ -587,7 +587,6 @@ class ModelPembayaran extends Model
     {
         // Query data dari database berdasarkan rentang tanggal
         return $this->db->table('tbl_kelas_pembayaran')
-
             ->join('tbl_mhs', 'tbl_mhs.id_mhs=tbl_kelas_pembayaran.id_mhs', 'left')
             ->join('tbl_user', 'tbl_user.id_user = tbl_kelas_pembayaran.id_user', 'left')
             ->join('tbl_prodi', 'tbl_prodi.id_prodi = tbl_kelas_pembayaran.id_prodi', 'left')

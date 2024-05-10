@@ -11,90 +11,6 @@
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
-
-    <body>
-
-        <div class="table-container">
-            <?php
-            // Array untuk menyimpan data berdasarkan tahun akademik
-            $data_by_ta = [];
-
-            print_r($data_by_ta);
-
-            // Mengelompokkan data berdasarkan tahun akademik
-            foreach ($nama_mhs_list as $nama_mhs) {
-                $tahun_akademik = $nama_mhs['ta'];
-                $kode_kelas_data = [];
-
-                // Mengelompokkan data berdasarkan kode kelas
-                foreach ($kode_kelas_pembayaran_list as $kode_kelas) {
-                    $kode_kelas_pembayaran = $kode_kelas['kode_kelas_pembayaran'];
-                    $pelunasan = isset($pelunasan_data[$nama_mhs['nama_mhs']][$kode_kelas_pembayaran]) ?
-                        ($pelunasan_data[$nama_mhs['nama_mhs']][$kode_kelas_pembayaran] !== null ? $pelunasan_data[$nama_mhs['nama_mhs']][$kode_kelas_pembayaran] : 1)
-                        : 2;
-                    $kode_kelas_data[$kode_kelas_pembayaran] = $pelunasan;
-                }
-
-                // Menyimpan data dalam array berdasarkan tahun akademik
-                $data_by_ta[$tahun_akademik][] = [
-                    'nama_mhs' => $nama_mhs['nama_mhs'],
-                    'kode_kelas_data' => $kode_kelas_data
-                ];
-            }
-
-            // Menampilkan tabel berdasarkan tahun akademik
-            foreach ($data_by_ta as $tahun_akademik => $data_kelas) {
-            ?>
-                <h2>Tahun Akademik <?= $tahun_akademik ?></h2>
-                <table id="example" class="table table-bordered table-striped">
-                    <thead>
-                        <tr class="bg-success color-palette">
-                            <th>Nama Mahasiswa</th>
-                            <?php
-                            // Array untuk menyimpan informasi apakah kolom harus ditampilkan
-                            $show_column = array_fill_keys(array_keys($kode_kelas_pembayaran_list), false);
-
-                            // Mengatur informasi apakah kolom harus ditampilkan atau tidak
-                            foreach ($kode_kelas_pembayaran_list as $key => $kode_kelas) {
-                                foreach ($data_kelas as $data) {
-                                    if ($data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']] != 2) {
-                                        $show_column[$key] = true;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            // Menampilkan kolom kelas pembayaran yang harus ditampilkan
-                            foreach ($kode_kelas_pembayaran_list as $key => $kode_kelas) {
-                                if ($show_column[$key]) {
-                                    echo "<th>{$kode_kelas['kode_kelas_pembayaran']}</th>";
-                                }
-                            }
-
-                            ?>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($data_kelas as $data) : ?>
-                            <tr>
-                                <td><?= $data['nama_mhs'] ?></td>
-                                <?php
-                                foreach ($kode_kelas_pembayaran_list as $key => $kode_kelas) {
-                                    if ($show_column[$key]) {
-                                        echo "<td>{$data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']]}</td>";
-                                    }
-                                }
-                                ?>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php } ?>
-        </div>
-    </body>
-
-    <th>BATAS</th>
-
     <body>
 
         <div class="table-container">
@@ -175,7 +91,7 @@
                 //    print_r($data_kelas);
             ?>
                 <h2>Tahun Akademik <?= $tahun_akademik ?></h2>
-                <div class="card-body">
+                <div class="card-body" style="overflow-x:auto;">
                     <table id="example" class="table table-bordered table-striped">
                         <thead>
                             <tr class="bg-success color-palette">
@@ -209,7 +125,7 @@
                                 }
                                 ?>
 
-                                <th>Jumlah</th>
+                                <th><b>JUMLAH</b></th>
 
 
                             </tr>
@@ -223,12 +139,12 @@
                                 $total += $total_pelunasan;
                             ?>
                                 <tr>
-                                    <td><?= $data['nama_mhs'] ?></td>
+                                    <td width="300px"><?= $data['nama_mhs'] ?></td>
                                     <?php
                                     foreach ($kode_kelas_pembayaran_list as $key => $kode_kelas) {
                                         if ($show_column[$key]) {
                                             // jika echo "<td>Rp " . number_format($data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']], 0, ',', '.') . "</td>"; adalah 2 maka isinya 0
-                                            echo "<td>Rp " . ($data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']] !== 2 ? number_format($data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']], 0, ',', '.') : 0) . "</td>";
+                                            echo "<td  width='150px'>Rp " . ($data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']] !== 2 ? number_format($data['kode_kelas_data'][$kode_kelas['kode_kelas_pembayaran']], 0, ',', '.') : 0) . "</td>";
                                             // echo '<pre>';
                                             //  print_r($kode_kelas['kode_kelas_pembayaran']);
                                             //   print_r($data_kelas);
@@ -238,44 +154,14 @@
                                         }
                                     }
                                     ?>
-                                    <td><?= 'Rp ' . number_format($total_pelunasan, 0, ',', '.') ?></td>
+                                    <td width="300px"><b><?= 'Rp ' . number_format($total_pelunasan, 0, ',', '.') ?></b></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-                    <div class="card-footer bg-warning color-palette" align="right" style="font-size: 20px;">Total Pelunasan : <?= 'Rp ' . number_format($total, 0, ',', '.') ?></div>
+                    <div class="card-footer bg-warning color-palette" align="right" style="font-size: 20px;"><b>TOTAL PELUNASAN : <?= 'Rp ' . number_format($total, 0, ',', '.') ?></b></div>
                 </div>
             <?php } ?>
 
         </div>
     </body>
-
-    <body>
-
-        <body>
-
-            <div style="overflow-x:auto;">
-                <table border="1">
-                    <tr>
-                        <th>Nama</th>
-                        <th>Umur</th>
-                        <th>Kota</th>
-                        <!-- Tambahkan kolom sebanyak yang diperlukan -->
-                    </tr>
-                    <tr>
-                        <td>John Doe</td>
-                        <td>30</td>
-                        <td>New York</td>
-                        <!-- Isi data sesuai kebutuhan -->
-                    </tr>
-                    <tr>
-                        <td>Jane Smith</td>
-                        <td>25</td>
-                        <td>Los Angeles</td>
-                        <!-- Isi data sesuai kebutuhan -->
-                    </tr>
-                    <!-- Tambahkan baris sebanyak yang diperlukan -->
-                </table>
-            </div>
-
-        </body>
