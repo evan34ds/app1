@@ -256,7 +256,7 @@ class Pembayaran extends BaseController
 
 
 
-		if ($jumlah_kelas == 1) {
+		if ($jumlah_kelas == 0) {
 			// Menyiapkan data untuk penghapusan
 			$data = [
 				'id_kelas_pembayaran' => $id_kelas_pembayaran,
