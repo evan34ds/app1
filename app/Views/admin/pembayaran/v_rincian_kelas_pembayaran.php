@@ -46,7 +46,7 @@
                           $jml = $db->table('tbl_kelas_pembayaran')
                           ->where('kode_kelas_pembayaran',  $rincian_kelas_pembayaran['kode_kelas_pembayaran'])
                           ->where('tbl_kelas_pembayaran.id_mhs IS NOT NULL')
-                          ->where('tbl_kelas_pembayaran.id_pembayaran IS NOT NULL')
+                          ->where('tbl_kelas_pembayaran.pelunasan IS NULL')
                           ->countAllResults();
                     ?>
 

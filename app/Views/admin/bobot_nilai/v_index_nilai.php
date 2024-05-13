@@ -46,7 +46,7 @@
                                 <td><?= $value['prodi'] ?></td>
                                 <td class="text-center"><?= $value['jenjang'] ?></td>
                                 <td class=" text-center">
-                                    <a href="<?= base_url('BobotNilai/detailbobotnilai/' . $value['id_prodi']) ?>" class="btn btn-succes"><i class="nav-icon far fa-calendar-alt"></i></i></a>
+                                    <a href="<?= base_url('BobotNilai/daftar_bobot_nilai/' . $value['id_prodi']) ?>" class="btn btn-succes"><i class="nav-icon far fa-calendar-alt"></i></i></a>
                                 </td>
                             </tr>
                         <?php } ?>

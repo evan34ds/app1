@@ -35,9 +35,9 @@ class Pembayaran extends BaseController
 		$data = array(
 			'title' =>    'Pembayaran',
 			'ta'	=> $this->ModelTa->allData(),
-			'pembayaran' => $this->ModelPembayaran->allData(),
 			'prodi' => $this->ModelProdi->allData(),
 			'kategori_pembayaran' => $this->ModelPembayaran->allData_kategori_pembayaran(),
+			'pembayaran' => $this->ModelPembayaran->allData(),
 			'isi'    =>    'admin/pembayaran/v_pembayaran'
 		);
 		return view('layout/v_wrapper', $data);
@@ -47,9 +47,9 @@ class Pembayaran extends BaseController
 		$ta = $this->ModelTa->ta_aktif();
 
 		$data = [
-			'id_ta' => $ta['id_ta'],
 			'id_prodi' => $this->request->getPost('id_prodi'),
 			'nama_pembayaran' => $this->request->getPost('nama_pembayaran'),
+			'id_ta' => $ta['id_ta'],
 			'biaya' => $this->request->getPost('biaya'),
 			'id_kategori_pembayaran' => $this->request->getPost('id_kategori_pembayaran'),
 		];
@@ -100,8 +100,10 @@ class Pembayaran extends BaseController
 	{
 		$kode_kelas_pembayaran = $this->ModelPembayaran->findKodeKelasPembayaran($id_kelas_pembayaran); // cek agar mata kuliah bisa didefinis
 		$nama_kelas_pembayaran = $this->ModelPembayaran->findNamaKelas($id_kelas_pembayaran); // cek agar mata kuliah bisa didefinis
-		$id_pembayaran = $this->ModelPembayaran->findIdPembayaran($id_kelas_pembayaran); // cek agar mata kuliah bisa didefinis
 		$id_prodi = $this->ModelPembayaran->findProdi($id_kelas_pembayaran); // cek agar mata kuliah bisa didefinis
+		$id_Ta = $this->ModelPembayaran->findIdTa($id_kelas_pembayaran); // cek agar mata kuliah bisa didefinis
+		$biaya = $this->ModelPembayaran->findbiaya($id_kelas_pembayaran); // cek agar mata kuliah bisa didefinis
+		$kategori_pembayaran = $this->ModelPembayaran->findkategori_pembayaran($id_kelas_pembayaran); // cek agar mata kuliah bisa didefinis
 
 
 		$ModelMahasiswa = new ModelMahasiswa();
@@ -119,8 +121,10 @@ class Pembayaran extends BaseController
 					'id_mhs' => $mahasiswaId,
 					'kode_kelas_pembayaran' => $kode_kelas_pembayaran,
 					'nama_kelas_pembayaran' => $nama_kelas_pembayaran,
-					'id_pembayaran' => $id_pembayaran,
 					'id_prodi' => $id_prodi,
+					'id_ta' => $id_Ta,
+					'biaya' => $biaya,
+					'id_kategori_pembayaran' => $kategori_pembayaran,
 				];
 			}
 
@@ -136,6 +140,8 @@ class Pembayaran extends BaseController
 	}
 	public function add_kelas_pembayaran()
 	{
+		
+
 		if ($this->validate([
 			'kode_kelas_pembayaran' => [
 				'label' => 'Kode Kelas Pembayaran',
@@ -152,15 +158,8 @@ class Pembayaran extends BaseController
 					'required' => '{field} Wajib Diisi !!!'
 				]
 			],
-			'id_pembayaran' => [
-				'label' => 'Biaya',
-				'rules' => 'required',
-				'errors' => [
-					'required' => '{field} Wajib Diisi !!!'
-				]
-			],
-			'id_prodi' => [
-				'label' => 'Program Studi',
+			'id_kategori_pembayaran' => [
+				'label' => 'Kategori Pembayaran',
 				'rules' => 'required',
 				'errors' => [
 					'required' => '{field} Wajib Diisi !!!'
@@ -170,9 +169,11 @@ class Pembayaran extends BaseController
 			$data = [
 				'id_kelas_pembayaran' => $this->request->getPost('id_kelas_pembayaran'),
 				'kode_kelas_pembayaran' => $this->request->getPost('kode_kelas_pembayaran'),
-				'id_pembayaran' => $this->request->getPost('id_pembayaran'),
 				'nama_kelas_pembayaran' => $this->request->getPost('nama_kelas_pembayaran'),
 				'id_prodi' => $this->request->getPost('id_prodi'),
+				'id_ta' =>  $this->request->getPost('id_ta'),
+				'biaya' => $this->request->getPost('biaya'),
+				'id_kategori_pembayaran' => $this->request->getPost('id_kategori_pembayaran'),
 			];
 			$this->ModelPembayaran->add_kelas_pembayaran($data);
 			session()->setFlashdata('pesan', 'Data Berhasil Di Tambahkan !!!');
@@ -431,8 +432,10 @@ class Pembayaran extends BaseController
 		$data = array(
 			'title' =>    'Kelas Pembayaran',
 			'kelas_pembayaran' => $this->ModelPembayaran->kelas_pembayaran(),
-			'pembayaran' => $this->ModelPembayaran->allData(),
 			'prodi' => $this->ModelProdi->allData(),
+			'ta'	=> $this->ModelTa->allData(),
+			'prodi' => $this->ModelProdi->allData(),
+			'kategori_pembayaran' => $this->ModelPembayaran->allData_kategori_pembayaran(),
 			'isi'    =>    'admin/pembayaran/v_kelas_pembayaran'
 		);
 		return view('layout/v_wrapper', $data);
@@ -481,7 +484,7 @@ class Pembayaran extends BaseController
 
 	public function laporan_statistik()
 	{
-		
+
 		$data = [
 			'title' =>    'Laporan Statistik Pembayaran',
 			'nama_mhs_list' => $this->ModelPembayaran->getNamaMhsList(),

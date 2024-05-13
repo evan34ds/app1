@@ -46,6 +46,11 @@
                         <td>:</td>
                         <td> <?= $ta_aktif['ta'] ?> <?= $ta_aktif['semester'] ?></td>
                     </tr>
+                    <tr>
+                        <th>Kode Bobot Nilai</th>
+                        <td>:</td>
+                        <td><?= $kode_bobot_nilai ?></td>
+                    </tr>
                 </table>
 
             </div>
@@ -98,7 +103,7 @@
                         </thead>
                         <tbody>
                             <?php $no = 1;
-                            foreach ($bobot as $key => $value) { ?>
+                            foreach ($detail_bobot as $key => $value) { ?>
                                 <tr>
                                     <td class="text-center"><?= $no++ ?></td>
                                     <td class="text-center"><?= $value['nilai_huruf'] ?></td>

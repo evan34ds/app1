@@ -85,7 +85,7 @@
                             $jml = $db->table('tbl_kelas_pembayaran')
                             ->where('kode_kelas_pembayaran', $value['kode_kelas_pembayaran'])
                             ->where('tbl_kelas_pembayaran.id_mhs IS NOT NULL')
-                            ->where('tbl_kelas_pembayaran.id_pembayaran IS NOT NULL')
+                            ->where('tbl_kelas_pembayaran.pelunasan IS NULL')
                             ->countAllResults();
                        
                        ?>
@@ -115,6 +115,7 @@
                             <th width="50px" class="text-center">No</th>
                             <th>Kode Kelas Pembayaran</th>
                             <th>Nama Kelas Pembayaran</th>
+                            <th>Tahun Angkatan</th>
                             <th>Program Studi</th>
                             <th>Biaya</th>
                             <th>Jumlah Mahasiswa</th>
@@ -155,16 +156,6 @@
                         <input name="nama_kelas_pembayaran" class="form-control" placeholder="Nama Kelas Pembayaran">
                     </div>
                     <div class="form-grup">
-                        <label>Pembayaran</label>
-                        <select name="id_pembayaran" class="form-control">
-                            <option value="">Pembayaran angkatan</option>
-                            <?php foreach ($pembayaran as $key => $value) { ?>
-                                <option value="<?= $value['id_pembayaran'] ?>"><?= $value['nama_pembayaran'] ?> | <?= $value['biaya'] ?> | <?= $value['ta'] ?>  <?= $value['semester'] ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-
-                    <div class="form-grup">
                         <label>Program Studi</label>
                         <select name="id_prodi" class="form-control">
                             <option value="">--Pilih Program Studi--</option>
@@ -173,6 +164,33 @@
                             <?php } ?>
                         </select>
                     </div>
+
+                    <div class="form-grup">
+                        <label>Biaya</label>
+                        <input name="biaya" id="dengan-rupiah" class="form-control" placeholder="Biaya">
+                    </div>
+
+                    <div class="form-grup">
+                        <label>Angkatan Tahun</label>
+                        <select name="id_ta" class="form-control">
+                            <option value="">--Pilih Tahun Angkatan--</option>
+                            <?php foreach ($ta as $key => $value) { ?>
+                                <option value="<?= $value['id_ta'] ?>"><?= $value['ta'] ?>-<?= $value['semester'] ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+
+                    <div class="form-grup">
+                        <label>Kategori Pembayaran</label>
+                        <select name="id_kategori_pembayaran" class="form-control">
+                            <option value="">--Pilih Kategori Pembayaran--</option>
+                            <?php foreach ($kategori_pembayaran as $key => $value) { ?>
+                                <option value="<?= $value['id_kategori_pembayaran'] ?>"><?= $value['nama_kategori_pembayaran'] ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+
+                    
                     </p>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -214,3 +232,41 @@
             <!-- /.modal-dialog -->
         </div>
     <?php } ?>
+
+    
+    <script type="text/javascript">
+        /* Tanpa Rupiah */
+        var tanpa_rupiah = document.getElementById('tanpa-rupiah');
+        tanpa_rupiah.addEventListener('keyup', function(e) {
+            tanpa_rupiah.value = formatRupiah(this.value);
+        });
+
+        /* Tanpa Rupiah */
+        var tanpa_rupiah = document.getElementById('tanpa1-rupiah');
+        tanpa_rupiah.addEventListener('input', function(e) {
+            this.value = formatRupiah(this.value);
+        });
+
+        /* Dengan Rupiah */
+        var dengan_rupiah = document.getElementById('dengan-rupiah');
+        dengan_rupiah.addEventListener('keyup', function(e) {
+            dengan_rupiah.value = formatRupiah(this.value, 'Rp. ');
+        });
+
+        /* Fungsi */
+        function formatRupiah(angka, prefix) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+        }
+    </script>

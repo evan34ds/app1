@@ -42,7 +42,6 @@ class ModelPembayaran extends Model
     {
         return $this->db->table('tbl_kelas_pembayaran')
             ->join('tbl_mhs', 'tbl_mhs.id_mhs=tbl_kelas_pembayaran.id_mhs', 'left')
-            ->join('tbl_pembayaran', 'tbl_pembayaran.id_pembayaran=tbl_kelas_pembayaran.id_pembayaran', 'left')
             ->join('tbl_prodi', 'tbl_prodi.id_prodi =tbl_mhs.id_prodi', 'left')
             ->groupBy('tbl_kelas_pembayaran.id_kelas_pembayaran')
             ->where('tbl_kelas_pembayaran.kode_kelas_pembayaran', $kode_kelas_pembayaran)
@@ -113,8 +112,7 @@ class ModelPembayaran extends Model
         return $this->db->table('tbl_kelas_pembayaran')
             ->join('tbl_mhs', 'tbl_mhs.id_mhs=tbl_kelas_pembayaran.id_mhs', 'left')
             ->join('tbl_prodi', 'tbl_prodi.id_prodi = tbl_kelas_pembayaran.id_prodi', 'left')
-            ->join('tbl_pembayaran', 'tbl_pembayaran.id_pembayaran=tbl_kelas_pembayaran.id_pembayaran', 'left')
-            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_pembayaran.id_ta', 'left')
+            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_kelas_pembayaran.id_ta', 'left')
             ->where('kode_kelas_pembayaran', $kode_kelas_pembayaran)
             ->get()->getRowArray();
     }
@@ -123,10 +121,9 @@ class ModelPembayaran extends Model
     {
         return $this->db->table('tbl_kelas_pembayaran')
             ->join('tbl_mhs', 'tbl_mhs.id_mhs=tbl_kelas_pembayaran.id_mhs', 'left')
-            ->join('tbl_pembayaran', 'tbl_pembayaran.id_pembayaran=tbl_kelas_pembayaran.id_pembayaran', 'left')
             ->where('kode_kelas_pembayaran', $kode_kelas_pembayaran)
             ->where('tbl_kelas_pembayaran.id_mhs IS not null')
-            ->where('tbl_kelas_pembayaran.id_pembayaran IS not null')
+            ->where('tbl_kelas_pembayaran.pelunasan IS null')
             ->get()->getResultArray();
     }
 
@@ -147,8 +144,7 @@ class ModelPembayaran extends Model
             ->select('tbl_kelas_pembayaran.kode_kelas_pembayaran, SUM(tbl_kelas_pembayaran.pelunasan) as total_pelunasan')
             ->join('tbl_kelas_pembayaran', 'tbl_kelas_pembayaran.id_mhs=tbl_mhs.id_mhs', 'left')
             ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_mhs.id_prodi', 'left')
-            ->join('tbl_pembayaran', 'tbl_pembayaran.id_pembayaran=tbl_kelas_pembayaran.id_pembayaran', 'left')
-            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_pembayaran.id_ta', 'left')
+            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_kelas_pembayaran.id_ta', 'left')
             ->where('tbl_mhs.id_mhs', $id_mhs)
             ->where('tbl_kelas_pembayaran.kode_kelas_pembayaran', $kode_kelas_pembayaran)
             ->where('tbl_kelas_pembayaran.id_mhs IS NOT NULL')
@@ -175,12 +171,9 @@ class ModelPembayaran extends Model
         return $this->db->table('tbl_kelas_pembayaran')
             ->join('tbl_mhs', 'tbl_mhs.id_mhs=tbl_kelas_pembayaran.id_mhs', 'left')
             ->join('tbl_prodi', 'tbl_prodi.id_prodi = tbl_kelas_pembayaran.id_prodi', 'left')
-            ->join('tbl_pembayaran', 'tbl_pembayaran.id_pembayaran=tbl_kelas_pembayaran.id_pembayaran', 'left')
-            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_pembayaran.id_ta', 'left')
+            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_kelas_pembayaran.id_ta', 'left')
             ->where('tbl_kelas_pembayaran.id_mhs', $id_mhs)
             ->where('tbl_kelas_pembayaran.kode_kelas_pembayaran', $kode_kelas_pembayaran)
-            ->where('tbl_kelas_pembayaran.id_mhs IS not null')
-            ->where('tbl_kelas_pembayaran.id_pembayaran IS not null')
             ->get()->getRowArray();
     }
 
@@ -294,11 +287,10 @@ class ModelPembayaran extends Model
             ->selectSum('tbl_kelas_pembayaran.pelunasan')
             ->join('tbl_kelas_pembayaran', 'tbl_kelas_pembayaran.id_mhs=tbl_mhs.id_mhs', 'left')
             ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_mhs.id_prodi', 'left')
-            ->join('tbl_pembayaran', 'tbl_pembayaran.id_pembayaran=tbl_kelas_pembayaran.id_pembayaran', 'left')
-            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_pembayaran.id_ta', 'left')
+            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_kelas_pembayaran.id_ta', 'left')
             ->where('tbl_mhs.id_mhs', $id_mhs)
             ->where('tbl_kelas_pembayaran.kode_kelas_pembayaran', $kode_kelas_pembayaran)
-            ->where('tbl_kelas_pembayaran.id_pembayaran IS NULL')
+            ->where('tbl_kelas_pembayaran.pelunasan IS NULL')
             ->groupBy('tbl_kelas_pembayaran.kode_kelas_pembayaran') // Group by kode_kelas_pembayaran
             ->get()
             ->getResultArray();
@@ -495,12 +487,38 @@ class ModelPembayaran extends Model
     {
         $query = $this->db->table('tbl_kelas_pembayaran')
             ->select('id_ta')
-            ->join('tbl_pembayaran', 'tbl_pembayaran.id_pembayaran = tbl_kelas_pembayaran.id_pembayaran', 'left')
             ->where('id_kelas_pembayaran', $id_kelas_pembayaran)
             ->get();
         $result = $query->getRow();
         if ($result !== null) {
             return $result->id_ta;
+        }
+
+        return null; // Jika id_matkul tidak ditemukan, mengembalikan nilai null
+    }
+    public function findbiaya($id_kelas_pembayaran)
+    {
+        $query = $this->db->table('tbl_kelas_pembayaran')
+            ->select('biaya')
+            ->where('id_kelas_pembayaran', $id_kelas_pembayaran)
+            ->get();
+        $result = $query->getRow();
+        if ($result !== null) {
+            return $result->biaya;
+        }
+
+        return null; // Jika id_matkul tidak ditemukan, mengembalikan nilai null
+    }
+
+    public function findkategori_pembayaran($id_kelas_pembayaran)
+    {
+        $query = $this->db->table('tbl_kelas_pembayaran')
+            ->select('id_kategori_pembayaran')
+            ->where('id_kelas_pembayaran', $id_kelas_pembayaran)
+            ->get();
+        $result = $query->getRow();
+        if ($result !== null) {
+            return $result->id_kategori_pembayaran;
         }
 
         return null; // Jika id_matkul tidak ditemukan, mengembalikan nilai null
@@ -511,9 +529,8 @@ class ModelPembayaran extends Model
     {
         return $this->db->table('tbl_kelas_pembayaran')
             ->join('tbl_mhs', 'tbl_mhs.id_mhs=tbl_kelas_pembayaran.id_mhs', 'left')
-            ->join('tbl_pembayaran', 'tbl_pembayaran.id_pembayaran=tbl_kelas_pembayaran.id_pembayaran', 'left')
+            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_kelas_pembayaran.id_ta', 'left')
             ->join('tbl_prodi', 'tbl_prodi.id_prodi = tbl_kelas_pembayaran.id_prodi', 'left')
-            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_pembayaran.id_ta', 'left')
             ->groupBy('tbl_kelas_pembayaran.kode_kelas_pembayaran')
             ->where('tbl_kelas_pembayaran.id_mhs IS null')
             ->get()->getResultArray();
@@ -541,11 +558,10 @@ class ModelPembayaran extends Model
     public function pembayaran($id_mhs)
     {
         return $this->db->table('tbl_mhs')
-            ->select('tbl_pembayaran.biaya, tbl_kelas_pembayaran.kode_kelas_pembayaran, nama_kelas_pembayaran, tbl_mhs.id_mhs, SUM(tbl_kelas_pembayaran.pelunasan) as total_pelunasan')
+            ->select('tbl_kelas_pembayaran.biaya, tbl_kelas_pembayaran.kode_kelas_pembayaran, nama_kelas_pembayaran, tbl_mhs.id_mhs, SUM(tbl_kelas_pembayaran.pelunasan) as total_pelunasan')
             ->join('tbl_kelas_pembayaran', 'tbl_kelas_pembayaran.id_mhs=tbl_mhs.id_mhs', 'left')
             ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_mhs.id_prodi', 'left')
-            ->join('tbl_pembayaran', 'tbl_pembayaran.id_pembayaran=tbl_kelas_pembayaran.id_pembayaran', 'left')
-            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_pembayaran.id_ta', 'left')
+            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_kelas_pembayaran.id_ta', 'left')
             ->where('tbl_mhs.id_mhs', $id_mhs)
             ->where('tbl_kelas_pembayaran.id_mhs IS NOT NULL')
             ->groupBy('tbl_kelas_pembayaran.kode_kelas_pembayaran') // Group by kode_kelas_pembayaran
@@ -565,11 +581,10 @@ class ModelPembayaran extends Model
             ->join('tbl_mhs', 'tbl_mhs.id_mhs=tbl_kelas_pembayaran.id_mhs', 'left')
             ->join('tbl_user', 'tbl_user.id_user = tbl_kelas_pembayaran.id_user', 'left')
             ->join('tbl_prodi', 'tbl_prodi.id_prodi = tbl_kelas_pembayaran.id_prodi', 'left')
-            ->join('tbl_pembayaran', 'tbl_pembayaran.id_pembayaran=tbl_kelas_pembayaran.id_pembayaran', 'left')
-            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_pembayaran.id_ta', 'left')
+            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_kelas_pembayaran.id_ta', 'left')
             ->where('tbl_kelas_pembayaran.id_mhs', $id_mhs)
             ->where('tbl_kelas_pembayaran.kode_kelas_pembayaran', $kode_kelas_pembayaran)
-            ->where('tbl_kelas_pembayaran.id_pembayaran IS null')
+            ->where('tbl_kelas_pembayaran.waktu_pembayaran_mhs IS not null')
             ->get()->getResultArray();
     }
     public function tambah_mhs_kelas_pembayaran($data)
@@ -590,9 +605,8 @@ class ModelPembayaran extends Model
             ->join('tbl_mhs', 'tbl_mhs.id_mhs=tbl_kelas_pembayaran.id_mhs', 'left')
             ->join('tbl_user', 'tbl_user.id_user = tbl_kelas_pembayaran.id_user', 'left')
             ->join('tbl_prodi', 'tbl_prodi.id_prodi = tbl_kelas_pembayaran.id_prodi', 'left')
-            ->join('tbl_pembayaran', 'tbl_pembayaran.id_pembayaran=tbl_kelas_pembayaran.id_pembayaran', 'left')
-            ->join('tbl_kategori_pembayaran', 'tbl_kategori_pembayaran.id_kategori_pembayaran=tbl_pembayaran.id_kategori_pembayaran', 'left')
-            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_pembayaran.id_ta', 'left')
+            ->join('tbl_kategori_pembayaran', 'tbl_kategori_pembayaran.id_kategori_pembayaran=tbl_kelas_pembayaran.id_kategori_pembayaran', 'left')
+            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_kelas_pembayaran.id_ta', 'left')
             ->where('waktu_pembayaran_mhs >=', $start_date . ' 00:00:00')
             ->where('waktu_pembayaran_mhs <=', $end_date . ' 23:59:59')
             ->where('waktu_pembayaran_mhs IS not null')

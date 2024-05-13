@@ -62,7 +62,6 @@
                 <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Keuangan</a>
                 <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
                     <li><a href="<?= base_url('pembayaran/kategori_pembayaran') ?>" class="dropdown-item">Kategori Pembayaran</a></li>
-                    <li><a href="<?= base_url('pembayaran') ?>" class="dropdown-item">Pembayaran</a></li>
                     <li><a href="<?= base_url('pembayaran/kelas_pembayaran') ?>" class="dropdown-item">Kelas Pembayaran</a></li>
                     <li><a href="<?= base_url('pembayaran/daftar-mhs-pembayaran34') ?>" class="dropdown-item">Proses Pembayaran</a></li>
                     <li><a href="<?= base_url('pembayaran/laporan_pembayaran') ?>" class="dropdown-item">Laporan Pembayaran</a></li>
