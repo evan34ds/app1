@@ -51,6 +51,16 @@
                         <td>:</td>
                         <td><?= $kode_bobot_nilai ?></td>
                     </tr>
+                    <tr>
+                        <th>Tanggal Mulai</th>
+                        <td>:</td>
+                        <td><?= $tanggal_mulai ?></td>
+                    </tr>
+                    <tr>
+                        <th>Tanggal Akhir</th>
+                        <td>:</td>
+                        <td><?= $tanggal_akhir ?></td>
+                    </tr>
                 </table>
 
             </div>
@@ -96,8 +106,6 @@
                                 <th class="text-center">Nilai Index</th>
                                 <th class="text-center">Nilai Minimum</th>
                                 <th class="text-center">Nilai Maksimum</th>
-                                <th class="text-center">Tanggal Mulai </th>
-                                <th class="text-center">Tanggal Akhir</th>
                                 <th width="150px" class="text-center">Action</th>
                             </tr>
                         </thead>
@@ -110,8 +118,6 @@
                                     <td class="text-center"><?= $value['nilai_index'] ?></td>
                                     <td class="text-center"><?= $value['bobot_minimum'] ?></td>
                                     <td class="text-center"><?= $value['bobot_maksimum'] ?></td>
-                                    <td class="text-center"><?= $value['tanggal_mulai'] ?></td>
-                                    <td class="text-center"><?= $value['tanggal_akhir'] ?></td>
                                     <td width="50px" class="text-center">
                                         <button class="fas fa-trash btn-sm btn-flat" data-toggle="modal" data-target="#delete<?= $value['id_range_nilai'] ?>"><i class="fa fa-pencil"></i></button>
                                     </td>
@@ -125,8 +131,6 @@
                                 <th class="text-center">Nilai Index</th>
                                 <th class="text-center">Nilai Minimum</th>
                                 <th class="text-center">Nilai Maksimum</th>
-                                <th class="text-center">Tanggal Mulai </th>
-                                <th class="text-center">Tanggal Akhir</th>
                                 <th width="150px" class="text-center">Action</th>
                             </tr>
                         </tfoot>
@@ -140,3 +144,73 @@
 
     </div>
     <!-- /.col -->
+
+       <!-- form inputnya -->
+       <div class="modal fade" id="add">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Bobot Nilai</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <?php
+                        echo form_open('BobotNilai/add_bobot_nilai/' . $kode_bobot_nilai);
+                        ?>
+                    <div class="form-grup">
+                        <label>Nilai Huruf</label>
+                        <input name="nilai_huruf" class="form-control" placeholder="Nilai Huruf">
+                    </div>
+                    <div class="form-grup">
+                        <label>Nilai Index</label>
+                        <input name="nilai_index" class="form-control" placeholder="Nilai Index">
+                    </div>
+                    <div class="form-grup">
+                        <label>Nilai Minimum</label>
+                        <input name="bobot_minimum" class="form-control" placeholder="Nilai Minimum">
+                    </div>
+                    <div class="form-grup">
+                        <label>Nilai Maksimum</label>
+                        <input name="bobot_maksimum" class="form-control" placeholder="Nilai Maksimum">
+                    </div>
+                    <p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="fas fa-edit btn-sm btn-danger" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="fas fa-trash btn-sm btn-flat">Simpan</button>
+                </div>
+                <?php echo form_close() ?>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <?php foreach ($detail_bobot as $key => $value) { ?>
+        <div class="modal fade" id="delete<?= $value['id_range_nilai'] ?>">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Delete Bobot Nilai</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        Apakah Anda Yakin Ingin Menghapus Bobot Nilai <b><?= $value['kode_range_nilai'] ?> </b>
+                        <div> Mulai Tanggal <b> <?= $value['tanggal_mulai'] ?></b> sampai <b><?= $value['tanggal_akhir'] ?></b></div>
+
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"> Tutup</button>
+                        <a href="<?= base_url('/BobotNilai/delete_detail_bobot_nilai/' . $value['id_range_nilai']) ?>" class="btn btn-info"> Delete</a>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    <?php } ?>

@@ -33,15 +33,41 @@ class ModelBobotNilai extends Model
             ->delete($data);
     }
 
-    public function findProdi($id_range_nilai)
+    public function findProdi($kode_range_nilai)
     {
         $query = $this->db->table('tbl_range_nilai')
             ->select('id_prodi')
-            ->where('id_range_nilai', $id_range_nilai)
+            ->where('kode_range_nilai', $kode_range_nilai)
             ->get();
         $result = $query->getRow();
         if ($result !== null) {
             return $result->id_prodi;
+        }
+
+    }
+
+    public function findTanggalMulai($kode_range_nilai)
+    {
+        $query = $this->db->table('tbl_range_nilai')
+            ->select('tanggal_mulai')
+            ->where('kode_range_nilai', $kode_range_nilai)
+            ->get();
+        $result = $query->getRow();
+        if ($result !== null) {
+            return $result->tanggal_mulai;
+        }
+
+    }
+
+    public function findTanggalAkhir($kode_range_nilai)
+    {
+        $query = $this->db->table('tbl_range_nilai')
+            ->select('tanggal_akhir')
+            ->where('kode_range_nilai', $kode_range_nilai)
+            ->get();
+        $result = $query->getRow();
+        if ($result !== null) {
+            return $result->tanggal_akhir;
         }
 
     }

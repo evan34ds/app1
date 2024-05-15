@@ -47,6 +47,12 @@
                         <td>:</td>
                         <td> <?= $ta_aktif['ta'] ?> <?= $ta_aktif['semester'] ?></td>
                     </tr>
+
+                    <tr>
+                        <th>Kode Bobot</th>
+                        <td>:</td>
+                        <td> <?= $ta_aktif['ta'] ?> <?= $ta_aktif['semester'] ?></td>
+                    </tr>
                 </table>
 
             </div>
