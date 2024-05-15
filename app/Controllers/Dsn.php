@@ -75,6 +75,7 @@ class Dsn extends BaseController
 			$data = [
 				'id_krs' => $this->request->getPost($value['id_krs'] . 'id_krs'),
 				'nilai' => $this->request->getPost($value['id_krs'] . 'nilai'),
+				
 			];
 			$this->ModelDsn->SimpanNilai($data);
 		}

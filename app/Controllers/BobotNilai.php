@@ -147,5 +147,19 @@ class BobotNilai extends BaseController
 			return redirect()->to('/BobotNilai/detail_bobot_nilai/' . $kode_range_nilai);
 		
 	}
+	public function edit_detail_bobot_nilai($id_range_nilai)
+	{
+		$kode_range_nilai = $this->ModelBobotNilai->findKode($id_range_nilai); // cek agar mata kuliah bisa didefinis
+		$data = [
+			'id_range_nilai' => $id_range_nilai,
+			'nilai_index' => $this->request->getPost('nilai_index'),
+			'nilai_huruf' => $this->request->getPost('nilai_huruf'),
+			'bobot_minimum' => $this->request->getPost('bobot_minimum'),
+			'bobot_maksimum' => $this->request->getPost('bobot_maksimum'),
+		];
+		$this->ModelBobotNilai->edit_detail_bobot_nilai($data);
+		session()->setFlashdata('pesan', 'Data Berhasil Di Update !!!');
+		return redirect()->to('/BobotNilai/detail_bobot_nilai/' . $kode_range_nilai);
+	}
 
 }

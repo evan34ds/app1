@@ -631,7 +631,8 @@ class ModelAdmin extends Model
         $builder->join('tbl_ta', 'tbl_ta.id_ta =tbl_krs.id_ta', 'inner');
         $builder->where('tbl_mhs.id_mhs', $id_mhs);
         $builder->where('tbl_ta.id_ta', $id_ta);
-        $builder->WHERE('tbl_krs.nilai BETWEEN tbl_range_nilai.bobot_minimum AND tbl_range_nilai.bobot_maksimum');
+        $builder->WHERE('tbl_krs.nilai BETWEEN tbl_range_nilai.bobot_minimum AND tbl_range_nilai.bobot_maksimum')
+        ->WHERE('tbl_krs.tanggal_input_nilai BETWEEN tbl_range_nilai.tanggal_mulai AND tbl_range_nilai.tanggal_akhir');
         $query = $builder->get();
         return $query;
     }

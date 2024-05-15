@@ -206,7 +206,7 @@
                         </div>
                         <div class="form-grup">
                         <label>Singkatan</label>
-                        <input name="singkatan_kategori_pembayaran" class="form-control" placeholder="Singkatan Kategori Pembayaran">
+                        <input name="singkatan_kategori_pembayaran" value="<?= $edit['singkatan_kategori_pembayaran'] ?>" class="form-control" placeholder="Singkatan Kategori Pembayaran">
                     </div>
                         </p>
                     </div>

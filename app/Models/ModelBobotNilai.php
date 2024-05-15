@@ -32,6 +32,12 @@ class ModelBobotNilai extends Model
             ->where('id_range_nilai', $data['id_range_nilai'])
             ->delete($data);
     }
+    public function edit_detail_bobot_nilai($data)
+    {
+        $this->db->table('tbl_range_nilai')
+            ->where('id_range_nilai', $data['id_range_nilai'])
+            ->update($data);
+    }
 
     public function findProdi($kode_range_nilai)
     {

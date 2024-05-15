@@ -47,12 +47,6 @@
                         <td>:</td>
                         <td> <?= $ta_aktif['ta'] ?> <?= $ta_aktif['semester'] ?></td>
                     </tr>
-
-                    <tr>
-                        <th>Kode Bobot</th>
-                        <td>:</td>
-                        <td> <?= $ta_aktif['ta'] ?> <?= $ta_aktif['semester'] ?></td>
-                    </tr>
                 </table>
 
             </div>
@@ -126,7 +120,6 @@
                                     <td class="text-center"><?= $jml ?></td>
                                     <td width="50px" class="text-center">
                                         <a href="<?= base_url('BobotNilai/detail_bobot_nilai/' . $value['kode_range_nilai']) ?>" class="btn btn-sm fas fa-eye btn-info"></a>
-                                        <a href="" class="btn btn-sm fas fa-edit btn-danger"></i></a>
                                         <button class="fas fa-trash btn-sm btn-flat" data-toggle="modal" data-target="#delete<?= $value['id_range_nilai'] ?>"><i class="fa fa-pencil"></i></button>
                                     </td>
                                 </tr>

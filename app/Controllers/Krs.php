@@ -77,10 +77,12 @@ class Krs extends BaseController
 
             $mhs = $this->ModelKrs->DataMhs();
             $ta = $this->ModelTa->ta_aktif();
+            $tanggal_input_nilai = date('Y-m-d');
             $data = [
                 'id_jadwal' => $id_jadwal,
                 'id_ta'       => $ta['id_ta'],
-                'id_mhs'       => $mhs['id_mhs']
+                'id_mhs'       => $mhs['id_mhs'],
+                'tanggal_input_nilai' => $tanggal_input_nilai,
             ];
             $this->ModelKrs->TambahMatkul($data);
             session()->setFlashdata('pesan', '' . $nama_matkul . ' Mata Kuliah Berhasil Di Tambahkan !!!');
