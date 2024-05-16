@@ -82,8 +82,8 @@
             $jumlahmatakuliah = 1;
         ?>
         <?php } ?>
-        <button class="btn-flat bg-success color-palette"> <a href="<?= base_url('krs/print') ?>" target="_blank" class="btn-flat bg-success color-palette">
-                <i class="fa fa-print">PRINT KRS </i></a></button>
+        <button class="btn-flat bg-success color-palette"> <a href="<?= base_url('admin/transkrip_print/'. $mhs['id_mhs']) ?>" target="_blank" class="btn-flat bg-success color-palette">
+                <i class="fa fa-print">PRINT</i></a></button>
         <button type="button" data-toggle="modal" data-target="#add" class="btn-flat bg-success color-palette">
             <i class="fa fa-print">CHEKLISH MATA KULIAH</i></button>
     </div>

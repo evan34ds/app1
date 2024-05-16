@@ -55,6 +55,36 @@ class Admin extends BaseController
 		return view('layout/v_wrapper', $data);
 	}
 
+	public function add_mhs_akses()
+	{
+		$ModelMahasiswa = new ModelMahasiswa();
+		$data = [];
+
+		// Ambil data mahasiswa_id dan pembimbing_id dari formulir
+		$mahasiswaIds = $this->request->getPost('mahasiswa_ids');
+		$ta = $this->ModelTa->ta_aktif();
+
+		if (is_array($mahasiswaIds)) {
+
+			// Loop melalui semua mahasiswa yang dipilih
+			foreach ($mahasiswaIds as $mahasiswaId) {
+				$data[] = [
+					'id_mhs' => $mahasiswaId,
+					'id_ta'       => $ta['id_ta'],
+				];
+			}
+
+
+			$ModelMahasiswa->Tambah_mhs_status($data);
+
+			// Redirect ke halaman sebelumnya atau tampilkan pesan berhasil jika diperlukan
+			return redirect()->back()->with('pesan', 'Data berhasil disimpan ke tabel status.');
+		} else {
+
+			return redirect()->back()->with('error', 'Tidak Ada data yang di Pilih.');
+		}
+	}
+
 	public function admin_khs_mhs($id_mhs)
 	{
 		$ta = $this->ModelTa->ta_aktif(); //sesuiakan dengan tahun akademik krs
@@ -168,19 +198,19 @@ class Admin extends BaseController
 		);
 		return view('layout/v_wrapper', $data);
 	}
-	public function transkip($id_mhs)
-	{
+
+	public function transkrip_print($id_mhs)
+    {
 		$mhs = $this->ModelAdmin->Data_mahasiswa_transkip($id_mhs);
-		$data = array(
+        $data = [
 			'title' =>    'Transkip Nilai Mahasiswa',
 			'mhs'       => $this->ModelAdmin->Data_mahasiswa_khs($id_mhs),
 			'matkul_ditawarkan'  => $this->ModelAdmin->matkulditawarkan($mhs['id_prodi']), //sesuiakan dengan tahun akademik krs // $mhs['id_prodi'] filter berdasarkan id_prodi
 			'data_matkul'    => $this->ModelAdmin->DataMatkul($mhs['id_mhs']), // tambahan , $ta['id_ta'] sesuiakan dengan tahun akademik krs
 			'data_matkul_aktif'    => $this->ModelAdmin->DataMatkul_aktif($mhs['id_mhs']), // tambahan , $ta['id_ta'] sesuiakan dengan tahun akademik krs
-			'isi'   => 'admin/mahasiswa/v_transkip_nilai'
-		);
-		return view('layout/v_wrapper', $data);
-	}
+        ];
+        return view('admin/mahasiswa/v_transkrip_print', $data);
+    }
 
 	public function transkip_simpan()
 	{
@@ -194,42 +224,9 @@ class Admin extends BaseController
 		}
 
 		return redirect()->back()->with('pesan', 'Data Transkip tersimpan');
-
 	}
 
-	public function add_mhs_akses()
-	{
-		$ModelMahasiswa = new ModelMahasiswa();
-		$data = [];
-
-		// Ambil data mahasiswa_id dan pembimbing_id dari formulir
-		$mahasiswaIds = $this->request->getPost('mahasiswa_ids');
-		$ta = $this->ModelTa->ta_aktif();
-
-		if (is_array($mahasiswaIds)) {
-
-			// Loop melalui semua mahasiswa yang dipilih
-			foreach ($mahasiswaIds as $mahasiswaId) {
-				$data[] = [
-					'id_mhs' => $mahasiswaId,
-					'id_ta'       => $ta['id_ta'],
-				];
-			}
-
-
-			$ModelMahasiswa->Tambah_mhs_status($data);
-
-			// Redirect ke halaman sebelumnya atau tampilkan pesan berhasil jika diperlukan
-			return redirect()->back()->with('pesan', 'Data berhasil disimpan ke tabel status.');
-		} else {
-
-			return redirect()->back()->with('error', 'Tidak Ada data yang di Pilih.');
-		}
-	}
-
-
-
-
+	
 	public function tambah_status($id_prodi)
 
 	// TERUSKAN VIDEO 21 SIAKAD CI 4 MENIT 16:19
@@ -246,7 +243,22 @@ class Admin extends BaseController
 		return redirect()->to(base_url('krs'));
 		return view('layout/v_wrapper', $data);
 	}
+	public function transkip($id_mhs)
+	{
+		$mhs = $this->ModelAdmin->Data_mahasiswa_transkip($id_mhs);
+		$data = array(
+			'title' =>    'Transkip Nilai Mahasiswa',
+			'mhs'       => $this->ModelAdmin->Data_mahasiswa_khs($id_mhs),
+			'matkul_ditawarkan'  => $this->ModelAdmin->matkulditawarkan($mhs['id_prodi']), //sesuiakan dengan tahun akademik krs // $mhs['id_prodi'] filter berdasarkan id_prodi
+			'data_matkul'    => $this->ModelAdmin->DataMatkul($mhs['id_mhs']), // tambahan , $ta['id_ta'] sesuiakan dengan tahun akademik krs
+			'data_matkul_aktif'    => $this->ModelAdmin->DataMatkul_aktif($mhs['id_mhs']), // tambahan , $ta['id_ta'] sesuiakan dengan tahun akademik krs
+			'isi'   => 'admin/mahasiswa/v_transkip_nilai'
+		);
+		return view('layout/v_wrapper', $data);
+	}
+
 	
+
 
 	//--------------------------------------------------------------------
 
