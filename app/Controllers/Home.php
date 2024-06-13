@@ -24,34 +24,6 @@ class Home extends BaseController
         $this->konfigurasi = new Modelkonfigurasi;
     }
 
-
-    public function beranda()
-
-    {
-        $kategori = $this->kategori->list();
-        $berita = $this->berita->published();
-        $konfigurasi = $this->konfigurasi->orderBy('konfigurasi_id')->first();
-        $data = [
-            'title' =>    'Login',
-            'slider'  => $this->ModelAdmin->slider(),
-            'berita' => $berita,
-            'kategori' => $kategori,
-            'konfigurasi' => $konfigurasi,
-            'isi'    =>    'layout1/v_home'
-        ];
-        return view('layout/v_wrapper', $data);
-    }
-
-    public function  pagination()
-    {
-        return view('pagination/pagination');
-    }
-
-    public function  welcome()
-    {
-        return view('welcome_message');
-    }
-
     public function index()
 
     {   
@@ -87,6 +59,68 @@ class Home extends BaseController
         return view('layout1/v_wrapper', $data);
     }
 
+
+
+    public function beranda()
+
+    {
+        $kategori = $this->kategori->list();
+        $berita = $this->berita->published();
+        $konfigurasi = $this->konfigurasi->orderBy('konfigurasi_id')->first();
+        $data = [
+            'title' =>    'Login',
+            'slider'  => $this->ModelAdmin->slider(),
+            'berita' => $berita,
+            'kategori' => $kategori,
+            'konfigurasi' => $konfigurasi,
+            'isi'    =>    'layout1/v_home'
+        ];
+        return view('layout1/v_wrapper', $data);
+    }
+
+    public function profil()
+
+    {
+        $tombolCari = $this->request->getPost('tombolcariberita');
+
+        if (isset($tombolCari)) {
+            $cari = $this->request->getPost('cariberita');
+            session()->set('cariberita', $cari);
+            redirect()->to('/home/beranda');
+        } else {
+            $cari = session()->get('cariberita');
+        }
+        $kategori = $this->kategori->list();
+        $berita = $this->berita->published();
+        $konfigurasi = $this->konfigurasi->orderBy('konfigurasi_id')->first();
+        $dataBerita = $cari ? $this->berita->cariData($cari) : $this->berita->join('tbl_user', 'tbl_user.id_user = tbl_berita.id_user')
+        ->join('kategori', 'kategori.kategori_id = tbl_berita.kategori_id');
+        $data = [
+            'title' =>    'STAK-LUWUK BANGGAI',
+            'slider'  => $this->ModelAdmin->slider(),
+            'berita' => $dataBerita->paginate(4, 'berita'),
+            'kategori' => $kategori,
+            'pager'   => $this->berita->pager,
+            'konfigurasi' => $konfigurasi,
+            'jml_prodi' => $this->ModelAdmin->jml_prodi(),
+			'jml_dosen' => $this->ModelAdmin->jml_dosen(),
+			'jml_mhs' => $this->ModelAdmin->jml_mhs(),
+            'isi'    =>    'layout_profil/v_profil'
+        ];
+        return view('layout_profil/v_wrapper', $data);
+    }
+
+    public function  pagination()
+    {
+        return view('pagination/pagination');
+    }
+
+    public function  welcome()
+    {
+        return view('welcome_message');
+    }
+
+ 
     // public function beranda()
 
     // {   

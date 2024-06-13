@@ -265,46 +265,4 @@
     <?php } ?>
 
 
-     <!-- form inputnya -->
-     <div class="modal fade" id="edit<?= $value['id_range_nilai'] ?>">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Add Bobot Nilai</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>
-                        <?php
-                        echo form_open('BobotNilai/add_bobot_nilai/' . $kode_bobot_nilai);
-                        ?>
-                    <div class="form-grup">
-                        <label>Nilai Huruf</label>
-                        <input name="nilai_huruf" class="form-control" placeholder="Nilai Huruf">
-                    </div>
-                    <div class="form-grup">
-                        <label>Nilai Index</label>
-                        <input name="nilai_index" class="form-control" placeholder="Nilai Index">
-                    </div>
-                    <div class="form-grup">
-                        <label>Nilai Minimum</label>
-                        <input name="bobot_minimum" class="form-control" placeholder="Nilai Minimum">
-                    </div>
-                    <div class="form-grup">
-                        <label>Nilai Maksimum</label>
-                        <input name="bobot_maksimum" class="form-control" placeholder="Nilai Maksimum">
-                    </div>
-                    <p>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="fas fa-edit btn-sm btn-danger" data-dismiss="modal">Tutup</button>
-                    <button type="submit" class="fas fa-trash btn-sm btn-flat">Simpan</button>
-                </div>
-                <?php echo form_close() ?>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
+    
