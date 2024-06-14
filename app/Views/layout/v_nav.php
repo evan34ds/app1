@@ -78,6 +78,8 @@
                     <li><a href="<?= base_url('fakultas') ?>" class="dropdown-item">Fakultas</a></li>
                     <li><a href="<?= base_url('tutorial') ?>" class="dropdown-item">Tutorial</a></li>
                     <li><a href="<?= base_url('slider') ?>" class="dropdown-item">Slider</a></li>
+                    <li><a href="<?= base_url('pengumuman') ?>" class="dropdown-item">Pengumuman</a></li>
+                    <li><a href="<?= base_url('galeri') ?>" class="dropdown-item">Galeri</a></li>
                   <!-- Level two dropdown-->
               <li class="dropdown-submenu dropdown-hover">
                 <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Berita</a>

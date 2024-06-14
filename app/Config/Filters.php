@@ -61,6 +61,7 @@ class Filters extends BaseConfig
 				'jadwalkuliah', 'jadwalkuliah/*',
 				'slider', 'slider/*',
 				'berita', 'berita/*',
+				'pengumuman', 'pengumuman/*',
 				'bobotnilai', 'bobotnilai/*',
 				'pembayaran', 'pembayaran/*',
 				'/'
