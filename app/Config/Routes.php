@@ -22,6 +22,10 @@ $routes->setTranslateURIDashes(false);
 $routes->set404Override();
 $routes->setAutoRoute(true);
 
+$routes->get('pengumuman/pdf_view/(:num)', 'Pdf::pdf_view/$1');
+$routes->post('pdf/upload', 'Pdf::upload');
+$routes->get('pdf/list', 'Pdf::list');
+$routes->get('pdf/pengumuman/(:any)', 'PdfController::viewPdf/$1');
 /**
  * --------------------------------------------------------------------
  * Route Definitions

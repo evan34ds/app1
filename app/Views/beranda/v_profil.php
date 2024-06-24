@@ -1,47 +1,4 @@
-<body>
 
-  <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top d-flex align-items-center">
-    <div class="container d-flex align-items-center">
-
-      <h1 class="logo me-auto"><a href="index.html">STAK-LUWUK BANGGAI</a></h1>
-      <!-- Uncomment below if you prefer to use an image logo -->
-      <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-
-      <nav id="navbar" class="navbar">
-        <ul>
-          <li><a href="index.html" class="active">Home</a></li>
-
-          <li class="dropdown"><a href="#"><span>About</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="about.html">About</a></li>
-              <li><a href="team.html">Team</a></li>
-              <li><a href="testimonials.html">Testimonials</a></li>
-
-              <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
-                <ul>
-                  <li><a href="#">Deep Drop Down 1</a></li>
-                  <li><a href="#">Deep Drop Down 2</a></li>
-                  <li><a href="#">Deep Drop Down 3</a></li>
-                  <li><a href="#">Deep Drop Down 4</a></li>
-                  <li><a href="#">Deep Drop Down 5</a></li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="portfolio.html">Portfolio</a></li>
-          <li><a href="pricing.html">Pricing</a></li>
-          <li><a href="blog.html">Blog</a></li>
-
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="index.html" class="getstarted">Get Started</a></li>
-        </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
-      </nav><!-- .navbar -->
-
-    </div>
-  </header><!-- End Header -->
 
   <!-- ======= Hero Section ======= -->
   <section id="hero">
@@ -216,15 +173,15 @@
         </div>
         <div class="row">
           <?php
-          foreach ($berita as $data) :
+          foreach ($listberita as $data) :
           ?>
             <div class="col-lg-6">
               <div class="member d-flex align-items-start">
                 <div class="pic"><img src="<?= base_url('/img/berita/thumb/' . $data['gambar']) ?>" class="img-fluid" alt="..."></div>
                 <div class="member-info">
-                  <h4><a href="<?= base_url('home/detail_berita/' . $data['slug_berita']) ?>"><?= $data['judul_berita'] ?></a></h4>
+                  <h4><a href="<?= base_url('home/detail_berita1/' . $data['slug_berita']) ?>"><?= $data['judul_berita'] ?></a></h4>
                   <p><?= substr(strip_tags($data['isi']), 0, 100) ?>..</p>
-                  <a href="<?= base_url('home/detail_berita/' . $data['slug_berita']) ?>" class="btn btn-primary btn-sm">Read More</a>
+                  <a href="<?= base_url('home/uraian_berita/' . $data['slug_berita']) ?>" class="btn btn-primary btn-sm">Read More</a>
                   <p class="card-text"><small class="text-muted"><i class="bi bi-person-circle"></i>Post by <?= $data['nama_user'] ?> | <?= date_indo($data['tgl_berita']) ?> | <?= $data['nama_kategori'] ?> </small></p>
                 </div>
               </div>
@@ -232,7 +189,7 @@
           <?php endforeach; ?>
         </div>
         <p></p>
-        <div class="col-lg-12 d-flex justify-content-center"><a href="<?= base_url('home/semua_berita') ?>"> <button class="btn btn-block btn-outline-dark btn-lg">Selengkapnya</button></a></div>
+        <div class="col-lg-12 d-flex justify-content-center"><a href="<?= base_url('home/berita_selengkapnya') ?>"> <button class="btn btn-block btn-outline-dark btn-lg">Selengkapnya</button></a></div>
       </div>
     </section><!-- End Team Section -->
     <!-- ======= Services Section ======= -->
@@ -244,28 +201,28 @@
           <p>STAK-LUWUK BANGGAI</p>
         </div>
         <div class="row">
-          <?php foreach ($berita as $key => $data) : ?>
+          <?php foreach ($pengumuman as $key => $data) : ?>
             <?php if ($key == 0) : ?>
               <div class="col-md-12">
                 <div class="icon-box">
                   <i class="bi bi-file-earmark-pdf-fill"></i>
-                  <h4><a href="#"><?= $data['judul_berita'] ?></a></h4>
-                  <p><?= date_indo($data['tgl_berita']) ?></p>
+                  <h4><a href="<?= base_url('home/viewPdf/' . $data['pdf']) ?>"><?= $data['judul_pengumuman'] ?></a></h4>
+                  <p><?= date_indo($data['tgl_pengumuman']) ?></p>
                 </div>
               </div>
             <?php else : ?>
               <div class="col-md-6 mt-4 mt-md-0">
                 <div class="icon-box">
                   <i class="bi bi-file-earmark-pdf-fill"></i>
-                  <h4><a href="#"><?= $data['judul_berita'] ?></a></h4>
-                  <p><?= date_indo($data['tgl_berita']) ?></p>
+                  <h4><a href="<?= base_url('home/viewPdf/' . $data['pdf']) ?>" target="_blank"><?= $data['judul_pengumuman'] ?></a></h4>
+                  <p><?= date_indo($data['tgl_pengumuman']) ?></p>
                 </div>
               </div>
             <?php endif; ?>
           <?php endforeach; ?>
         </div>
         <div class="d-flex justify-content-center">
-          <a href="<?= base_url('home/semua_berita') ?>">
+          <a href="<?= base_url('home/pengumuman_selengkapnya') ?>">
             <button class="btn btn-block btn-outline-dark btn-lg">Selengkapnya</button>
           </a>
         </div>
@@ -311,7 +268,7 @@
           </div>
 
           <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-            <img src="<?= base_url() ?>/template/sailor/assets/img/clients/client-2.png" class="img-fluid" alt="">
+          <img src="<?= base_url() ?>/template/sailor/assets/img/clients/client-2.png" class="img-fluid" alt="">
           </div>
 
           <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
@@ -319,7 +276,7 @@
           </div>
 
           <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-            <img src="<?= base_url() ?>/template/sailor/assets/img/clients/client-4.png" class="img-fluid" alt="">
+          <a href="<?= base_url() ?>/auth"> <img src="<?= base_url() ?>/template/sailor/assets/img/clients/siakad.png" class="img-fluid" alt=""></a>
           </div>
 
           <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
@@ -339,76 +296,4 @@
 
   </main><!-- End #main -->
 
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
-    <div class="footer-top">
-      <div class="container">
-        <div class="row">
-
-          <div class="col-lg-3 col-md-6">
-            <div class="footer-info">
-              <h3>Sailor</h3>
-              <p>
-                A108 Adam Street <br>
-                NY 535022, USA<br><br>
-                <strong>Phone:</strong> +1 5589 55488 55<br>
-                <strong>Email:</strong> info@example.com<br>
-              </p>
-              <div class="social-links mt-3">
-                <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-                <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-                <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-                <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-2 col-md-6 footer-links">
-            <h4>Useful Links</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
-            </ul>
-          </div>
-
-          <div class="col-lg-3 col-md-6 footer-links">
-            <h4>Our Services</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
-            </ul>
-          </div>
-
-          <div class="col-lg-4 col-md-6 footer-newsletter">
-            <h4>Our Newsletter</h4>
-            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
-            <form action="" method="post">
-              <input type="email" name="email"><input type="submit" value="Subscribe">
-            </form>
-
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-
-    <div class="container">
-      <div class="copyright">
-        &copy; Copyright <strong><span>Sailor</span></strong>. All Rights Reserved
-      </div>
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/sailor-free-bootstrap-theme/ -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-      </div>
-    </div>
+  

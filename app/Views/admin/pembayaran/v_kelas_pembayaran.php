@@ -87,7 +87,7 @@
                             ->where('tbl_kelas_pembayaran.id_mhs IS NOT NULL')
                             ->where('tbl_kelas_pembayaran.pelunasan IS NULL')
                             ->countAllResults();
-                       
+                            
                        ?>
 
 

@@ -2,22 +2,16 @@
 
 namespace App\Controllers;
 
-use App\Models\ModelAdmin;
-use App\Models\Modelberita;
-use App\Models\Modelkategori;
-use App\Models\Modelkonfigurasi;
+use App\Models\ModelPengumuman;
 use App\Models\ModelUser;
 
-class Berita extends BaseController
+class Pengumuman extends BaseController
 {
 
     public function __construct()
     {
         helper('form');
-        $this->ModelAdmin = new ModelAdmin();
-        $this->Modelberita = new Modelberita;
-        $this->Modelkategori = new Modelkategori;
-        $this->Modelkonfigurasi = new Modelkonfigurasi;
+        $this->ModelPengumuman = new ModelPengumuman;
         $this->ModelUser = new ModelUser;
     }
 
@@ -25,10 +19,9 @@ class Berita extends BaseController
     {
 
         $data = [
-            'title' =>    'Berita',
-            'daftar_berita'  => $this->Modelberita->list(),
-            'kategori' => $this->Modelkategori->orderBy('nama_kategori', 'ASC')->findAll(),
-            'isi'    =>    'admin/admin_berita/v_index_berita'
+            'title' =>    'Pengumuman',
+            'daftar_pengumuman'  => $this->ModelPengumuman->list(),
+            'isi'    =>    'admin/admin_pengumuman/v_index_pengumuman'
         ];
         return view('layout/v_wrapper', $data);
     }
@@ -36,195 +29,161 @@ class Berita extends BaseController
     public function add()
     {
         if ($this->validate([
-            'judul_berita' => [
-                'label' => 'Judul berita',
+            'judul_pengumuman' => [
+                'label' => 'Judul Pengumuman',
                 'rules' => 'required',
                 'errors' => [
                     'required' => '{field} tidak boleh kosong',
                 ]
             ],
-            'kategori_id' => [
-                'label' => 'Kategori',
-                'rules' => 'required',
-                'errors' => [
-                    'required' => '{field} tidak boleh kosong',
-                ]
-            ],
-            'isi' => [
-                'label' => 'Isi Berita',
-                'rules' => 'required',
-                'errors' => [
-                    'required' => '{field} tidak boleh kosong',
-                ]
-            ],
-            'status' => [
+            'status_pengumuman' => [
                 'label' => 'Status',
                 'rules' => 'required',
                 'errors' => [
                     'required' => '{field} tidak boleh kosong',
                 ]
             ],
-            'gambar' => [
-                'label' => 'gambar',
-                'rules' => 'uploaded[gambar]|max_size[gambar,5000]|mime_in[gambar,image/png,image/jpg,image/jpeg,image/ico]', //documentasi Codeigniter Upload validasi "Rules for File Uploads"
+            'pdf' => [
+                'label' => 'pdf',
+                'rules' => 'uploaded[pdf]|max_size[pdf,2048]|ext_in[pdf,pdf]', //documentasi Codeigniter Upload validasi "Rules for File Uploads"
                 'errors' => [
                     'uploaded' => '{field} Wajib Diisi !!!',
                     'max_size' => '{field} Max 5000 KB !!!',
-                    'min_in' => 'Format {field} Wajib PNG, JPG, !!!'
+                    'ext_in' => 'Format {field} Wajib, !!!'
                 ]
             ],
 
         ])) {
 
             //mengambil nama foto
-            $gambar = $this->request->getFile('gambar'); //documentasi Codeigniter =>Working with Uploaded Files=>Simplest usage ""
+            $pdf = $this->request->getFile('pdf'); //documentasi Codeigniter =>Working with Uploaded Files=>Simplest usage ""
             //merubah nama foto
-            $nama_file = $gambar->getRandomName(); //documentasi Codeigniter =>Working with Uploaded Files=>Moving Files"
+            $nama_file = $pdf->getRandomName(); //documentasi Codeigniter =>Working with Uploaded Files=>Moving Files"
             $tgl = date('Y-m-d'); //cara menentukan tanggal sekarang
             $user = session()->get('id'); //di ambil dari AUTH Nomor 59
             //documentasi Codeigniter =>Working with Uploaded Files=>Moving Files"
             //jika valid
             $data = array(
-                'judul_berita' => $this->request->getPost('judul_berita'),
-                'kategori_id' => $this->request->getPost('kategori_id'),
-                'isi' => $this->request->getPost('isi'),
-                'status' => $this->request->getPost('status'),
-                'slug_berita' => slug($this->request->getPost('judul_berita')),
-                'tgl_berita' =>  $tgl,
+                'judul_pengumuman' => $this->request->getPost('judul_pengumuman'),
+                'status_pengumuman' => $this->request->getPost('status_pengumuman'),
+                'tgl_pengumuman' =>  $tgl,
                 'id_user' =>   $user,
-                'gambar' => $nama_file,
+                'pdf' => $nama_file,
             );
             //memindahkan file foto dari form input ke  direktori
-            $gambar->move('img/berita/thumb', $nama_file); //documentasi Codeigniter =>Working with Uploaded Files=>Moving Files
-            $this->Modelberita->add_berita($data);
+            $pdf->move('pdf/pengumuman', $nama_file); //documentasi Codeigniter =>Working with Uploaded Files=>Moving Files
+            $this->ModelPengumuman->add_pengumuman($data);
             session()->setFlashdata('pesan', 'Data Berhasil Di Tambahkan !!!');
-            return redirect()->to('/berita');
+            return redirect()->to('/pengumuman');
         } else {
             //jika tidak valid
             session()->setFlashdata('errors', \Config\Services::validation()->getErrors());
-            return redirect()->to(base_url('berita'));
+            return redirect()->to(base_url('pengumuman'));
         }
     }
 
+    public function viewPdf($pdf)
+    {
 
-    public function edit($berita_id)
+        // Path ke file PDF
+        $filePath = 'pdf/pengumuman/' . $pdf;
+
+        // Periksa apakah file ada
+        if (!file_exists($filePath)) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('File PDF tidak ditemukan');
+        }
+
+        // Set header untuk menampilkan file PDF
+        return $this->response->setHeader('Content-Type', 'application/pdf')
+            ->setBody(file_get_contents($filePath));
+    }
+
+    public function edit($id_pengumuman)
     {
         if ($this->validate([
-            'judul_berita' => [
-                'label' => 'Judul berita',
+            'judul_pengumuman' => [
+                'label' => 'judul pengumuman',
                 'rules' => 'required',
                 'errors' => [
                     'required' => '{field} tidak boleh kosong',
                 ]
             ],
-            'kategori_id' => [
-                'label' => 'Kategori',
+            'status_pengumuman' => [
+                'label' => 'Status pengumuman',
                 'rules' => 'required',
                 'errors' => [
                     'required' => '{field} tidak boleh kosong',
                 ]
             ],
-            'isi' => [
-                'label' => 'Isi Berita',
-                'rules' => 'required',
-                'errors' => [
-                    'required' => '{field} tidak boleh kosong',
-                ]
-            ],
-            'status' => [
-                'label' => 'Status',
-                'rules' => 'required',
-                'errors' => [
-                    'required' => '{field} tidak boleh kosong',
-                ]
-            ],
-            'gambar' => [
-                'label' => 'gambar',
-                'rules' => 'max_size[gambar,5000]|mime_in[gambar,image/png,image/jpg,image/jpeg,image/ico]', //documentasi Codeigniter Upload validasi "Rules for File Uploads"
+            'pdf' => [
+                'label' => 'pdf',
+                'rules' => 'max_size[pdf,2048]|ext_in[pdf,pdf]', //documentasi Codeigniter Upload validasi "Rules for File Uploads"
                 'errors' => [
                     'max_size' => '{field} Max 5000 KB !!!',
-                    'min_in' => 'Format {field} Wajib PNG, JPG, !!!'
+                    'ext_in' => 'Format {field} Wajib, !!!'
                 ]
             ],
 
         ])) {
+
             //mengambil nama foto
-            $gambar = $this->request->getFile('gambar'); //documentasi Codeigniter =>Working with Uploaded Files=>Simplest usage ""
-            if ($gambar->getError() == 4) {
+            $tgl = date('Y-m-d'); //cara menentukan tanggal sekarang
+            $pdf = $this->request->getFile('pdf'); //documentasi Codeigniter =>Working with Uploaded Files=>Simplest usage ""
+            $user = session()->get('id'); //di ambil dari AUTH Nomor 59
+            if ($pdf->getError() == 4) {
 
                 $data = array(
-                    'berita_id' => $berita_id,
-                    'judul_berita' => $this->request->getPost('judul_berita'),
-                    'kategori_id' => $this->request->getPost('kategori_id'),
-                    'isi' => $this->request->getPost('isi'),
-                    'status' => $this->request->getPost('status'),
-                    'slug_berita' => slug($this->request->getPost('judul_berita')),
-                    'tgl_berita' =>  $this->request->getPost('tgl_berita'),
+                    'id_pengumuman' => $id_pengumuman,
+                    'judul_pengumuman' => $this->request->getPost('judul_pengumuman'),
+                    'status_pengumuman' => $this->request->getPost('status_pengumuman'),
+                    'tgl_pengumuman' =>   $this->request->getPost('tgl_pengumuman'),
+                    'id_user' =>   $user,
                 );
-                $this->Modelberita->edit($data);
+                $this->ModelPengumuman->edit($data);
             } else {
                 //menghapus foto lama
-                $home = $this->Modelberita->detail_data($berita_id);
-                if ($home['gambar'] != "") {
-                    unlink('img/berita/thumb/' . $home['gambar']);
+                $home = $this->ModelPengumuman->detail_data($id_pengumuman);
+                if ($home['pdf'] != "") {
+                    unlink('pdf/pengumuman/' . $home['pdf']);
                 }
                 //merename nama file
-                $nama_file = $gambar->getRandomName(); //documentasi Codeigniter =>Working with Uploaded Files=>Moving Files"
+                $nama_file = $pdf->getRandomName(); //documentasi Codeigniter =>Working with Uploaded Files=>Moving Files"
                 //jika valid
                 $data = array(
-                    'berita_id' => $berita_id,
-                    'judul_berita' => $this->request->getPost('judul_berita'),
-                    'kategori_id' => $this->request->getPost('kategori_id'),
-                    'isi' => $this->request->getPost('isi'),
-                    'status' => $this->request->getPost('status'),
-                    'slug_berita' => slug($this->request->getPost('judul_berita')),
-                    'tgl_berita' =>  $this->request->getPost('tgl_berita'),
-                    'gambar' => $nama_file,
+                    'id_pengumuman' => $id_pengumuman,
+                    'judul_pengumuman' => $this->request->getPost('judul_pengumuman'),
+                    'status_pengumuman' => $this->request->getPost('status_pengumuman'),
+                    'tgl_pengumuman' =>  $tgl,
+                    'id_user' =>   $user,
+                    'pdf' => $nama_file,
                 );
                 //memindahkan file foto dari form input ke  direktori
-                $gambar->move('img/berita/thumb', $nama_file); //documentasi Codeigniter =>Working with Uploaded Files=>Moving Files
-                $this->Modelberita->edit($data);
+                $pdf->move('pdf/pengumuman', $nama_file); //documentasi Codeigniter =>Working with Uploaded Files=>Moving Files
+                $this->ModelPengumuman->edit($data);
             }
             //merubah nama foto
 
             session()->setFlashdata('pesan', 'Data Berhasil Di Ganti !!!');
-            return redirect()->to('/berita');
+            return redirect()->to('/pengumuman');
         } else {
             //jika tidak valid
             session()->setFlashdata('errors', \Config\Services::validation()->getErrors());
-            return redirect()->to(base_url('berita'));
+            return redirect()->to(base_url('pengumuman'));
         }
     }
 
-    public function formupload()
-    {
-        if ($this->request->isAJAX()) {
-            $berita_id = $this->request->getVar('berita_id');
-            $list =  $this->berita->find($berita_id);
-            $data = [
-                'title' => 'Upload Sampul Berita',
-                'list'  => $list,
-                'berita_id' => $berita_id
-            ];
-            $msg = [
-                'sukses' => view('admin/admin_berita/upload', $data)
-            ];
-            echo json_encode($msg);
-        }
-    }
-
-    public function delete($berita_id)
+    public function delete($id_pengumuman)
     {
         //menghapus foto lama
-        $home = $this->ModelAdmin->detail_data($berita_id);
-        if ($home['gambar'] != "") {
-            unlink('img/berita/thumb/' . $home['gambar']);
+        $home = $this->ModelPengumuman->detail_data($id_pengumuman);
+        if ($home['pdf'] != "") {
+            unlink('pdf/pengumuman/' . $home['pdf']);
         }
         $data = [
-            'berita_id' => $berita_id,
+            'id_pengumuman' => $id_pengumuman,
         ];
-        $this->Modelberita->delete_data($data);
+        $this->ModelPengumuman->delete_data($data);
         session()->setFlashdata('pesan', 'Data Berhasil Di Hapus !!!');
-        return redirect()->to('/berita');
+        return redirect()->to('/pengumuman');
     }
 }
