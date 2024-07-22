@@ -106,6 +106,21 @@ class Berita extends BaseController
         }
     }
 
+    public function delete($berita_id)
+    {
+        //menghapus foto lama
+        $home = $this->ModelAdmin->detail_data($berita_id);
+        if ($home['gambar'] != "") {
+            unlink('img/berita/thumb/' . $home['gambar']);
+        }
+        $data = [
+            'berita_id' => $berita_id,
+        ];
+        $this->Modelberita->delete_data($data);
+        session()->setFlashdata('pesan', 'Data Berhasil Di Hapus !!!');
+        return redirect()->to('/berita');
+    }
+
 
     public function edit($berita_id)
     {
@@ -213,18 +228,24 @@ class Berita extends BaseController
         }
     }
 
-    public function delete($berita_id)
+
+    public function pesan()
     {
-        //menghapus foto lama
-        $home = $this->ModelAdmin->detail_data($berita_id);
-        if ($home['gambar'] != "") {
-            unlink('img/berita/thumb/' . $home['gambar']);
-        }
+
         $data = [
-            'berita_id' => $berita_id,
+            'title' =>    'Pesan',
+            'daftar_pesan'  => $this->Modelberita->listPesan(),
+            'isi'    =>    'admin/admin_berita/v_pesan'
         ];
-        $this->Modelberita->delete_data($data);
+        return view('layout/v_wrapper', $data);
+    }
+    public function delete_pesan($id_message)
+    {
+        $data = [
+            'id_message' => $id_message,
+        ];
+        $this->Modelberita->hapus_pesan($data);
         session()->setFlashdata('pesan', 'Data Berhasil Di Hapus !!!');
-        return redirect()->to('/berita');
+        return redirect()->to('/berita/pesan');
     }
 }

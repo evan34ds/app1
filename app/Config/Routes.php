@@ -34,7 +34,7 @@ $routes->get('pdf/pengumuman/(:any)', 'PdfController::viewPdf/$1');
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Home::index');
+$routes->get('/', 'Home::profil');
 
 
 $routes->add('pembayaran/daftar-mhs-pembayaran34', 'Pembayaran::daftar_mhs_pembayaran');

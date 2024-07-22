@@ -13,6 +13,44 @@ class ModelAdmin extends Model
         $this->db = db_connect();
     }
 
+    public function DataKrsAktivitas($id_ta) // tmbahan $id_tajika tahun akademik di rubah maka isi krs berubah
+    // cara relasi tabel ke tiga tabel 
+    {
+
+        return $this->db->table('tbl_krs')
+
+            ->join('tbl_jadwal', 'tbl_jadwal.id_jadwal=tbl_krs.id_jadwal', 'left',) //menampilkan fakultas
+            ->join('tbl_mhs', 'tbl_mhs.id_mhs=tbl_krs.id_mhs', 'left') //menampilkan fakultas
+            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_krs.id_ta', 'left') //menampilkan fakultas
+            ->join('tbl_matkul', 'tbl_matkul.id_matkul=tbl_jadwal.id_matkul', 'left') //menampilkan matkul
+            ->join('tbl_kelas', 'tbl_kelas.id_kelas=tbl_jadwal.id_kelas', 'left') //menampilkan fakultas
+            ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_mhs.id_prodi', 'left') //menampilkan fakultas
+            ->join('tbl_ruangan', 'tbl_ruangan.id_ruangan=tbl_jadwal.id_ruangan', 'left') //menampilkan fakultas
+            ->groupBy('tbl_krs.id_mhs') //jika tahun akademik di rubah maka isi krs berubah   
+            ->get()->getResultArray();
+    }
+
+    public function admin_khs($id_mhs, $id_ta)
+    {
+        $builder = $this->db->table('tbl_krs');
+        $builder->select('tbl_matkul.kode_matkul,tbl_matkul.sks, tbl_matkul.smt,tbl_matkul.matkul,tbl_kelas_perkuliahan.nama_kelas_perkuliahan, tbl_krs.nilai,tbl_dosen.nama_dosen, tbl_range_nilai.nilai_huruf, tbl_range_nilai.nilai_index');
+        $builder->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_krs.id_mhs', 'left');
+        $builder->join('tbl_jadwal', 'tbl_jadwal.id_jadwal = tbl_krs.id_jadwal', 'left');
+        $builder->join('tbl_kelas_perkuliahan', 'tbl_kelas_perkuliahan.id_kelas_perkuliahan = tbl_jadwal.id_kelas_perkuliahan', 'left');
+        $builder->join('tbl_kurikulum', 'tbl_kurikulum.id_kurikulum=tbl_kelas_perkuliahan.id_kurikulum', 'left');
+        $builder->join('tbl_matkul', 'tbl_matkul.id_matkul = tbl_kurikulum.id_matkul', 'left');
+        $builder->join('tbl_dosen', 'tbl_dosen.id_dosen = tbl_jadwal.id_dosen', 'left');
+        $builder->join('tbl_prodi', 'tbl_prodi.id_prodi =tbl_mhs.id_prodi', 'left');
+        $builder->join('tbl_range_nilai', 'tbl_range_nilai.id_prodi =tbl_mhs.id_prodi', 'left');
+        $builder->join('tbl_ta', 'tbl_ta.id_ta =tbl_krs.id_ta', 'inner');
+        $builder->where('tbl_mhs.id_mhs', $id_mhs);
+        $builder->where('tbl_ta.id_ta', $id_ta);
+        $builder->WHERE('tbl_krs.nilai BETWEEN tbl_range_nilai.bobot_minimum AND tbl_range_nilai.bobot_maksimum')
+            ->WHERE('tbl_krs.tanggal_input_nilai BETWEEN tbl_range_nilai.tanggal_mulai AND tbl_range_nilai.tanggal_akhir');
+        $query = $builder->get();
+        return $query;
+    }
+
     public function aktif_mhs_prodi()
     {
         $query = $this->db->query("SELECT
@@ -58,67 +96,68 @@ class ModelAdmin extends Model
         return $query;
     }
 
-    public function jml_gedung()
+    public function add_slider($data)
     {
-        return $this->db->table('tbl_gedung')
-            ->countAll();
+        $this->db->table('tbl_slider')->insert($data);
     }
 
-    public function jml_ruangan()
+    public function aktif_mhs()
     {
-        return $this->db->table('tbl_ruangan')
-            ->countAll();
-    }
-    public function jml_fakultas()
-    {
-        return $this->db->table('tbl_fakultas')
-            ->countAll(); // Menghitung jumlah keseluruhan tabel codeignter =>> Working With Databases >> Query Builder Class >> $builder->countAll
-    }
-    public function jml_prodi()
-    {
-        return $this->db->table('tbl_prodi')
-            ->countAll();
-    }
-    public function jml_dosen()
-    {
-        return $this->db->table('tbl_dosen')
-            ->countAll();
-    }
-    public function jml_mhs()
-    {
-        return $this->db->table('tbl_mhs')
-            ->countAll();
-    }
-    public function jml_matkul()
-    {
-        return $this->db->table('tbl_matkul')
-            ->countAll();
-    }
-    public function jml_user()
-    {
-        return $this->db->table('tbl_user')
-            ->countAll();
+        $query = $this->db->query("SELECT
+        h.id_mhs,
+        h.nama_mhs,
+        h.nim,
+        i.jenjang,
+        i.prodi,
+        t.status,
+        SUM(u.sks) ba,
+        SUM(IF(
+    STATUS LIKE 1,
+        u.sks,
+        0
+    )) Total, COUNT(IF(
+    STATUS LIKE 1,
+        k.id_mhs,
+        0
+    )) Total,
+  IF(t.status =0,'AKTIF',IF(t.status=1,'AKTIF','AKTIF')) AS nilai_huruf
+   
+    FROM
+        tbl_krs AS k
+    INNER JOIN tbl_mhs AS h
+    ON
+        k.id_mhs = h.id_mhs
+    INNER JOIN tbl_prodi AS i
+    ON
+        i.id_prodi = h.id_prodi
+    INNER JOIN tbl_jadwal AS j
+    ON
+        k.id_jadwal = j.id_jadwal
+    INNER JOIN tbl_kelas_perkuliahan AS o
+    ON
+        j.id_kelas_perkuliahan = o.id_kelas_perkuliahan 
+
+         INNER JOIN tbl_kurikulum AS kur
+    ON
+        kur.id_kurikulum = o.id_kurikulum   
+    INNER JOIN tbl_matkul AS u
+    ON
+        kur.id_matkul = u.id_matkul
+    INNER JOIN tbl_ta AS t
+    ON
+        k.id_ta = t.id_ta
+        
+        WHERE t.status= '1'
+        
+        GROUP BY
+        
+        id_mhs;");
+        //menghitung jumlah sks berdasrakan hari
+        return $query;
     }
 
-    public function slider()
-    {
-        return $this->db->table('tbl_slider')
-            ->get()->getResultArray();
-    }
 
-    public function grafik()
-    {
-        return $this->db->table('tbl_grafik')
-            ->get()->getResultArray();
-    }
 
-    public function prodi_fakultas()
-    {
-        return $this->db->table('tbl_prodi')
-            ->join('tbl_fakultas', 'tbl_fakultas.id_fakultas = tbl_prodi.id_fakultas', 'left')
-            ->orderBy('tbl_fakultas.id_fakultas', 'ASC')
-            ->get()->getResultArray();
-    }
     public function allData($id_prodi)
     {
         return $this->db->table('tbl_jadwal')
@@ -131,37 +170,6 @@ class ModelAdmin extends Model
             ->orderBy('tbl_matkul.smt', 'ASC')
             ->get()->getResultArray();
     }
-    public function matkul($id_prodi)
-    {
-        return $this->db->table('tbl_matkul')
-            ->where('id_prodi', $id_prodi)
-            //  ->orderBy('smt', 'ASC') //pengurutan data tabel
-            ->get()->getResultArray();
-    }
-    public function kelas($id_prodi)
-    {
-        return $this->db->table('tbl_kelas')
-            ->where('id_prodi', $id_prodi)
-            ->orderBy('nama_kelas', 'ASC')
-            ->get()->getResultArray();
-    }
-
-    public function jumlah_mata_kuliah_kontrak($id_ta, $id_prodi)
-    {
-        return $this->db->table('tbl_jadwal')
-            ->select('tbl_matkul.kode_matkul,tbl_matkul.sks, tbl_matkul.smt,tbl_matkul.matkul, tbl_dosen.nama_dosen, tbl_jadwal.id_prodi, tbl_jadwal.id_jadwal, tbl_prodi.kode_prodi, tbl_kelas_perkuliahan.nama_kelas_perkuliahan, tbl_ruangan.ruangan, tbl_jadwal.hari,tbl_jadwal.waktu, tbl_jadwal.quota')
-            ->join('tbl_kelas_perkuliahan', 'tbl_kelas_perkuliahan.id_kelas_perkuliahan=tbl_jadwal.id_kelas_perkuliahan', 'left') //menampilkan kelas
-            ->join('tbl_kurikulum', 'tbl_kurikulum.id_kurikulum=tbl_kelas_perkuliahan.id_kurikulum', 'left')
-            ->join('tbl_matkul', 'tbl_matkul.id_matkul=tbl_kurikulum.id_matkul', 'left') //menampilkan pembimbing Prodi
-            ->join('tbl_ruangan', 'tbl_ruangan.id_ruangan=tbl_jadwal.id_ruangan', 'left') //menampilkan fakultas
-            ->join('tbl_dosen', 'tbl_dosen.id_dosen=tbl_jadwal.id_dosen', 'left') //menampilkan pembimbing akaademik
-            ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_jadwal.id_prodi', 'left') //menampilkan pembimbing akaademik
-            // ->orderBy('id_mhs', 'DESC')
-            ->where('tbl_jadwal.id_ta', $id_ta) //sesuaikan dengan id_ta di tabel jadwal
-            ->where('tbl_jadwal.id_prodi', $id_prodi) //sesuaikan dengan id_prodi di tabel jadwal
-            ->get()->getResultArray();
-    }
-
 
     public function DataMhs($id_prodi)
     {
@@ -173,6 +181,23 @@ class ModelAdmin extends Model
             ->where('tbl_prodi.id_prodi', $id_prodi) //Filter Bedarsarkan id Prodi
             ->get()->getRowArray();
     }
+
+    public function DataInstitusi()
+    {
+        return $this->db->table('tbl_institusi')
+            ->join('tbl_dosen', 'tbl_dosen.id_dosen=tbl_dosen.id_dosen', 'left') //menampilkan fakultas
+            ->get()->getResultArray();
+    }
+
+    public function DataInstitusi_kontak() //dodo
+    {
+        return $this->db->table('tbl_institusi')
+            ->join('tbl_dosen', 'tbl_dosen.id_dosen=tbl_institusi.id_dosen', 'left') //menampilkan pembimbing 
+            ->where('id_institusi', 1)
+            ->get()
+            ->getRowArray();
+    }
+
     public function DataKrs($id_jadwal, $id_ta) // tmbahan $id_tajika tahun akademik di rubah maka isi krs berubah
     {
         return $this->db->table('tbl_krs')
@@ -187,6 +212,34 @@ class ModelAdmin extends Model
 
             ->get()->getResultArray();
     }
+
+    public function Data_mahasiswa_khs($id_mhs)
+    {
+        return $this->db->table('tbl_mhs')
+            ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_mhs.id_prodi', 'left') //menampilkan pembimbing Prodi
+            ->join('tbl_fakultas', 'tbl_fakultas.id_fakultas=tbl_prodi.id_fakultas', 'left') //menampilkan fakultas
+            ->join('tbl_kelas', 'tbl_kelas.id_kelas=tbl_mhs.id_kelas', 'left') //menampilkan kelas
+            ->join('tbl_dosen', 'tbl_dosen.id_dosen=tbl_kelas.id_dosen', 'left') //menampilkan pembimbing 
+            ->where('tbl_mhs.id_mhs', $id_mhs) //Filter Bedarsarkan id Prodi
+            ->get()->getRowArray();
+    }
+
+    public function daftar_slider()
+    {
+        return $this->db->table('tbl_slider')
+            ->orderBy('id', 'DESC')
+            ->where('kategori_slider',  'slider')
+            ->get()->getResultArray();
+    }
+
+    public function daftar_galeri()
+    {
+        return $this->db->table('tbl_slider')
+            ->orderBy('id', 'DESC')
+            ->where('kategori_slider',  'galeri') //mata kulia tampil krs sesuai nim 
+            ->get()->getResultArray();
+    }
+
     public function DataProdi($id_prodi)
     {
         return $this->db->table('tbl_prodi')
@@ -198,51 +251,17 @@ class ModelAdmin extends Model
             ->get()->getRowArray();
     }
 
-    public function DetailJadwal($id_jadwal)
+    public function data_transkrip()
     {
         return $this->db->table('tbl_krs')
-            ->join('tbl_jadwal', 'tbl_jadwal.id_jadwal=tbl_krs.id_jadwal', 'left') //menampilkan fakultas
-            ->join('tbl_kelas_perkuliahan', 'tbl_kelas_perkuliahan.id_kelas_perkuliahan = tbl_jadwal.id_kelas_perkuliahan', 'left')
-            ->join('tbl_kurikulum', 'tbl_kurikulum.id_kurikulum=tbl_kelas_perkuliahan.id_kurikulum', 'left')
-            ->join('tbl_prodi ', 'tbl_prodi.id_prodi = tbl_jadwal.id_prodi', 'left')
-            ->join('tbl_fakultas', 'tbl_fakultas.id_fakultas=tbl_prodi.id_fakultas', 'left')
-            ->join('tbl_matkul', 'tbl_matkul.id_matkul = tbl_kurikulum.id_matkul', 'left')
-            ->join('tbl_dosen', 'tbl_dosen.id_dosen = tbl_jadwal.id_dosen', 'left')
-            ->where('tbl_jadwal.id_jadwal', $id_jadwal)
-            ->get()->getRowArray();
-    }
 
-    public function mhs($id_jadwal)
-    {
-        return $this->db->table('tbl_krs')
-            ->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_krs.id_mhs', 'left')
-            ->where('id_jadwal', $id_jadwal)
-            ->get()->getResultArray();
-    }
-
-
-
-    public function Data_mahasiswa_transkip($id_mhs)
-    {
-        return $this->db->table('tbl_mhs')
-            ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_mhs.id_prodi', 'left') //menampilkan pembimbing Prodi
-            ->join('tbl_fakultas', 'tbl_fakultas.id_fakultas=tbl_prodi.id_fakultas', 'left') //menampilkan fakultas
-            ->join('tbl_kelas', 'tbl_kelas.id_kelas=tbl_mhs.id_kelas', 'left') //menampilkan kelas
-            ->join('tbl_dosen', 'tbl_dosen.id_dosen=tbl_kelas.id_dosen', 'left') //menampilkan pembimbing 
-            ->where('tbl_mhs.id_mhs', $id_mhs) //Filter Bedarsarkan id Prodi
-            ->get()->getRowArray();
-    }
-
-    public function Matkulditawarkan($id_prodi)
-    {
-        return $this->db->table('tbl_jadwal')
+            ->join('tbl_jadwal', 'tbl_jadwal.id_jadwal=tbl_krs.id_jadwal', 'left',) //menampilkan fakultas
+            ->join('tbl_mhs', 'tbl_mhs.id_mhs=tbl_krs.id_mhs', 'left') //menampilkan fakultas
+            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_krs.id_ta', 'left') //menampilkan fakultas
+            ->join('tbl_matkul', 'tbl_matkul.id_matkul=tbl_jadwal.id_matkul', 'left') //menampilkan matkul
             ->join('tbl_kelas_perkuliahan', 'tbl_kelas_perkuliahan.id_kelas_perkuliahan=tbl_jadwal.id_kelas_perkuliahan', 'left') //menampilkan fakultas
-            ->join('tbl_kurikulum', 'tbl_kurikulum.id_kurikulum=tbl_kelas_perkuliahan.id_kurikulum', 'left')
-            ->join('tbl_matkul', 'tbl_matkul.id_matkul=tbl_kurikulum.id_matkul', 'left') //menampilkan matkul
+            ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_mhs.id_prodi', 'left') //menampilkan fakultas
             ->join('tbl_ruangan', 'tbl_ruangan.id_ruangan=tbl_jadwal.id_ruangan', 'left') //menampilkan fakultas
-            ->join('tbl_dosen', 'tbl_dosen.id_dosen=tbl_jadwal.id_dosen', 'left') //menampilkan pembimbing akaademik
-            ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_jadwal.id_prodi', 'left') //menampilkan pembimbing akaademik
-            ->where('tbl_jadwal.id_prodi', $id_prodi) //Filter Bedarsarkan id Prodi
             ->get()->getResultArray();
     }
 
@@ -295,6 +314,84 @@ class ModelAdmin extends Model
             ->orderBy('id_mhs', 'DESC')
             ->get()->getResultArray();
     }
+
+    public function Data_mahasiswa_transkip($id_mhs)
+    {
+        return $this->db->table('tbl_mhs')
+            ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_mhs.id_prodi', 'left') //menampilkan pembimbing Prodi
+            ->join('tbl_fakultas', 'tbl_fakultas.id_fakultas=tbl_prodi.id_fakultas', 'left') //menampilkan fakultas
+            ->join('tbl_kelas', 'tbl_kelas.id_kelas=tbl_mhs.id_kelas', 'left') //menampilkan kelas
+            ->join('tbl_dosen', 'tbl_dosen.id_dosen=tbl_kelas.id_dosen', 'left') //menampilkan pembimbing 
+            ->where('tbl_mhs.id_mhs', $id_mhs) //Filter Bedarsarkan id Prodi
+            ->get()->getRowArray();
+    }
+
+    public function DetailJadwal($id_jadwal)
+    {
+        return $this->db->table('tbl_krs')
+            ->join('tbl_jadwal', 'tbl_jadwal.id_jadwal=tbl_krs.id_jadwal', 'left') //menampilkan fakultas
+            ->join('tbl_kelas_perkuliahan', 'tbl_kelas_perkuliahan.id_kelas_perkuliahan = tbl_jadwal.id_kelas_perkuliahan', 'left')
+            ->join('tbl_kurikulum', 'tbl_kurikulum.id_kurikulum=tbl_kelas_perkuliahan.id_kurikulum', 'left')
+            ->join('tbl_prodi ', 'tbl_prodi.id_prodi = tbl_jadwal.id_prodi', 'left')
+            ->join('tbl_fakultas', 'tbl_fakultas.id_fakultas=tbl_prodi.id_fakultas', 'left')
+            ->join('tbl_matkul', 'tbl_matkul.id_matkul = tbl_kurikulum.id_matkul', 'left')
+            ->join('tbl_dosen', 'tbl_dosen.id_dosen = tbl_jadwal.id_dosen', 'left')
+            ->where('tbl_jadwal.id_jadwal', $id_jadwal)
+            ->get()->getRowArray();
+    }
+
+    public function detail_data($id)
+    {
+        return $this->db->table('tbl_slider')
+            ->where('id', $id)
+            ->get()->getRowArray();
+    }
+
+    public function delete_data($data)
+    {
+        $this->db->table('tbl_slider')
+            ->where('id', $data['id'])
+            ->delete($data);
+    }
+    public function data_dosen()
+    {
+        return $this->db->table('tbl_dosen')
+            ->orderBy('id_dosen', 'DESC')
+            ->get()->getResultArray();
+    }
+
+    public function DataJadwal()
+    {
+        return $this->db->table('tbl_jadwal')
+            ->join('tbl_matkul', 'tbl_matkul.id_matkul = tbl_jadwal.id_matkul', 'left')
+            ->join('tbl_prodi', 'tbl_prodi.id_prodi = tbl_jadwal.id_prodi', 'left')
+            ->join('tbl_dosen', 'tbl_dosen.id_dosen = tbl_jadwal.id_dosen', 'left')
+            ->join('tbl_ruangan', 'tbl_ruangan.id_ruangan = tbl_jadwal.id_ruangan', 'left')
+            ->join('tbl_kelas', 'tbl_kelas.id_kelas = tbl_jadwal.id_kelas', 'left')
+            ->orderBy('tbl_matkul.smt', 'ASC')
+            ->get()->getResultArray();
+    }
+
+    public function detailDataInstitusi($id_institusi)
+    {
+        return $this->db->table('tbl_institusi')
+            ->where('id_institusi', $id_institusi)
+            ->get()->getRowArray();
+    }
+
+    public function edit($data)
+    {
+        $this->db->table('tbl_slider')
+            ->where('id', $data['id'])
+            ->update($data);
+    }
+
+    public function grafik()
+    {
+        return $this->db->table('tbl_grafik')
+            ->get()->getResultArray();
+    }
+
     public function hitung_aktivitas_mhs($id_ta, $id_prodi)
     {
         return $this->db->table('tbl_krs')
@@ -541,162 +638,47 @@ class ModelAdmin extends Model
         return $query;
     }
 
-    public function aktif_mhs()
-    {
-        $query = $this->db->query("SELECT
-        h.id_mhs,
-        h.nama_mhs,
-        h.nim,
-        i.jenjang,
-        i.prodi,
-        t.status,
-        SUM(u.sks) ba,
-        SUM(IF(
-    STATUS LIKE 1,
-        u.sks,
-        0
-    )) Total, COUNT(IF(
-    STATUS LIKE 1,
-        k.id_mhs,
-        0
-    )) Total,
-  IF(t.status =0,'AKTIF',IF(t.status=1,'AKTIF','AKTIF')) AS nilai_huruf
-   
-    FROM
-        tbl_krs AS k
-    INNER JOIN tbl_mhs AS h
-    ON
-        k.id_mhs = h.id_mhs
-    INNER JOIN tbl_prodi AS i
-    ON
-        i.id_prodi = h.id_prodi
-    INNER JOIN tbl_jadwal AS j
-    ON
-        k.id_jadwal = j.id_jadwal
-    INNER JOIN tbl_kelas_perkuliahan AS o
-    ON
-        j.id_kelas_perkuliahan = o.id_kelas_perkuliahan 
 
-         INNER JOIN tbl_kurikulum AS kur
-    ON
-        kur.id_kurikulum = o.id_kurikulum   
-    INNER JOIN tbl_matkul AS u
-    ON
-        kur.id_matkul = u.id_matkul
-    INNER JOIN tbl_ta AS t
-    ON
-        k.id_ta = t.id_ta
-        
-        WHERE t.status= '1'
-        
-        GROUP BY
-        
-        id_mhs;");
-        //menghitung jumlah sks berdasrakan hari
-        return $query;
+    public function jml_gedung()
+    {
+        return $this->db->table('tbl_gedung')
+            ->countAll();
     }
 
-
-
-
-    public function DataKrsAktivitas($id_ta) // tmbahan $id_tajika tahun akademik di rubah maka isi krs berubah
-    // cara relasi tabel ke tiga tabel 
+    public function jml_ruangan()
     {
-
-        return $this->db->table('tbl_krs')
-
-            ->join('tbl_jadwal', 'tbl_jadwal.id_jadwal=tbl_krs.id_jadwal', 'left',) //menampilkan fakultas
-            ->join('tbl_mhs', 'tbl_mhs.id_mhs=tbl_krs.id_mhs', 'left') //menampilkan fakultas
-            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_krs.id_ta', 'left') //menampilkan fakultas
-            ->join('tbl_matkul', 'tbl_matkul.id_matkul=tbl_jadwal.id_matkul', 'left') //menampilkan matkul
-            ->join('tbl_kelas', 'tbl_kelas.id_kelas=tbl_jadwal.id_kelas', 'left') //menampilkan fakultas
-            ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_mhs.id_prodi', 'left') //menampilkan fakultas
-            ->join('tbl_ruangan', 'tbl_ruangan.id_ruangan=tbl_jadwal.id_ruangan', 'left') //menampilkan fakultas
-            ->groupBy('tbl_krs.id_mhs') //jika tahun akademik di rubah maka isi krs berubah   
-            ->get()->getResultArray();
+        return $this->db->table('tbl_ruangan')
+            ->countAll();
     }
-
-    public function admin_khs($id_mhs, $id_ta)
+    public function jml_fakultas()
     {
-        $builder = $this->db->table('tbl_krs');
-        $builder->select('tbl_matkul.kode_matkul,tbl_matkul.sks, tbl_matkul.smt,tbl_matkul.matkul,tbl_kelas_perkuliahan.nama_kelas_perkuliahan, tbl_krs.nilai,tbl_dosen.nama_dosen, tbl_range_nilai.nilai_huruf, tbl_range_nilai.nilai_index');
-        $builder->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_krs.id_mhs', 'left');
-        $builder->join('tbl_jadwal', 'tbl_jadwal.id_jadwal = tbl_krs.id_jadwal', 'left');
-        $builder->join('tbl_kelas_perkuliahan', 'tbl_kelas_perkuliahan.id_kelas_perkuliahan = tbl_jadwal.id_kelas_perkuliahan', 'left');
-        $builder->join('tbl_kurikulum', 'tbl_kurikulum.id_kurikulum=tbl_kelas_perkuliahan.id_kurikulum', 'left');
-        $builder->join('tbl_matkul', 'tbl_matkul.id_matkul = tbl_kurikulum.id_matkul', 'left');
-        $builder->join('tbl_dosen', 'tbl_dosen.id_dosen = tbl_jadwal.id_dosen', 'left');
-        $builder->join('tbl_prodi', 'tbl_prodi.id_prodi =tbl_mhs.id_prodi', 'left');
-        $builder->join('tbl_range_nilai', 'tbl_range_nilai.id_prodi =tbl_mhs.id_prodi', 'left');
-        $builder->join('tbl_ta', 'tbl_ta.id_ta =tbl_krs.id_ta', 'inner');
-        $builder->where('tbl_mhs.id_mhs', $id_mhs);
-        $builder->where('tbl_ta.id_ta', $id_ta);
-        $builder->WHERE('tbl_krs.nilai BETWEEN tbl_range_nilai.bobot_minimum AND tbl_range_nilai.bobot_maksimum')
-        ->WHERE('tbl_krs.tanggal_input_nilai BETWEEN tbl_range_nilai.tanggal_mulai AND tbl_range_nilai.tanggal_akhir');
-        $query = $builder->get();
-        return $query;
+        return $this->db->table('tbl_fakultas')
+            ->countAll(); // Menghitung jumlah keseluruhan tabel codeignter =>> Working With Databases >> Query Builder Class >> $builder->countAll
     }
-
-    public function Data_mahasiswa_khs($id_mhs)
+    public function jml_prodi()
     {
-        return $this->db->table('tbl_mhs')
-            ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_mhs.id_prodi', 'left') //menampilkan pembimbing Prodi
-            ->join('tbl_fakultas', 'tbl_fakultas.id_fakultas=tbl_prodi.id_fakultas', 'left') //menampilkan fakultas
-            ->join('tbl_kelas', 'tbl_kelas.id_kelas=tbl_mhs.id_kelas', 'left') //menampilkan kelas
-            ->join('tbl_dosen', 'tbl_dosen.id_dosen=tbl_kelas.id_dosen', 'left') //menampilkan pembimbing 
-            ->where('tbl_mhs.id_mhs', $id_mhs) //Filter Bedarsarkan id Prodi
-            ->get()->getRowArray();
+        return $this->db->table('tbl_prodi')
+            ->countAll();
     }
-
-    public function daftar_slider()
-    {
-        return $this->db->table('tbl_slider')
-            ->orderBy('id', 'DESC')
-            ->get()->getResultArray();
-    }
-
-    public function add_slider($data)
-    {
-        $this->db->table('tbl_slider')->insert($data);
-    }
-
-    public function detail_data($id)
-    {
-        return $this->db->table('tbl_slider')
-            ->where('id', $id)
-            ->get()->getRowArray();
-    }
-
-    public function delete_data($data)
-    {
-        $this->db->table('tbl_slider')
-            ->where('id', $data['id'])
-            ->delete($data);
-    }
-    public function data_dosen()
+    public function jml_dosen()
     {
         return $this->db->table('tbl_dosen')
-            ->orderBy('id_dosen', 'DESC')
-            ->get()->getResultArray();
+            ->countAll();
     }
-
-    public function DataJadwal()
+    public function jml_mhs()
     {
-        return $this->db->table('tbl_jadwal')
-            ->join('tbl_matkul', 'tbl_matkul.id_matkul = tbl_jadwal.id_matkul', 'left')
-            ->join('tbl_prodi', 'tbl_prodi.id_prodi = tbl_jadwal.id_prodi', 'left')
-            ->join('tbl_dosen', 'tbl_dosen.id_dosen = tbl_jadwal.id_dosen', 'left')
-            ->join('tbl_ruangan', 'tbl_ruangan.id_ruangan = tbl_jadwal.id_ruangan', 'left')
-            ->join('tbl_kelas', 'tbl_kelas.id_kelas = tbl_jadwal.id_kelas', 'left')
-            ->orderBy('tbl_matkul.smt', 'ASC')
-            ->get()->getResultArray();
+        return $this->db->table('tbl_mhs')
+            ->countAll();
     }
-
-    public function edit($data)
+    public function jml_matkul()
     {
-        $this->db->table('tbl_slider')
-            ->where('id', $data['id'])
-            ->update($data);
+        return $this->db->table('tbl_matkul')
+            ->countAll();
+    }
+    public function jml_user()
+    {
+        return $this->db->table('tbl_user')
+            ->countAll();
     }
 
     public function jumlah_prodi()
@@ -710,25 +692,79 @@ class ModelAdmin extends Model
         return $query;
     }
 
-    public function tampilkan_mhs_tidak_aktif()
+    public function jumlah_mata_kuliah_kontrak($id_ta, $id_prodi)
     {
-        $query = $this->db->query("SELECT * FROM tbl_mhs WHERE NOT EXISTS (SELECT * FROM tbl_krs WHERE tbl_mhs.id_mhs = tbl_krs.id_mhs)
-        ;");
-        //menghitung jumlah sks berdasrakan hari
-        return $query;
+        return $this->db->table('tbl_jadwal')
+            ->select('tbl_matkul.kode_matkul,tbl_matkul.sks, tbl_matkul.smt,tbl_matkul.matkul, tbl_dosen.nama_dosen, tbl_jadwal.id_prodi, tbl_jadwal.id_jadwal, tbl_prodi.kode_prodi, tbl_kelas_perkuliahan.nama_kelas_perkuliahan, tbl_ruangan.ruangan, tbl_jadwal.hari,tbl_jadwal.waktu, tbl_jadwal.quota')
+            ->join('tbl_kelas_perkuliahan', 'tbl_kelas_perkuliahan.id_kelas_perkuliahan=tbl_jadwal.id_kelas_perkuliahan', 'left') //menampilkan kelas
+            ->join('tbl_kurikulum', 'tbl_kurikulum.id_kurikulum=tbl_kelas_perkuliahan.id_kurikulum', 'left')
+            ->join('tbl_matkul', 'tbl_matkul.id_matkul=tbl_kurikulum.id_matkul', 'left') //menampilkan pembimbing Prodi
+            ->join('tbl_ruangan', 'tbl_ruangan.id_ruangan=tbl_jadwal.id_ruangan', 'left') //menampilkan fakultas
+            ->join('tbl_dosen', 'tbl_dosen.id_dosen=tbl_jadwal.id_dosen', 'left') //menampilkan pembimbing akaademik
+            ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_jadwal.id_prodi', 'left') //menampilkan pembimbing akaademik
+            // ->orderBy('id_mhs', 'DESC')
+            ->where('tbl_jadwal.id_ta', $id_ta) //sesuaikan dengan id_ta di tabel jadwal
+            ->where('tbl_jadwal.id_prodi', $id_prodi) //sesuaikan dengan id_prodi di tabel jadwal
+            ->get()->getResultArray();
     }
 
-    public function data_transkrip()
+
+    public function kelas($id_prodi)
+    {
+        return $this->db->table('tbl_kelas')
+            ->where('id_prodi', $id_prodi)
+            ->orderBy('nama_kelas', 'ASC')
+            ->get()->getResultArray();
+    }
+
+    public function matkul($id_prodi)
+    {
+        return $this->db->table('tbl_matkul')
+            ->where('id_prodi', $id_prodi)
+            //  ->orderBy('smt', 'ASC') //pengurutan data tabel
+            ->get()->getResultArray();
+    }
+
+    public function Matkulditawarkan($id_prodi)
+    {
+        return $this->db->table('tbl_jadwal')
+            ->join('tbl_kelas_perkuliahan', 'tbl_kelas_perkuliahan.id_kelas_perkuliahan=tbl_jadwal.id_kelas_perkuliahan', 'left') //menampilkan fakultas
+            ->join('tbl_kurikulum', 'tbl_kurikulum.id_kurikulum=tbl_kelas_perkuliahan.id_kurikulum', 'left')
+            ->join('tbl_matkul', 'tbl_matkul.id_matkul=tbl_kurikulum.id_matkul', 'left') //menampilkan matkul
+            ->join('tbl_ruangan', 'tbl_ruangan.id_ruangan=tbl_jadwal.id_ruangan', 'left') //menampilkan fakultas
+            ->join('tbl_dosen', 'tbl_dosen.id_dosen=tbl_jadwal.id_dosen', 'left') //menampilkan pembimbing akaademik
+            ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_jadwal.id_prodi', 'left') //menampilkan pembimbing akaademik
+            ->where('tbl_jadwal.id_prodi', $id_prodi) //Filter Bedarsarkan id Prodi
+            ->get()->getResultArray();
+    }
+
+    public function mhs($id_jadwal)
     {
         return $this->db->table('tbl_krs')
+            ->join('tbl_mhs', 'tbl_mhs.id_mhs = tbl_krs.id_mhs', 'left')
+            ->where('id_jadwal', $id_jadwal)
+            ->get()->getResultArray();
+    }
 
-            ->join('tbl_jadwal', 'tbl_jadwal.id_jadwal=tbl_krs.id_jadwal', 'left',) //menampilkan fakultas
-            ->join('tbl_mhs', 'tbl_mhs.id_mhs=tbl_krs.id_mhs', 'left') //menampilkan fakultas
-            ->join('tbl_ta', 'tbl_ta.id_ta=tbl_krs.id_ta', 'left') //menampilkan fakultas
-            ->join('tbl_matkul', 'tbl_matkul.id_matkul=tbl_jadwal.id_matkul', 'left') //menampilkan matkul
-            ->join('tbl_kelas_perkuliahan', 'tbl_kelas_perkuliahan.id_kelas_perkuliahan=tbl_jadwal.id_kelas_perkuliahan', 'left') //menampilkan fakultas
-            ->join('tbl_prodi', 'tbl_prodi.id_prodi=tbl_mhs.id_prodi', 'left') //menampilkan fakultas
-            ->join('tbl_ruangan', 'tbl_ruangan.id_ruangan=tbl_jadwal.id_ruangan', 'left') //menampilkan fakultas
+    public function prodi_fakultas()
+    {
+        return $this->db->table('tbl_prodi')
+            ->join('tbl_fakultas', 'tbl_fakultas.id_fakultas = tbl_prodi.id_fakultas', 'left')
+            ->orderBy('tbl_fakultas.id_fakultas', 'ASC')
+            ->get()->getResultArray();
+    }
+
+    public function profil_slider()
+    {
+        return $this->db->table('tbl_slider')
+            ->where('kategori_slider', 'slider')
+            ->get()->getResultArray();
+    }
+
+    public function profil_galeri()
+    {
+        return $this->db->table('tbl_slider')
+            ->where('kategori_slider', 'galeri')
             ->get()->getResultArray();
     }
 
@@ -738,5 +774,17 @@ class ModelAdmin extends Model
             ->where('id_krs', $data['id_krs'])
             ->update($data);
     }
-
+    public function tampilkan_mhs_tidak_aktif()
+    {
+        $query = $this->db->query("SELECT * FROM tbl_mhs WHERE NOT EXISTS (SELECT * FROM tbl_krs WHERE tbl_mhs.id_mhs = tbl_krs.id_mhs)
+        ;");
+        //menghitung jumlah sks berdasrakan hari
+        return $query;
+    }
+    public function update_data_institusi($data)
+    {
+        $this->db->table('tbl_institusi')
+            ->where('id_institusi', $data['id_institusi'])
+            ->update($data);
+    }
 }

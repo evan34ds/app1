@@ -2,103 +2,106 @@
         <img src="<?= base_url() ?>/template/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">Template</span>
         <a href="<?= base_url('home/beranda') ?>" class="navbar-brand">
-        <img src="<?= base_url() ?>/template/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">Beranda</span>
-    </a>
-    <a href="<?= base_url('home') ?>" class="navbar-brand">
-        <img src="<?= base_url() ?>/template/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">SIAKAD KAMPUS</span>
-    </a>
-    <a href="<?= base_url('home/profil') ?>" class="navbar-brand">
-        <img src="<?= base_url() ?>/template/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">Web Profil</span>
-    </a>
+            <img src="<?= base_url() ?>/template/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+            <span class="brand-text font-weight-light">Beranda</span>
+        </a>
+        <a href="<?= base_url('home') ?>" class="navbar-brand">
+            <img src="<?= base_url() ?>/template/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+            <span class="brand-text font-weight-light">SIAKAD KAMPUS</span>
+        </a>
+        <a href="<?= base_url('home/profil') ?>" class="navbar-brand">
+            <img src="<?= base_url() ?>/template/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+            <span class="brand-text font-weight-light">Web Profil</span>
+        </a>
 
-    <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+        <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="collapse navbar-collapse order-3" id="navbarCollapse">
-        <!-- Left navbar links -->
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <?php if (session()->get('level') == 1) { ?>
-                    <!-- jika lebih dari 2 pakai elseif jika terakhir  pakai else dan tanpan session-->
-                    <!-- Menu Halaman Admin-->
-                    <a href="<?= base_url('admin') ?>" class="nav-link">Dashboard</a>
-            </li>
-            <li class="nav-item">
-                <a href="<?= base_url() ?>/template/index3.html" class="nav-link">Contact</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Master</a>
-                <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-                    <li><a href="<?= base_url('fakultas') ?>" class="dropdown-item">Fakultas </a></li>
-                    <li><a href="<?= base_url('gedung') ?>" class="dropdown-item">Gedung </a></li>
-                    <li><a href="<?= base_url('ruangan') ?>" class="dropdown-item">Ruangan </a></li>
-                    <li><a href="<?= base_url('prodi') ?>" class="dropdown-item">Program Studi</a></li>
-                    <li><a href="<?= base_url('kurikulum') ?>" class="dropdown-item">Kurikulum</a></li>
-                    <li><a href="<?= base_url('matkul') ?>" class="dropdown-item">Mata Kuliah</a></li>
-                    <li><a href="<?= base_url('mahasiswa') ?>" class="dropdown-item">Mahasiswa</a></li>
-                    <li><a href="<?= base_url('mahasiswa/akses_fitur_mhs') ?>" class="dropdown-item">Akses Fitur Mahasiswa</a></li>
-                    <li><a href="<?= base_url('dosen') ?>" class="dropdown-item">Dosen</a></li>
-                    <!-- Level two dropdown-->
-                    <!-- End Level two -->
-                </ul>
-            </li>
-            <li class="nav-item dropdown">
-                <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Akademik</a>
-                <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-                    <li><a href="<?= base_url('ta') ?>" class="dropdown-item">Tahun Akademik</a></li>
-                    <li><a href="<?= base_url('bobotnilai') ?>" class="dropdown-item">Bobot Nilai</a></li>
-                    <li><a href="<?= base_url('kelas') ?>" class="dropdown-item">Kelas Pembimbing Akademik</a></li>
-                    <li><a href="<?= base_url('kelas/kelas_perkuliahan') ?>" class="dropdown-item">Kelas Perkuliahan</a></li>
-                    <li><a href="<?= base_url('ta/setting') ?>" class="dropdown-item">Tahun Akademik</a></li>
-                    <li><a href="<?= base_url('jadwalkuliah') ?>" class="dropdown-item">Jadwal Kuliah</a></li>
-                    <li><a href="<?= base_url('admin/admin_prodi_krs') ?>" class="dropdown-item">Kartu Rencana Mahasiswa</a></li>
-                    <li><a href="<?= base_url('admin/daftar_mhs_khs') ?>" class="dropdown-item">Kartu Hasil Studi Mahasiswa</a></li>
-                    <li><a href="<?= base_url('admin/admin_aktivitas_mhs') ?>" class="dropdown-item">Hitung Aktivitas Perkuliahan Mahasiswa</a></li>
-                    <li><a href="<?= base_url('admin/daftar_mhs_transkip') ?>" class="dropdown-item">Transkip Nilai</a></li>
-                </ul>
-            </li>
-
-            <li class="nav-item dropdown">
-                <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Keuangan</a>
-                <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-                    <li><a href="<?= base_url('pembayaran/kategori_pembayaran') ?>" class="dropdown-item">Kategori Pembayaran</a></li>
-                    <li><a href="<?= base_url('pembayaran/kelas_pembayaran') ?>" class="dropdown-item">Kelas Pembayaran</a></li>
-                    <li><a href="<?= base_url('pembayaran/daftar-mhs-pembayaran34') ?>" class="dropdown-item">Proses Pembayaran</a></li>
-                    <li><a href="<?= base_url('pembayaran/laporan_pembayaran') ?>" class="dropdown-item">Laporan Pembayaran</a></li>
-                </ul>
-            </li>
-            <li class="nav-item dropdown">
-                <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Setting</a>
-                <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-                    <li><a href="<?= base_url('user') ?>" class="dropdown-item">User </a></li>
-                    <li><a href="<?= base_url('fakultas') ?>" class="dropdown-item">Fakultas</a></li>
-                    <li><a href="<?= base_url('tutorial') ?>" class="dropdown-item">Tutorial</a></li>
-                    <li><a href="<?= base_url('slider') ?>" class="dropdown-item">Slider</a></li>
-                    <li><a href="<?= base_url('pengumuman') ?>" class="dropdown-item">Pengumuman</a></li>
-                    <li><a href="<?= base_url('galeri') ?>" class="dropdown-item">Galeri</a></li>
-                  <!-- Level two dropdown-->
-              <li class="dropdown-submenu dropdown-hover">
-                <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Berita</a>
-                <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
-                  <li>
-                    <a tabindex="-1" href="#" class="dropdown-item">Kategori</a>
-                  </li>
-
-                  <!-- Level three dropdown-->
-                  <li class="dropdown-submenu">
-                    <a tabindex="-1" href="<?= base_url('berita') ?>" class="dropdown-item">List Berita</a>
+        <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <?php if (session()->get('level') == 1) { ?>
+                        <!-- jika lebih dari 2 pakai elseif jika terakhir  pakai else dan tanpan session-->
+                        <!-- Menu Halaman Admin-->
+                        <a href="<?= base_url('admin') ?>" class="nav-link">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?= base_url() ?>/template/index3.html" class="nav-link">Contact</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Master</a>
+                    <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                        <li><a href="<?= base_url('fakultas') ?>" class="dropdown-item">Fakultas </a></li>
+                        <li><a href="<?= base_url('gedung') ?>" class="dropdown-item">Gedung </a></li>
+                        <li><a href="<?= base_url('ruangan') ?>" class="dropdown-item">Ruangan </a></li>
+                        <li><a href="<?= base_url('prodi') ?>" class="dropdown-item">Program Studi</a></li>
+                        <li><a href="<?= base_url('kurikulum') ?>" class="dropdown-item">Kurikulum</a></li>
+                        <li><a href="<?= base_url('matkul') ?>" class="dropdown-item">Mata Kuliah</a></li>
+                        <li><a href="<?= base_url('mahasiswa') ?>" class="dropdown-item">Mahasiswa</a></li>
+                        <li><a href="<?= base_url('mahasiswa/akses_fitur_mhs') ?>" class="dropdown-item">Akses Fitur Mahasiswa</a></li>
+                        <li><a href="<?= base_url('dosen') ?>" class="dropdown-item">Dosen</a></li>
+                        <!-- Level two dropdown-->
+                        <!-- End Level two -->
                     </ul>
-                  </li>
-                  <!-- End Level three -->
+                </li>
+                <li class="nav-item dropdown">
+                    <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Akademik</a>
+                    <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                        <li><a href="<?= base_url('ta') ?>" class="dropdown-item">Tahun Akademik</a></li>
+                        <li><a href="<?= base_url('bobotnilai') ?>" class="dropdown-item">Bobot Nilai</a></li>
+                        <li><a href="<?= base_url('kelas') ?>" class="dropdown-item">Kelas Pembimbing Akademik</a></li>
+                        <li><a href="<?= base_url('kelas/kelas_perkuliahan') ?>" class="dropdown-item">Kelas Perkuliahan</a></li>
+                        <li><a href="<?= base_url('ta/setting') ?>" class="dropdown-item">Tahun Akademik</a></li>
+                        <li><a href="<?= base_url('jadwalkuliah') ?>" class="dropdown-item">Jadwal Kuliah</a></li>
+                        <li><a href="<?= base_url('admin/admin_prodi_krs') ?>" class="dropdown-item">Kartu Rencana Mahasiswa</a></li>
+                        <li><a href="<?= base_url('admin/daftar_mhs_khs') ?>" class="dropdown-item">Kartu Hasil Studi Mahasiswa</a></li>
+                        <li><a href="<?= base_url('admin/admin_aktivitas_mhs') ?>" class="dropdown-item">Hitung Aktivitas Perkuliahan Mahasiswa</a></li>
+                        <li><a href="<?= base_url('admin/daftar_mhs_transkip') ?>" class="dropdown-item">Transkip Nilai</a></li>
+                    </ul>
+                </li>
 
-                  
-                </ul>
-              </li>
-                </ul>
+                <li class="nav-item dropdown">
+                    <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Keuangan</a>
+                    <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                        <li><a href="<?= base_url('pembayaran/input_pem_mitrans') ?>" class="dropdown-item">Mitrans</a></li>
+                        <li><a href="<?= base_url('pembayaran/kategori_pembayaran') ?>" class="dropdown-item">Kategori Pembayaran</a></li>
+                        <li><a href="<?= base_url('pembayaran/kelas_pembayaran') ?>" class="dropdown-item">Kelas Pembayaran</a></li>
+                        <li><a href="<?= base_url('pembayaran/daftar-mhs-pembayaran34') ?>" class="dropdown-item">Proses Pembayaran</a></li>
+                        <li><a href="<?= base_url('pembayaran/laporan_pembayaran') ?>" class="dropdown-item">Laporan Pembayaran</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Setting</a>
+                    <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                        <li><a href="<?= base_url('admin/institusi') ?>" class="dropdown-item">Data Institusi </a></li>
+                        <li><a href="<?= base_url('user') ?>" class="dropdown-item">User </a></li>
+                        <li><a href="<?= base_url('fakultas') ?>" class="dropdown-item">Fakultas</a></li>
+                        <li><a href="<?= base_url('tutorial') ?>" class="dropdown-item">Tutorial</a></li>
+                        <li><a href="<?= base_url('slider') ?>" class="dropdown-item">Slider</a></li>
+                        <li><a href="<?= base_url('pengumuman') ?>" class="dropdown-item">Pengumuman</a></li>
+                        <li><a href="<?= base_url('slider/galeri') ?>" class="dropdown-item">Galeri</a></li>
+                        <!-- Level two dropdown-->
+                        <li class="dropdown-submenu dropdown-hover">
+                            <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Berita</a>
+                            <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+                                <li>
+                                    <a tabindex="-1" href="#" class="dropdown-item">Kategori</a>
+                                </li>
+
+                                <!-- Level three dropdown-->
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="<?= base_url('berita') ?>" class="dropdown-item">List Berita</a>
+                            </ul>
+                        </li>
+                        <li><a href="<?= base_url('berita/pesan') ?>" class="dropdown-item">Pesan</a></li>
+                        <!-- End Level three -->
+
+
+                    </ul>
+                </li>
+            </ul>
             </li>
         <?php } elseif (session()->get('level') == 2) { ?>
             <!-- jika lebih dari 2 pakai elseif jika terakhir  pakai else dan tanpan session-->
@@ -244,7 +247,7 @@
                         <img src="<?= base_url('fotodosen/' . session()->get('foto'))  ?>" class="user-image img-circle elevation-2" alt="User Image">
                     <?php } ?>
                     <span class="d-none d-md-inline"><?= session()->get('nama') ?></span>
-                    
+
                 </a>
                 <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                     <!-- User image -->
@@ -258,7 +261,7 @@
                         <?php } ?>
 
                         <p>
-                        <?= session()->get('nama') ?> - <?php if (session()->get('level') == 1) {
+                            <?= session()->get('nama') ?> - <?php if (session()->get('level') == 1) {
                                                                 echo 'Admin';
                                                             } elseif (session()->get('level') == 2) {
                                                                 echo session()->get('username'); //untuk menampilkan nim di profil mahasiswa
@@ -277,18 +280,18 @@
                 </ul>
             </li>
 
-         
+
             <div><span class="badge badge-primary">TA <?= session()->get('ta') ?> <?= session()->get('semester') ?></span></div>
         </ul>
-    </div>
-    </nav>
-    
+        </div>
+        </nav>
 
 
 
-    <!-- /.navbar -->
 
-    <!-- SEARCH FORM 
+        <!-- /.navbar -->
+
+        <!-- SEARCH FORM 
     <form class="form-inline ml-0 ml-md-3">
         <div class="input-group input-group-sm"> 
             <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">

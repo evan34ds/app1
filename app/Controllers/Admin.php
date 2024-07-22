@@ -13,7 +13,6 @@ use App\Models\ModelMahasiswa;
 use App\Models\ModelStatus;
 use App\Models\ModelTutorial;
 
-
 class Admin extends BaseController
 {
 
@@ -141,6 +140,8 @@ class Admin extends BaseController
 		return view('layout/v_wrapper1', $data);
 	}
 
+	
+
 	public function admin_aktivitas_mhs1()
 	{
 		$mhs = $this->ModelKrs->DataMhs();
@@ -199,6 +200,19 @@ class Admin extends BaseController
 		return view('layout/v_wrapper', $data);
 	}
 
+	public function institusi()
+	{
+		$data = array(
+			'title' => 'Data Institusi',
+			'data_institusi'   => $this->ModelAdmin->DataInstitusi_kontak(),
+			'dosen' =>$this->ModelDosen->allData(),
+			'isi'    =>    'admin/institusi/v_index_institusi'
+		);
+
+		return view('layout/v_wrapper', $data);
+	}
+	
+
 	public function transkrip_print($id_mhs)
     {
 		$mhs = $this->ModelAdmin->Data_mahasiswa_transkip($id_mhs);
@@ -256,6 +270,86 @@ class Admin extends BaseController
 		);
 		return view('layout/v_wrapper', $data);
 	}
+
+	public function update_institusi($id_institusi)
+    {
+        if ($this->validate([
+            'nama_institusi' => [
+                'label' => 'nama_institusi',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '{field} Wajib Diisi !!!'
+                ]
+            ],
+			'id_dosen' => [
+                'kepalah' => 'Kepalah',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '{field} Wajib Diisi !!!'
+                ]
+            ],
+
+			'alamat' => [
+                'label' => 'Alamat',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '{field} Wajib Diisi !!!'
+                ]
+            ],
+
+			'kontak' => [
+                'label' => 'Kontak',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '{field} Wajib Diisi !!!'
+                ]
+            ],
+			'lokasi_maps' => [
+                'label' => 'Lokasi',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '{field} Wajib Diisi !!!'
+                ]
+            ],
+
+			'visi_misi' => [
+                'label' => 'Visi dan Misi',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '{field} Wajib Diisi !!!'
+                ]
+            ],
+
+			'sambutan' => [
+                'label' => 'Sambutan',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '{field} Wajib Diisi !!!'
+                ]
+            ],
+
+        ])) {
+            //jika valid
+            $data = [
+                'id_institusi' => $id_institusi,
+                'nama_institusi' => $this->request->getPost('nama_institusi'),
+                'id_dosen' => $this->request->getPost('id_dosen'),
+                'alamat' => $this->request->getPost('alamat'),
+                'kontak' => $this->request->getPost('kontak'),
+                'lokasi_maps' => $this->request->getPost('lokasi_maps'),
+                'visi_misi' => $this->request->getPost('visi_misi'),
+                'sambutan' => $this->request->getPost('sambutan'),
+            ];
+            $this->ModelAdmin->update_data_institusi($data);
+            session()->setFlashdata('pesan', 'Data Berhasil Di Update !!!');
+            return redirect()->to('/admin/institusi/');
+        } else {
+            //jika tidak valid
+			session()->setFlashdata('errors', \Config\Services::validation()->getErrors());
+			return redirect()->to(base_url('/admin/institusi/'));
+        }
+    }
+
 
 	
 

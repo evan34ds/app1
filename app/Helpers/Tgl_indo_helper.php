@@ -3,6 +3,25 @@
 if (!function_exists('Tgl_indo')) {
     function date_indo($tgl)
     {
+        $timestamp = strtotime($tgl); // Ubah string tanggal menjadi timestamp
+
+        // Format tanggal dengan fungsi date()
+        $tanggal = date('d', $timestamp);
+        $bulan = bulan(date('m', $timestamp));
+        $tahun = date('Y', $timestamp);
+
+        return $tanggal . ' ' . $bulan . ' ' . $tahun;
+    }
+}
+
+
+/*
+        
+       sebelumnya format tanggal
+       
+        if (!function_exists('Tgl_indo')) {
+    function date_indo($tgl)
+    {
         $ubah = gmdate($tgl, time() + 60 * 60 * 8);
         $pecah = explode("-", $ubah);
         $tanggal = $pecah[2];
@@ -11,6 +30,8 @@ if (!function_exists('Tgl_indo')) {
         return $tanggal . ' ' . $bulan . ' ' . $tahun;
     }
 }
+
+        */
 
 if (!function_exists('bulan')) {
     function bulan($bln)

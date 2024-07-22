@@ -11,9 +11,10 @@ class Modelberita extends Model
     protected $allowedFields = ['judul_berita', 'slug_berita', 'isi', 'gambar', 'tgl_berita', 'status', 'kategori_id', 'user_id'];
 
 
-    public function kontak_simpan($data)
+
+    public function add_berita($data)
     {
-        $this->db->table('tbl_kontak')->insert($data);
+        $this->db->table('tbl_berita')->insert($data);
     }
 
     public function cariData($cari)
@@ -25,6 +26,61 @@ class Modelberita extends Model
             ->orderBy('tgl_berita', 'desc')
             ->like('judul_berita', $cari)
             ->orLike('isi', $cari);
+    }
+
+    public function detail_berita($slug_berita)
+    {
+        return $this->table('tbl_berita')
+            ->join('tbl_user', 'tbl_user.id_user = tbl_berita.id_user')
+            ->join('kategori', 'kategori.kategori_id = tbl_berita.kategori_id')
+            ->where('slug_berita', $slug_berita)
+            ->get()->getRow();
+    }
+
+    public function detail_data($berita_id)
+    {
+        return $this->db->table('tbl_berita')
+            ->where('berita_id', $berita_id)
+            ->get()->getRowArray();
+    }
+
+    public function delete_data($data)
+    {
+        $this->db->table('tbl_berita')
+            ->where('berita_id', $data['berita_id'])
+            ->delete($data);
+    }
+
+    public function edit($data)
+    {
+        $this->db->table('tbl_berita')
+            ->where('berita_id', $data['berita_id'])
+            ->update($data);
+    }
+
+
+    public function getPaginated($num)
+    {
+        return $this->table('tbl_berita')
+            ->join('tbl_user', 'tbl_user.id_user = tbl_berita.id_user')
+            ->join('kategori', 'kategori.kategori_id = tbl_berita.kategori_id')
+            ->where('status', 'published')
+            ->orderBy('tgl_berita', 'desc');
+        return [
+            'berita' => $this->paginate($num),
+        ];
+    }
+
+    public function hapus_pesan($data)
+    {
+        $this->db->table('tbl_kontak')
+            ->where('id_message', $data['id_message'])
+            ->delete($data);
+    }
+
+    public function kontak_simpan($data)
+    {
+        $this->db->table('tbl_kontak')->insert($data);
     }
 
     public function listBerita()
@@ -59,6 +115,15 @@ class Modelberita extends Model
             ->get()->getResultArray();
     }
 
+    public function listPesan()
+    {
+        return $this->db->table('tbl_kontak')
+            ->orderBy('tgl_pesan', 'DESC')
+            ->get()->getResultArray();
+    }
+
+  
+
     public function slider()
     {
         return $this->db->table('tbl_berita')
@@ -88,32 +153,7 @@ class Modelberita extends Model
             ->orderBy('tgl_berita', 'desc')
             ->paginate($num);
     }
-    public function getPaginated($num)
-    {
-        return $this->table('tbl_berita')
-            ->join('tbl_user', 'tbl_user.id_user = tbl_berita.id_user')
-            ->join('kategori', 'kategori.kategori_id = tbl_berita.kategori_id')
-            ->where('status', 'published')
-            ->orderBy('tgl_berita', 'desc');
-        return [
-            'berita' => $this->paginate($num),
-        ];
-    }
-    public function detail_berita($slug_berita)
-    {
-        return $this->table('tbl_berita')
-            ->join('tbl_user', 'tbl_user.id_user = tbl_berita.id_user')
-            ->join('kategori', 'kategori.kategori_id = tbl_berita.kategori_id')
-            ->where('slug_berita', $slug_berita)
-            ->get()->getRow();
-    }
-
-    public function add_berita($data)
-    {
-        $this->db->table('tbl_berita')->insert($data);
-    }
-
-
+  
     public function user_aktif()
     {
         return $this->db->table('tbl_user')
@@ -121,26 +161,5 @@ class Modelberita extends Model
             ->where('id_user', session()->get('username')) //contohnya d ambil dari session mahasiswa Auth
             ->get()->getRowArray();
     }
-
-    public function detail_data($berita_id)
-    {
-        return $this->db->table('tbl_berita')
-            ->where('berita_id', $berita_id)
-            ->get()->getRowArray();
-    }
-
-
-    public function edit($data)
-    {
-        $this->db->table('tbl_berita')
-            ->where('berita_id', $data['berita_id'])
-            ->update($data);
-    }
-
-    public function delete_data($data)
-    {
-        $this->db->table('tbl_berita')
-            ->where('berita_id', $data['berita_id'])
-            ->delete($data);
-    }
+   
 }

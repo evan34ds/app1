@@ -6,6 +6,8 @@ use CodeIgniter\Model;
 
 class ModelAuth extends Model
 {
+
+    //todo L
     public function login_user($username, $password)
     {
         return $this->db->table('tbl_user')
@@ -37,5 +39,5 @@ class ModelAuth extends Model
             ->get()
             ->getRowArray();
     }
-
+//todo
 }

@@ -40,6 +40,7 @@ defined('MONTH')  || define('MONTH', 2592000);
 defined('YEAR')   || define('YEAR', 31536000);
 defined('DECADE') || define('DECADE', 315360000);
 
+
 /*
 |--------------------------------------------------------------------------
 | Exit Status Codes
@@ -77,5 +78,6 @@ defined('EXIT__AUTO_MIN')      || define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      || define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 $base = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']) : 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']);
+
 
 defined('BASE') || define('BASE', $base);

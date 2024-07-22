@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+
 use App\Models\ModelKelas;
 use App\Models\Matkul;
 use App\Models\ModelDosen;
@@ -12,6 +13,8 @@ use App\Models\ModelTa;
 use App\Models\ModelJadwalKuliah;
 use App\Models\ModelPembayaran;
 use App\Models\ModelRuangan;
+use App\Models\ModelTransaksiMid;
+
 
 
 class Pembayaran extends BaseController
@@ -28,6 +31,8 @@ class Pembayaran extends BaseController
 		$this->ModelTa = new ModelTa();
 		$this->ModelJadwalKuliah = new ModelJadwalKuliah();
 		$this->ModelRuangan = new ModelRuangan();
+		$this->ModelTransaksiMid = new ModelTransaksiMid();
+		
 	}
 
 	public function index()
@@ -140,7 +145,7 @@ class Pembayaran extends BaseController
 	}
 	public function add_kelas_pembayaran()
 	{
-		
+
 
 		if ($this->validate([
 			'kode_kelas_pembayaran' => [
@@ -501,6 +506,69 @@ class Pembayaran extends BaseController
 
 		return view('layout/v_wrapper', $data);
 	}
+
+	public function input_pem_mitrans()
+	{
+
+		$data = [
+			'title' =>    'Pembuatan Tagihan',
+			'isi'    =>    'admin/pembayaran/mitrans/input_pem_mid'
+
+		];
+
+		return view('layout/v_wrapper', $data);
+	}
+
+
+
+	public function pem_mitrans()
+	{
+		$depan = $this->request->getVar('depan');
+		$belakang = $this->request->getVar('belakang');
+		$email = $this->request->getVar('email');
+		$ponsel = $this->request->getVar('ponsel');
+		$nominal = $this->request->getVar('nominal');
+		$id_order = time();
+
+        // Set your Merchant Server Key
+        \Midtrans\Config::$serverKey = 'SB-Mid-server-EBgU9ji51TZg0QtIqTFcABgw';
+        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+        \Midtrans\Config::$isProduction = false;
+        // Set sanitization on (default)
+        \Midtrans\Config::$isSanitized = true;
+        // Set 3DS transaction for credit card to true
+        \Midtrans\Config::$is3ds = true;
+
+        $params = array(
+            'transaction_details' => array(
+                'order_id' => $id_order,
+                'gross_amount' => $nominal,
+			),
+			'customer_details' => array(
+				'first_name' => $depan,
+				'last_name' => $belakang,
+				'email' => $email,
+				'phone' => $ponsel
+			)
+			);
+
+		$snapToken = \Midtrans\Snap::getSnapToken($params);
+		$token= $snapToken;
+
+		$data = [
+			'id_transaksi_mid' =>$id_order,
+			'nama_depan' =>$depan,
+			'nama_belakang' =>$belakang,
+			'email' =>$email,
+			'ponsel' =>$ponsel,
+			'nominal' =>$nominal,
+			'token' =>$token,
+        ];
+
+		$this->ModelTransaksiMid->save($data);
+
+		return redirect('/pembayaran/input_pem_mitrans');
+    }
 
 	public function rincian_kelas_pembayaran($id_kelas_pembayaran)
 	{
