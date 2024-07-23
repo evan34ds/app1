@@ -512,6 +512,7 @@ class Pembayaran extends BaseController
 
 		$data = [
 			'title' =>    'Pembuatan Tagihan',
+			'tagihan' => $this->ModelTransaksiMid->findAll(),
 			'isi'    =>    'admin/pembayaran/mitrans/input_pem_mid'
 
 		];
@@ -567,7 +568,7 @@ class Pembayaran extends BaseController
 
 		$this->ModelTransaksiMid->save($data);
 
-		return redirect('/pembayaran/input_pem_mitrans');
+		return redirect()->to('/pembayaran/input_pem_mitrans');
     }
 
 	public function rincian_kelas_pembayaran($id_kelas_pembayaran)
