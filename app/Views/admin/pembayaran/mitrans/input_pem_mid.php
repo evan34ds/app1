@@ -41,37 +41,43 @@
                     <div class="col-sm-6">
                         <div class="form-grup">
                             <label>Nama Depan</label>
-                            <input name="depan" class="form-control" placeholder="Nama">
+                            <input name="depan" class="form-control" placeholder="Nama Depan">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-grup">
                             <label>Nama Belakang</label>
-                            <input name="belakang" class="form-control" placeholder="Nama Mahasiswa">
+                            <input name="belakang" class="form-control" placeholder="Nama Belakang">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-grup">
-                            <label>email</label>
-                            <input name="email" class="form-control" placeholder="Nama Mahasiswa">
+                            <label>Email</label>
+                            <input name="email" class="form-control" placeholder="Email">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-grup">
                             <label>ponsel</label>
-                            <input name="ponsel" class="form-control" placeholder="Nama Mahasiswa">
+                            <input name="ponsel" class="form-control" placeholder="No HP">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-grup">
                             <label>Nominal Tagihan</label>
-                            <input name="nominal" class="form-control" placeholder="Nama Mahasiswa">
+                            <input name="nominal" class="form-control" placeholder="Nominal Tagihan">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-grup">
                             <label>Token</label>
-                            <input name="token" class="form-control" placeholder="Nama Mahasiswa">
+                            <input name="token" class="form-control" placeholder="Token">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-grup">
+                            <label>Untuk Pembayaran</label>
+                            <input name="nama_pembayaran" class="form-control" placeholder="Untuk Pembayaran">
                         </div>
                     </div>
                     </p>
@@ -94,32 +100,39 @@
                     <th>Email</th>
                     <th>Ponsel</th>
                     <th>Nominal</th>
+                    <th>Nama Pembayaran</th>
                     <th>Bayar</th>
                     <th width="150px" class="text-center">STATUS</th>
                 </tr>
             </thead>
             <tbody>
                 <?php $no = 1; ?>
-                <?php foreach ($tagihan as $data) : 
+                <?php foreach ($tagihan as $data) :
                     $id = $data->id_transaksi_mid;
                     $token = base64_encode("SB-Mid-server-EBgU9ji51TZg0QtIqTFcABgw:");
-                    $url=" https://api.sandbox.midtrans.com/v2/". $id ."/status";
-                    $header= array(
-                    'Accept: application/json',
-                    'Authorization: Basic'. $token,
-                    'Content-Type: application/json' 
+                    $url = "https://api.sandbox.midtrans.com/v2/" . $id . "/status";
+                    $header = array(
+                        'Accept: application/json',
+                        'Authorization: Basic ' . $token, // Tambahkan spasi setelah 'Basic'
+                        'Content-Type: application/json'
                     );
-                    $method='GET';
+                    $method = 'GET';
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $url);
                     curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, false);
-                    curl_setopt($ch, CURLINFO_HEADER_OUT, true);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                     $result = curl_exec($ch);
+
+                    if (curl_errno($ch)) {
+                        // Tangani kesalahan cURL jika ada
+                        echo 'Error:' . curl_error($ch);
+                    }
+
+                    curl_close($ch); // Tutup cURL
+
                     $hasil = json_decode($result, true);
-                    ?>
+                ?>
                     <tr>
                         <td class="text-center"><?= $no++; ?></td>
                         <td><?= $data->nama_belakang; ?></td>
@@ -127,15 +140,20 @@
                         <td><?= $data->email; ?></td>
                         <td><?= $data->ponsel; ?></td>
                         <td><?= $data->nominal; ?></td>
+                        <td><?= $data->nama_pembayaran; ?></td>
                         <td class="text-center">
-                            <a href="https://app.sandbox.midtrans.com/snap/v2/vtweb/<?= $data->token; ?>" class="fas fa-eye btn-sm btn-danger">Bayar</a>
+                            <a href="https://app.sandbox.midtrans.com/snap/v2/vtweb/<?= $data->token; ?>" class="fas fa-eye btn-sm btn-danger"> Bayar</a>
                         </td>
-                        <td class="text-center">
-                            <?= $hasil['fraud_status']; ?>
+                        <?php if ($hasil['status_code'] == 200) : ?>
+                            <td class="text-center"><?= '<div class="badge badge-success">Success</div>' ?></td>
+                        <?php else : ?>
+                            <td class="text-center"><?= '<div class="badge badge-warning">Pending</div>' ?></td>
+                        <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
+
             <tfoot>
                 <tr>
                     <th width="50px" class="text-center">No</th>
