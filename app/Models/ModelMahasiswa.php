@@ -59,6 +59,12 @@ class ModelMahasiswa extends Model
             ->where('id_mhs', $id_mhs)
             ->get()->getRowArray();
     }
+    public function delete_data($data)
+    {
+        $this->db->table('tbl_mhs')
+            ->where('id_mhs', $data['id_mhs'])
+            ->delete($data);
+    }
     public function add($data)
     {
         $this->db->table('tbl_mhs')->insert($data);
@@ -92,6 +98,20 @@ class ModelMahasiswa extends Model
             ->orderBy('tbl_mhs.id_mhs', 'DESC')
             ->get()->getResultArray();
     }
+
+    public function findNim($id_mhs)
+    {
+        $query = $this->db->table('tbl_mhs')
+            ->select('nim')
+            ->where('id_mhs', $id_mhs)
+            ->get();
+        $result = $query->getRow();
+        if ($result !== null) {
+            return $result->nim;
+        }
+
+        return null; // Jika id_matkul tidak ditemukan, mengembalikan nilai null
+    }
     public function getMahasiswaById($id_mhs)
     {
         return $this->find($id_mhs);
@@ -118,6 +138,13 @@ class ModelMahasiswa extends Model
             ->get()->getRowArray();
     }
 
+    public function Simpan_akses_fitur($data)
+    {
+        $this->db->table('tbl_akses_fitur')
+            ->where('id_akses_fitur_mhs', $data['id_akses_fitur_mhs'])
+            ->update($data);
+    }
+
     public function Tambah_mhs_status($data)
     {
         return $this->db->table('tbl_akses_fitur')->insertBatch($data);
@@ -126,17 +153,5 @@ class ModelMahasiswa extends Model
     public function Tambah_mhs_status1($data)
     {
         return $this->db->table('tbl_kelas_pembayaran')->insertBatch($data);
-    }
-    public function Simpan_akses_fitur($data)
-    {
-        $this->db->table('tbl_akses_fitur')
-            ->where('id_akses_fitur_mhs', $data['id_akses_fitur_mhs'])
-            ->update($data);
-    }
-    public function delete_data($data)
-    {
-        $this->db->table('tbl_mhs')
-            ->where('id_mhs', $data['id_mhs'])
-            ->delete($data);
     }
 }

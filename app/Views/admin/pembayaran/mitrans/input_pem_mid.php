@@ -101,8 +101,10 @@
                     <th>Ponsel</th>
                     <th>Nominal</th>
                     <th>Nama Pembayaran</th>
-                    <th>Bayar</th>
-                    <th width="150px" class="text-center">STATUS</th>
+                    <th class="text-center">Bayar</th>
+                    <th width="150px" class="text-center">Status</th>
+                    <th width="150px" class="text-center">Tanggal Pengiriman</th>
+                    <th width="150px" class="text-center">Biaya Terkirim</th>
                 </tr>
             </thead>
             <tbody>
@@ -149,6 +151,25 @@
                         <?php else : ?>
                             <td class="text-center"><?= '<div class="badge badge-warning">Pending</div>' ?></td>
                         <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php
+                            if (empty($hasil['settlement_time'])) {
+                                echo "belum dibayar";
+                            } else {
+                                echo $hasil['settlement_time'];
+                            }
+                            ?>
+                        </td>
+
+                        <td>
+                            <?php
+                            if (empty($hasil['settlement_time'])) {
+                                echo "belum dibayar";
+                            } else {
+                                echo $hasil['gross_amount'];
+                            }
+                            ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

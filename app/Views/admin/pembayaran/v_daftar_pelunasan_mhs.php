@@ -39,7 +39,46 @@
                 <tr>
                     <td>Jumlah Tagihan</td>
                     <td>:</td>
-                    <td><?= 'Rp ' . number_format($daftar_pelunasan['biaya'], 0, ',', '.') ?></td>
+                    <td><?= 'Rp ' . number_format($daftar_pelunasan['biaya'], 0, ',', '.') ?> <a href="https://app.sandbox.midtrans.com/snap/v2/vtweb/<?= $daftar_pelunasan['midtrans_token'] ?>" class="fas fa-eye btn-sm btn-danger"> Bayar</a>
+                        <?php foreach ($daftar_pelunasan as $data) :
+                            $id = $daftar_pelunasan['order_id'];
+                            $token = base64_encode("SB-Mid-server-EBgU9ji51TZg0QtIqTFcABgw:");
+                            $url = "https://api.sandbox.midtrans.com/v2/" . $id . "/status";
+                            $header = array(
+                                'Accept: application/json',
+                                'Authorization: Basic ' . $token, // Tambahkan spasi setelah 'Basic'
+                                'Content-Type: application/json'
+                            );
+                            $method = 'GET';
+                            $ch = curl_init();
+                            curl_setopt($ch, CURLOPT_URL, $url);
+                            curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+                            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                            $result = curl_exec($ch);
+
+                            if (curl_errno($ch)) {
+                                // Tangani kesalahan cURL jika ada
+                                echo 'Error:' . curl_error($ch);
+                            }
+
+                            curl_close($ch); // Tutup cURL
+
+                            $hasil = json_decode($result, true);
+
+                        ?>
+                        <?php endforeach; ?>
+                        <?php
+                        if (empty($hasil['settlement_time'])) {
+                            echo '<div class="badge badge-warning">Pending</div>';
+                        } else {
+                            echo '<div class="badge badge-success">Success</div>';
+                        }
+                        ?>
+                    </td>
+
+                <tr>
+
                 </tr>
 
                 <tr>

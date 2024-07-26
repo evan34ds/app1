@@ -100,7 +100,7 @@ class Pembayaran extends BaseController
 		return view('layout/v_wrapper', $data);
 	}
 
-	public function add_mhs_kelas_pembayaran($id_kelas_pembayaran)
+	public function add_mhs_kelas_pembayaran_0($id_kelas_pembayaran)
 	{
 		$kode_kelas_pembayaran = $this->ModelPembayaran->findKodeKelasPembayaran($id_kelas_pembayaran); // cek agar mata kuliah bisa didefinis
 		$nama_kelas_pembayaran = $this->ModelPembayaran->findNamaKelas($id_kelas_pembayaran); // cek agar mata kuliah bisa didefinis
@@ -142,6 +142,74 @@ class Pembayaran extends BaseController
 			return redirect()->back()->with('error', 'Tidak Ada data yang di Pilih.');
 		}
 	}
+
+	public function add_mhs_kelas_pembayaran($id_kelas_pembayaran)
+	{
+		$kode_kelas_pembayaran = $this->ModelPembayaran->findKodeKelasPembayaran($id_kelas_pembayaran); // cek agar mata kuliah bisa didefinis
+		$nama_kelas_pembayaran = $this->ModelPembayaran->findNamaKelas($id_kelas_pembayaran); // cek agar mata kuliah bisa didefinis
+		$id_prodi = $this->ModelPembayaran->findProdi($id_kelas_pembayaran); // cek agar mata kuliah bisa didefinis
+		$id_Ta = $this->ModelPembayaran->findIdTa($id_kelas_pembayaran); // cek agar mata kuliah bisa didefinis
+		$biaya = $this->ModelPembayaran->findbiaya($id_kelas_pembayaran); // cek agar mata kuliah bisa didefinis
+		$kategori_pembayaran = $this->ModelPembayaran->findkategori_pembayaran($id_kelas_pembayaran); // cek agar mata kuliah bisa didefinis
+		
+
+		// Set your Merchant Server Key
+		\Midtrans\Config::$serverKey = 'SB-Mid-server-EBgU9ji51TZg0QtIqTFcABgw';
+		// Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+		\Midtrans\Config::$isProduction = false;
+		// Set sanitization on (default)
+		\Midtrans\Config::$isSanitized = true;
+		// Set 3DS transaction for credit card to true
+		\Midtrans\Config::$is3ds = true;
+
+		$ModelMahasiswa = new ModelMahasiswa();
+		$data = [];
+
+		// Ambil data mahasiswa_id dan pembimbing_id dari formulir
+		$mahasiswaIds = $this->request->getPost('mhs_ids');
+
+		if (is_array($mahasiswaIds)) {
+			// Loop melalui semua mahasiswa yang dipilih
+			foreach ($mahasiswaIds as $mahasiswaId) {
+				$kode = bin2hex(random_bytes(16)); // Menghasilkan token unik
+				$unik=$nama_kelas_pembayaran. '-' . $kode;
+				// Buat parameter untuk Midtrans
+				$params = [
+					'transaction_details' => [
+						'order_id' => $unik, // Pastikan order_id unik
+						'gross_amount' => $biaya, // Pastikan ini diisi dengan nilai yang sesuai
+					],
+					// Parameter lainnya yang diperlukan oleh Midtrans
+				];
+
+				// Dapatkan token untuk mahasiswa ini
+				$snapToken = \Midtrans\Snap::getSnapToken($params);
+				$token = $snapToken;
+
+				// Tambahkan data ke array
+				$data[] = [
+					'id_mhs' => $mahasiswaId,
+					'kode_kelas_pembayaran' => $kode_kelas_pembayaran,
+					'nama_kelas_pembayaran' => $nama_kelas_pembayaran,
+					'id_prodi' => $id_prodi,
+					'id_ta' => $id_Ta,
+					'biaya' => $biaya,
+					'id_kategori_pembayaran' => $kategori_pembayaran,
+					'midtrans_token' => $token, // Tambahkan token Midtrans ke data
+					'order_id' => $unik // Tambahkan token Midtrans ke data
+				];
+			}
+
+			// Simpan data ke database
+			$ModelMahasiswa->Tambah_mhs_status1($data);
+
+			// Redirect ke halaman sebelumnya atau tampilkan pesan berhasil jika diperlukan
+			return redirect()->back()->with('pesan', 'Data berhasil disimpan ke tabel Kelas Pembayaran');
+		} else {
+			return redirect()->back()->with('error', 'Tidak Ada data yang dipilih.');
+		}
+	}
+
 	public function add_kelas_pembayaran()
 	{
 
@@ -540,6 +608,15 @@ class Pembayaran extends BaseController
 		// Set 3DS transaction for credit card to true
 		\Midtrans\Config::$is3ds = true;
 
+		$item = array(
+			array(
+				'id' => 'A02',
+				'price' => $nominal,
+				'quantity' => 1,
+				'name' => $pembayaran,
+			)
+		);
+
 		$params = array(
 			'transaction_details' => array(
 				'order_id' => $id_order,
@@ -550,7 +627,8 @@ class Pembayaran extends BaseController
 				'last_name' => $belakang,
 				'email' => $email,
 				'phone' => $ponsel,
-			)
+			),
+			'item_details' => $item,
 		);
 
 		$snapToken = \Midtrans\Snap::getSnapToken($params);
@@ -571,6 +649,8 @@ class Pembayaran extends BaseController
 
 		return redirect()->to('/pembayaran/input_pem_mitrans');
 	}
+
+
 
 	public function rincian_kelas_pembayaran($id_kelas_pembayaran)
 	{

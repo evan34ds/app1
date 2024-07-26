@@ -43,6 +43,8 @@ class Mhs extends BaseController
 		return view('layout/v_wrapper', $data);
 	}
 
+	
+
 	//-----------------------duplikate---------------------------------------------
 	public function index2()
 	{
